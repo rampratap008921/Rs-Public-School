@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Login | R.S. Public School</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:
+linear-gradient(rgba(11,31,75,.88),
+rgba(11,31,75,.88)),
+url('principal.jpg');
+
+background-size:cover;
+background-position:center;
+}
+
+.login-box{
+width:420px;
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(20px);
+border:1px solid rgba(255,255,255,.15);
+border-radius:20px;
+padding:40px;
+color:white;
+text-align:center;
+box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+.logo{
+width:90px;
+height:90px;
+background:white;
+padding:6px;
+border-radius:50%;
+margin:auto;
+margin-bottom:15px;
+}
+
+.logo img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+
+h1{
+font-size:30px;
+margin-bottom:5px;
+}
+
+.subtitle{
+color:#d4a017;
+margin-bottom:25px;
+}
+
+.input-group{
+margin-bottom:18px;
+text-align:left;
+}
+
+.input-group label{
+display:block;
+margin-bottom:6px;
+}
+
+.input-group input{
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+outline:none;
+}
+
+.login-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+background:#d4a017;
+color:#0B1F4B;
+font-weight:700;
+cursor:pointer;
+font-size:16px;
+margin-top:10px;
+}
+
+.login-btn:hover{
+transform:translateY(-2px);
+}
+
+.links{
+margin-top:18px;
+display:flex;
+justify-content:space-between;
+font-size:14px;
+}
+
+.links a{
+color:white;
+text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+<div class="logo">
+<img src="rslogo.png" alt="School Logo">
+</div>
+
+<h1>Student Login</h1>
+
+<p class="subtitle">
+R.S. Public School ERP
+</p>
+
+<div class="input-group">
+<label>Student ID</label>
+<input type="text" placeholder="Enter Student ID">
+</div>
+
+<div class="input-group">
+<label>Password</label>
+<input type="password" placeholder="Enter Password">
+</div>
+
+<button class="login-btn"
+onclick="window.location.href='student-dashboard.html'">
+Login
+</button>
+
+<div class="links">
+<a href="#">Forgot Password?</a>
+<a href="index.html">Back to Website</a>
+</div>
+
+</div>
+
+</body>
+</html>

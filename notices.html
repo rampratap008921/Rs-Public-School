@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notice & Notification Management</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#f4f7fc;
+}
+
+.header{
+background:#0B1F4B;
+color:white;
+padding:20px 30px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.header h1{
+color:#d4a017;
+}
+
+.container{
+padding:30px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h3{
+color:#0B1F4B;
+}
+
+.card p{
+font-size:30px;
+font-weight:bold;
+color:#d4a017;
+margin-top:10px;
+}
+
+.form-box{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+margin-bottom:30px;
+}
+
+.form-box h2{
+margin-bottom:20px;
+color:#0B1F4B;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+border:1px solid #ddd;
+border-radius:8px;
+}
+
+textarea{
+height:120px;
+resize:none;
+}
+
+.publish-btn{
+background:#d4a017;
+color:#0B1F4B;
+border:none;
+padding:12px 25px;
+border-radius:8px;
+font-weight:700;
+cursor:pointer;
+margin-top:15px;
+}
+
+.table-box{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+overflow-x:auto;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+th{
+background:#0B1F4B;
+color:white;
+padding:14px;
+}
+
+td{
+padding:14px;
+border-bottom:1px solid #eee;
+}
+
+.badge{
+background:#28a745;
+color:white;
+padding:5px 10px;
+border-radius:20px;
+font-size:12px;
+}
+
+.action-btn{
+background:#d4a017;
+border:none;
+padding:8px 12px;
+border-radius:6px;
+cursor:pointer;
+margin-right:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+<h1>R.S. Public School ERP</h1>
+<h3>Notice & Notification Center</h3>
+</div>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+<h3>Total Notices</h3>
+<p>125</p>
+</div>
+
+<div class="card">
+<h3>Published</h3>
+<p>110</p>
+</div>
+
+<div class="card">
+<h3>Draft</h3>
+<p>10</p>
+</div>
+
+<div class="card">
+<h3>Important</h3>
+<p>5</p>
+</div>
+
+</div>
+
+<div class="form-box">
+
+<h2>Create New Notice</h2>
+
+<div class="form-grid">
+
+<input type="text" placeholder="Notice Title">
+
+<select>
+<option>Select Notice Type</option>
+<option>General Notice</option>
+<option>Holiday Notice</option>
+<option>Exam Notice</option>
+<option>Admission Notice</option>
+<option>Emergency Alert</option>
+</select>
+
+<select>
+<option>Target Audience</option>
+<option>All</option>
+<option>Students</option>
+<option>Teachers</option>
+<option>Parents</option>
+</select>
+
+<input type="date">
+
+<input type="date">
+
+<input type="file">
+
+</div>
+
+<br>
+
+<textarea placeholder="Write Notice Details Here..."></textarea>
+
+<br>
+
+<button class="publish-btn">
+Publish & Send Notification
+</button>
+
+</div>
+
+<div class="table-box">
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Title</th>
+<th>Type</th>
+<th>Audience</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>N001</td>
+<td>Summer Vacation</td>
+<td>Holiday</td>
+<td>All</td>
+<td><span class="badge">Published</span></td>
+<td>
+<button class="action-btn">Edit</button>
+<button class="action-btn">Notify</button>
+</td>
+</tr>
+
+<tr>
+<td>N002</td>
+<td>Half Yearly Exam</td>
+<td>Exam</td>
+<td>Students</td>
+<td><span class="badge">Published</span></td>
+<td>
+<button class="action-btn">Edit</button>
+<button class="action-btn">Notify</button>
+</td>
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

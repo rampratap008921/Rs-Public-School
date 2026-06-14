@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Login | R.S. Public School</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    linear-gradient(rgba(11,31,75,.85),
+    rgba(11,31,75,.85)),
+    url('principal.jpg');
+
+    background-size:cover;
+    background-position:center;
+}
+
+.login-container{
+    width:420px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 15px 40px rgba(0,0,0,.4);
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    color:#ffffff;
+    font-size:32px;
+    font-weight:700;
+}
+
+.logo span{
+    color:#d4a017;
+    font-size:15px;
+}
+
+.input-group{
+    margin-bottom:20px;
+}
+
+.input-group label{
+    color:white;
+    display:block;
+    margin-bottom:8px;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    outline:none;
+    font-size:15px;
+}
+
+.login-btn{
+    width:100%;
+    padding:14px;
+    border:none;
+    border-radius:10px;
+    background:#d4a017;
+    color:#0B1F4B;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.login-btn:hover{
+    transform:translateY(-2px);
+}
+
+.footer-text{
+    text-align:center;
+    color:#ddd;
+    margin-top:20px;
+    font-size:13px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="logo">
+        <h1>Admin Login</h1>
+        <span>R.S. Public School ERP</span>
+    </div>
+
+    <form>
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" placeholder="Enter Username">
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" placeholder="Enter Password">
+        </div>
+
+        <button class="login-btn">
+            Login Dashboard
+        </button>
+
+    </form>
+
+    <div class="footer-text">
+        School Management System
+    </div>
+
+</div>
+
+</body>
+</html>

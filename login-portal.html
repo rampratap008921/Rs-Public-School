@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login Portal</title>
+<style>
+body{
+font-family:Poppins,sans-serif;
+background:#f4f7fc;
+margin:0;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:900px;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:20px;
+}
+
+.card{
+background:#0B1F4B;
+color:white;
+padding:40px;
+border-radius:15px;
+text-align:center;
+text-decoration:none;
+font-size:24px;
+font-weight:600;
+transition:.3s;
+}
+
+.card:hover{
+background:#d4a017;
+color:#0B1F4B;
+transform:translateY(-5px);
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="student-login.html" class="card">
+🎓 Student Login
+</a>
+
+<a href="teacher-login.html" class="card">
+👨‍🏫 Teacher Login
+</a>
+
+<a href="parent-login.html" class="card">
+👨‍👩‍👦 Parent Login
+</a>
+
+<a href="admin-login.html" class="card">
+⚙ Admin Login
+</a>
+
+</div>
+
+</body>
+</html>

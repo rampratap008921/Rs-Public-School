@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Dashboard</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+display:flex;
+background:#f4f7fc;
+}
+
+.sidebar{
+width:260px;
+height:100vh;
+background:#0B1F4B;
+color:white;
+padding:20px;
+}
+
+.sidebar h2{
+color:#d4a017;
+margin-bottom:30px;
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+margin:8px 0;
+color:white;
+text-decoration:none;
+border-radius:8px;
+}
+
+.sidebar a:hover{
+background:#d4a017;
+color:#0B1F4B;
+}
+
+.main{
+flex:1;
+padding:30px;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.card h3{
+color:#0B1F4B;
+}
+
+.card p{
+font-size:32px;
+font-weight:bold;
+color:#d4a017;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>R.S. Public School</h2>
+
+<a href="#">Dashboard</a>
+<a href="#">Students</a>
+<a href="#">Teachers</a>
+<a href="#">Attendance</a>
+<a href="#">Fees</a>
+<a href="#">Exams</a>
+<a href="#">Notices</a>
+<a href="#">Logout</a>
+
+</div>
+
+<div class="main">
+
+<h1>Admin Dashboard</h1>
+
+<br>
+
+<div class="cards">
+
+<div class="card">
+<h3>Students</h3>
+<p>1500</p>
+</div>
+
+<div class="card">
+<h3>Teachers</h3>
+<p>45</p>
+</div>
+
+<div class="card">
+<h3>Classes</h3>
+<p>25</p>
+</div>
+
+<div class="card">
+<h3>Admissions</h3>
+<p>120</p>
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

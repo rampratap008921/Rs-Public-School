@@ -30,9 +30,15 @@ header{background:var(--white);position:sticky;top:0;z-index:1000;box-shadow:0 2
 .logo-wrap{display:flex;align-items:center;gap:14px;}
 .logo-emblem{width: 100px;px;height: 100px;px;border-radius:50%;background:var(--navy);border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:900;font-size:18px;color:var(--gold);letter-spacing:1px;flex-shrink:0;}
 .logo-text{display:flex;flex-direction:column;}
-.logo-name{font-family:var(--font-display);font-weight:800;font: size 36px;px;color:red;line-height:1.1;}
-.logo-sub{font-size:18px;color:var(--text-muted);letter-spacing:.5px;margin-top:2px;}
-.logo-affil{font-size:15px;color:var(--gold);font-weight:700;letter-spacing:.8px;margin-top:1px;}
+.logo-name{
+font-family:var(--font-display);
+font-weight:600;
+font-size:40px;
+color:#d4a017;
+line-height:1.1;
+}
+.logo-sub{font: size 16px;px;color:var(--text-muted);letter-spacing:.5px;margin-top:2px;}
+.logo-affil{font-size:13px;color:var(--gold);font-weight:700;letter-spacing:.8px;margin-top:1px;}
 nav{display:flex;align-items:center;gap:4px;}
 nav a{font-size:13.5px;font-weight:500;color:var(--navy);padding:8px 14px;border-radius:6px;transition:all var(--transition);white-space:nowrap;}
 nav a:hover{background:var(--gold-pale);color:var(--gold);}
@@ -244,6 +250,64 @@ text-decoration:none;
 font-weight:600;
 margin-left:10px;
 display:inline-block;
+}
+
+.faculty-section{
+    padding:80px 5%;
+    background:#f8f9fc;
+}
+
+.faculty-section h2{
+    text-align:center;
+    color:#0B1F4B;
+    font-size:42px;
+    margin-bottom:40px;
+}
+
+.faculty-slider{
+    display:flex;
+    gap:25px;
+    overflow-x:auto;
+    scroll-behavior:smooth;
+    padding-bottom:15px;
+}
+
+.faculty-slider::-webkit-scrollbar{
+    height:10px;
+}
+
+.faculty-slider::-webkit-scrollbar-thumb{
+    background:#d4a017;
+    border-radius:20px;
+}
+
+.faculty-card{
+    min-width:300px;
+    background:#fff;
+    border-radius:20px;
+    padding:15px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.faculty-card img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+    border:4px solid #d4a017;
+    border-radius:20px;
+}
+
+.faculty-card h3{
+    margin-top:15px;
+    color:#0B1F4B;
+    font-size:28px;
+}
+
+.faculty-card p{
+    color:#d4a017;
+    font-size:20px;
+    font-weight:600;
 }
 </style>
 </head>
@@ -471,6 +535,148 @@ display:inline-block;
       </div>
     </div>
   </div>
+</section>
+
+<section class="faculty-section">
+
+<h2>Our Faculty Members</h2>
+
+<div class="faculty-slider">
+
+<div class="faculty-card">
+<img src="image/ram.jpg.jpeg" alt="Faculty">
+<h3>Ram Pratap Prajapati</h3>
+<p>I.T. Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty2.jpg" alt="Faculty">
+<h3>Ms. Priya Sharma</h3>
+<p>Science Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty3.jpg" alt="Faculty">
+<h3>Mr. Amit Verma</h3>
+<p>English Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty4.jpg" alt="Faculty">
+<h3>Mrs. Neha Gupta</h3>
+<p>Computer Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty5.jpg" alt="Faculty">
+<h3>Mr. Rajesh Singh</h3>
+<p>Mathematics Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty6.jpg" alt="Faculty">
+<h3>Mrs. Pooja Mishra</h3>
+<p>Hindi Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty7.jpg" alt="Faculty">
+<h3>Mr. Vivek Kumar</h3>
+<p>Physics Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty8.jpg" alt="Faculty">
+<h3>Mrs. Renu Singh</h3>
+<p>Chemistry Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty9.jpg" alt="Faculty">
+<h3>Mr. Deepak Verma</h3>
+<p>Biology Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty10.jpg" alt="Faculty">
+<h3>Mrs. Anjali Gupta</h3>
+<p>Primary Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty11.jpg" alt="Faculty">
+<h3>Mr. Ashok Mishra</h3>
+<p>Social Science Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty12.jpg" alt="Faculty">
+<h3>Mrs. Kiran Yadav</h3>
+<p>Primary Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty13.jpg" alt="Faculty">
+<h3>Mr. Rohit Singh</h3>
+<p>Sports Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty14.jpg" alt="Faculty">
+<h3>Mrs. Shalini Verma</h3>
+<p>Art Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty15.jpg" alt="Faculty">
+<h3>Mr. Sunil Kumar</h3>
+<p>Music Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty16.jpg" alt="Faculty">
+<h3>Mrs. Nidhi Singh</h3>
+<p>English Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty17.jpg" alt="Faculty">
+<h3>Mr. Sandeep Yadav</h3>
+<p>Mathematics Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty18.jpg" alt="Faculty">
+<h3>Mrs. Rekha Gupta</h3>
+<p>Science Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty19.jpg" alt="Faculty">
+<h3>Mr. Manish Verma</h3>
+<p>Computer Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty20.jpg" alt="Faculty">
+<h3>Mrs. Suman Mishra</h3>
+<p>Primary Teacher</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty21.jpg" alt="Faculty">
+<h3>Mr. Ajay Singh</h3>
+<p>Accountant</p>
+</div>
+
+<div class="faculty-card">
+<img src="image/faculty22.jpg" alt="Faculty">
+<h3>Mrs. Priti Yadav</h3>
+<p>Librarian</p>
+</div>
+
+</div>
+
 </section>
 <section id="facilities">
   <div class="container">

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Admission | R.S. Public School ERP</title>
+
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/topbar.css">
+<link rel="stylesheet" href="css/admission.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<div id="sidebar-container"></div>
+<div id="topbar-container"></div>
+
+<div class="page-content">
+
+    <div class="page-header">
+        <h1>Student Admission Form</h1>
+        <p>Add New Student Record</p>
+    </div>
+
+    <form id="admissionForm">
+
+        <!-- Admission Details -->
+        <div class="card">
+            <h2>Admission Details</h2>
+
+            <div class="grid">
+                <div>
+                    <label>Admission Number</label>
+                    <input type="text" id="admissionNo" readonly>
+                </div>
+
+                <div>
+                    <label>Admission Date</label>
+                    <input type="date" id="admissionDate">
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Details -->
+        <div class="card">
+            <h2>Student Details</h2>
+
+            <div class="grid">
+                <input type="text" id="studentName" placeholder="Student Name">
+                <input type="date" id="dob">
+                <input type="text" id="aadhar" placeholder="Aadhar Number">
+                <select id="gender">
+                    <option>Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Parent Details -->
+        <div class="card">
+            <h2>Parent Details</h2>
+
+            <div class="grid">
+                <input type="text" id="fatherName" placeholder="Father Name">
+                <input type="text" id="motherName" placeholder="Mother Name">
+                <input type="text" id="mobile" placeholder="Mobile Number">
+                <input type="email" id="email" placeholder="Email">
+            </div>
+        </div>
+
+        <!-- Address -->
+        <div class="card">
+            <h2>Address Details</h2>
+
+            <textarea id="address" rows="4" placeholder="Full Address"></textarea>
+        </div>
+
+        <!-- Academic -->
+        <div class="card">
+            <h2>Academic Details</h2>
+
+            <div class="grid">
+                <select id="class">
+                    <option>Select Class</option>
+                    <option>Nursery</option>
+                    <option>LKG</option>
+                    <option>UKG</option>
+                    <option>1st</option>
+                    <option>2nd</option>
+                </select>
+
+                <select id="section">
+                    <option>Select Section</option>
+                    <option>A</option>
+                    <option>B</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Upload -->
+        <div class="card">
+            <h2>Documents</h2>
+
+            <input type="file" id="photo">
+            <br><br>
+
+            <img id="preview" width="120">
+        </div>
+
+        <button type="submit" class="save-btn">
+            Save Student
+        </button>
+
+    </form>
+
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/topbar.js"></script>
+<script src="js/admission.js"></script>
+
+</body>
+</html>

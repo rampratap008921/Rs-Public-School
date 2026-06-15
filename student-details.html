@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Details</title>
+
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/topbar.css">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#f4f7fc;
+}
+
+.main-content{
+padding:30px;
+margin-left:260px;
+}
+
+.page-title{
+margin-bottom:25px;
+}
+
+.page-title h1{
+color:#0B1F4B;
+}
+
+.profile-card{
+background:white;
+border-radius:15px;
+padding:25px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+display:flex;
+gap:30px;
+margin-bottom:25px;
+}
+
+.profile-card img{
+width:180px;
+height:180px;
+object-fit:cover;
+border-radius:15px;
+border:4px solid #d4a017;
+}
+
+.student-info{
+flex:1;
+}
+
+.student-info h2{
+color:#0B1F4B;
+margin-bottom:15px;
+}
+
+.info-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:15px;
+}
+
+.info-box{
+background:#f8f9fc;
+padding:12px;
+border-radius:8px;
+}
+
+.info-box strong{
+color:#0B1F4B;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:20px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.card h3{
+color:#0B1F4B;
+margin-bottom:10px;
+}
+
+.card p{
+font-size:26px;
+font-weight:700;
+color:#d4a017;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="sidebar-container"></div>
+<div id="topbar-container"></div>
+
+<div class="main-content">
+
+<div class="page-title">
+<h1>Student Details</h1>
+</div>
+
+<div class="profile-card">
+
+<img src="https://via.placeholder.com/180" alt="Student">
+
+<div class="student-info">
+
+<h2>Ram Kumar</h2>
+
+<div class="info-grid">
+
+<div class="info-box">
+<strong>Admission No:</strong><br>
+RSPS1001
+</div>
+
+<div class="info-box">
+<strong>Class:</strong><br>
+10th
+</div>
+
+<div class="info-box">
+<strong>Section:</strong><br>
+A
+</div>
+
+<div class="info-box">
+<strong>Roll No:</strong><br>
+21
+</div>
+
+<div class="info-box">
+<strong>Father Name:</strong><br>
+Shyam Kumar
+</div>
+
+<div class="info-box">
+<strong>Mother Name:</strong><br>
+Sita Devi
+</div>
+
+<div class="info-box">
+<strong>Mobile:</strong><br>
+9876543210
+</div>
+
+<div class="info-box">
+<strong>Address:</strong><br>
+Khutaha Bazar, Maharajganj
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card">
+<h3>Attendance</h3>
+<p>95%</p>
+</div>
+
+<div class="card">
+<h3>Fees Status</h3>
+<p>Paid</p>
+</div>
+
+<div class="card">
+<h3>Result</h3>
+<p>88%</p>
+</div>
+
+<div class="card">
+<h3>Notices</h3>
+<p>12</p>
+</div>
+
+</div>
+
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/topbar.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Student</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<style>
+.container{
+    max-width:900px;
+    margin:30px auto;
+    background:#fff;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.form-group{
+    display:flex;
+    flex-direction:column;
+}
+
+label{
+    font-weight:bold;
+    margin-bottom:5px;
+}
+
+input,select,textarea{
+    padding:10px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+textarea{
+    resize:none;
+}
+
+.full-width{
+    grid-column:1/3;
+}
+
+.btn{
+    background:#007bff;
+    color:white;
+    border:none;
+    padding:12px;
+    cursor:pointer;
+    border-radius:5px;
+    width:100%;
+    margin-top:15px;
+}
+
+.btn:hover{
+    background:#0056b3;
+}
+
+.student-photo{
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.student-photo img{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #007bff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h2>Edit Student Details</h2>
+
+    <div class="student-photo">
+        <img id="previewImage"
+        src="https://via.placeholder.com/120"
+        alt="Student Photo">
+    </div>
+
+    <form id="editStudentForm">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Admission No</label>
+                <input type="text" id="admissionNo" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Student Name</label>
+                <input type="text" id="studentName" required>
+            </div>
+
+            <div class="form-group">
+                <label>Father Name</label>
+                <input type="text" id="fatherName">
+            </div>
+
+            <div class="form-group">
+                <label>Mother Name</label>
+                <input type="text" id="motherName">
+            </div>
+
+            <div class="form-group">
+                <label>Class</label>
+                <select id="studentClass">
+                    <option>Nursery</option>
+                    <option>LKG</option>
+                    <option>UKG</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Section</label>
+                <input type="text" id="section">
+            </div>
+
+            <div class="form-group">
+                <label>Date of Birth</label>
+                <input type="date" id="dob">
+            </div>
+
+            <div class="form-group">
+                <label>Gender</label>
+                <select id="gender">
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Mobile Number</label>
+                <input type="tel" id="mobile">
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="email">
+            </div>
+
+            <div class="form-group full-width">
+                <label>Address</label>
+                <textarea id="address" rows="4"></textarea>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Student Photo</label>
+                <input type="file" id="photo">
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn">
+            Update Student
+        </button>
+
+    </form>
+
+</div>
+
+<script>
+
+// Photo Preview
+
+document.getElementById("photo")
+.addEventListener("change", function(){
+
+    const file = this.files[0];
+
+    if(file){
+
+        const reader = new FileReader();
+
+        reader.onload = function(e){
+
+            document.getElementById(
+            "previewImage"
+            ).src = e.target.result;
+
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
+});
+
+
+// Example Student Data Load
+
+window.onload = function(){
+
+    document.getElementById("admissionNo").value = "RS1001";
+    document.getElementById("studentName").value = "Rahul Kumar";
+    document.getElementById("fatherName").value = "Ramesh Kumar";
+    document.getElementById("motherName").value = "Sita Devi";
+    document.getElementById("studentClass").value = "8";
+    document.getElementById("section").value = "A";
+    document.getElementById("mobile").value = "9876543210";
+    document.getElementById("email").value = "rahul@gmail.com";
+
+}
+
+
+// Update Form
+
+document.getElementById("editStudentForm")
+.addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    alert("Student Record Updated Successfully!");
+
+    // Backend API Call Here
+
+});
+
+</script>
+
+</body>
+</html>

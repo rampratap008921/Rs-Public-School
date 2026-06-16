@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Teacher | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ERP Layout Sidebar Workspace Base */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Main Workspace Section */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* Top Header Action Module */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        /* Form Styling Elements Layout */
+        form {
+            width: 100%;
+        }
+
+        .section-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .section-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--bg-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-card-title i {
+            color: var(--secondary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.span-2 {
+            grid-column: span 2;
+        }
+
+        .form-group.span-4 {
+            grid-column: span 4;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            background-color: var(--white);
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(11, 31, 75, 0.1);
+        }
+
+        .form-control:disabled {
+            background-color: #f1f5f9;
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .form-radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            height: 40px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        .radio-label input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-color);
+        }
+
+        .file-upload-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Form Footer Operation Bar Button Layout */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-bottom: 50px;
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #123070;
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+
+        .btn-danger:hover {
+            background-color: #dc2626;
+        }
+
+        /* System Operations Modal Success Banner */
+        .alert-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: var(--white);
+            padding: 16px 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.4s ease-in-out;
+            font-weight: 500;
+        }
+
+        .alert-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive UI Breakpoints Design Layout */
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .form-group.span-2 {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+            .brand {
+                margin-bottom: 15px;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.span-2, .form-group.span-4 {
+                grid-column: span 1;
+            }
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="teachers-management.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="header-actions">
+            <div class="page-title">
+                <h1>Add New Teacher</h1>
+                <p>Register new academic faculty entity configuration profile into operational enterprise database.</p>
+            </div>
+        </div>
+
+        <form id="addTeacherForm" name="addTeacherForm" enctype="multipart/form-data" novalidate>
+            
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-user"></i> Section 1: Personal Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="teacherId">Teacher ID</label>
+                        <input type="text" id="teacherId" name="teacherId" class="form-control" readonly value="TCH1001">
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherName">Teacher Name <span class="required">*</span></label>
+                        <input type="text" id="teacherName" name="teacherName" class="form-control" placeholder="Enter full name" required>
+                        <div class="error-message" id="errTeacherName">Teacher name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fatherName">Father's Name <span class="required">*</span></label>
+                        <input type="text" id="fatherName" name="fatherName" class="form-control" placeholder="Enter father's name" required>
+                        <div class="error-message" id="errFatherName">Father's name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="motherName">Mother's Name <span class="required">*</span></label>
+                        <input type="text" id="motherName" name="motherName" class="form-control" placeholder="Enter mother's name" required>
+                        <div class="error-message" id="errMotherName">Mother's name is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option value="">-- Select Gender --</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="error-message" id="errGender">Please select a gender.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="date" id="dob" name="dob" class="form-control" required>
+                        <div class="error-message" id="errDob">Date of birth is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodGroup">Blood Group</label>
+                        <select id="bloodGroup" name="bloodGroup" class="form-control">
+                            <option value="">-- Select Blood Group --</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="maritalStatus">Marital Status</label>
+                        <select id="maritalStatus" name="maritalStatus" class="form-control">
+                            <option value="">-- Select Marital Status --</option>
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-address-book"></i> Section 2: Contact Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" placeholder="10-digit mobile number" maxlength="10" required>
+                        <div class="error-message" id="errMobileNumber">Enter a valid 10-digit mobile number.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="alternateMobileNumber">Alternate Mobile Number</label>
+                        <input type="tel" id="alternateMobileNumber" name="alternateMobileNumber" class="form-control" placeholder="Alternate mobile number" maxlength="10">
+                        <div class="error-message" id="errAltMobileNumber">Enter a valid 10-digit mobile number.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="emailAddress">Email Address <span class="required">*</span></label>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-control" placeholder="example@schoolerp.com" required>
+                        <div class="error-message" id="errEmailAddress">Enter a valid email address.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="address">Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" class="form-control" placeholder="Street layout house flat details location" required>
+                        <div class="error-message" id="errAddress">Address block field tracking required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City <span class="required">*</span></label>
+                        <input type="text" id="city" name="city" class="form-control" placeholder="City" required>
+                        <div class="error-message" id="errCity">City field value required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State <span class="required">*</span></label>
+                        <input type="text" id="state" name="state" class="form-control" placeholder="State" required>
+                        <div class="error-message" id="errState">State layer text required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">Pincode <span class="required">*</span></label>
+                        <input type="text" id="pincode" name="pincode" class="form-control" placeholder="6-digit code" maxlength="6" required>
+                        <div class="error-message" id="errPincode">Enter a valid 6-digit postal pincode.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-briefcase"></i> Section 3: Professional Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" class="form-control" required>
+                            <option value="">-- Select Department --</option>
+                            <option value="Primary Department">Primary Department</option>
+                            <option value="Secondary Department">Secondary Department</option>
+                            <option value="Higher Secondary Department">Higher Secondary Department</option>
+                            <option value="Languages">Languages</option>
+                            <option value="Sciences">Sciences</option>
+                            <option value="Mathematics">Mathematics</option>
+                        </select>
+                        <div class="error-message" id="errDepartment">Please assign target department.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="designation">Designation <span class="required">*</span></label>
+                        <input type="text" id="designation" name="designation" class="form-control" placeholder="e.g. PGT, TGT, PRT" required>
+                        <div class="error-message" id="errDesignation">Designation field configuration required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualification">Qualification <span class="required">*</span></label>
+                        <input type="text" id="qualification" name="qualification" class="form-control" placeholder="e.g. B.Ed, M.Sc, Ph.D" required>
+                        <div class="error-message" id="errQualification">Qualification record required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Specialization</label>
+                        <input type="text" id="specialization" name="specialization" class="form-control" placeholder="e.g. Organic Chemistry">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Experience (Years)</label>
+                        <input type="number" id="experience" name="experience" class="form-control" min="0" max="50" placeholder="Years of experience">
+                    </div>
+                    <div class="form-group">
+                        <label for="joiningDate">Joining Date <span class="required">*</span></label>
+                        <input type="date" id="joiningDate" name="joiningDate" class="form-control" required>
+                        <div class="error-message" id="errJoiningDate">Specify formal institution joining date.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="classTeacherOf">Class Teacher Of</label>
+                        <select id="classTeacherOf" name="classTeacherOf" class="form-control">
+                            <option value="">-- None --</option>
+                            <option value="Class 1-A">Class 1-A</option>
+                            <option value="Class 5-B">Class 5-B</option>
+                            <option value="Class 9-A">Class 9-A</option>
+                            <option value="Class 10-C">Class 10-C</option>
+                            <option value="Class 11-Science">Class 11-Science</option>
+                            <option value="Class 12-Commerce">Class 12-Commerce</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="assignedSubjects">Assigned Subjects <span class="required">*</span></label>
+                        <input type="text" id="assignedSubjects" name="assignedSubjects" class="form-control" placeholder="Comma separated subjects list" required>
+                        <div class="error-message" id="errAssignedSubjects">Provide mapped teaching subject scope details.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label>Employment Type <span class="required">*</span></label>
+                        <div class="form-radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="employmentType" value="Full Time" checked> Full Time
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="employmentType" value="Part Time"> Part Time
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="employmentType" value="Contract"> Contract
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-money-bill-wave"></i> Section 4: Salary Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="basicSalary">Basic Salary <span class="required">*</span></label>
+                        <input type="number" id="basicSalary" name="basicSalary" class="form-control" placeholder="0.00" min="0" required>
+                        <div class="error-message" id="errBasicSalary">Provide valid structured initial basic salary.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="allowances">Allowances</label>
+                        <input type="number" id="allowances" name="allowances" class="form-control" placeholder="0.00" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="deductions">Deductions</label>
+                        <input type="number" id="deductions" name="deductions" class="form-control" placeholder="0.00" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="netSalary">Net Salary (Auto Calculated)</label>
+                        <input type="number" id="netSalary" name="netSalary" class="form-control" placeholder="0.00" readonly value="0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-building-columns"></i> Section 5: Bank Information
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="bankName">Bank Name <span class="required">*</span></label>
+                        <input type="text" id="bankName" name="bankName" class="form-control" placeholder="Bank Name" required>
+                        <div class="error-message" id="errBankName">Bank clearing identifier text required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountHolderName">Account Holder Name <span class="required">*</span></label>
+                        <input type="text" id="accountHolderName" name="accountHolderName" class="form-control" placeholder="As per bank passbook" required>
+                        <div class="error-message" id="errAccountHolderName">Account holder legal registration entity text needed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number <span class="required">*</span></label>
+                        <input type="text" id="accountNumber" name="accountNumber" class="form-control" placeholder="Bank Account Number" required>
+                        <div class="error-message" id="errAccountNumber">Valid core clearing routing number context required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ifscCode">IFSC Code <span class="required">*</span></label>
+                        <input type="text" id="ifscCode" name="ifscCode" class="form-control" placeholder="11 character alphanumeric code" maxlength="11" required>
+                        <div class="error-message" id="errIfscCode">Enter valid 11-digit system routing clearance IFSC identifier.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-folder-open"></i> Section 6: Verification Documentation Data Mappings
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="teacherPhoto">Teacher Photo Upload <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="teacherPhoto" name="teacherPhoto" class="form-control" accept="image/*" required>
+                        </div>
+                        <div class="error-message" id="errTeacherPhoto">Primary teacher verification photography profile image structure required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaarNumber">Aadhaar Number <span class="required">*</span></label>
+                        <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-control" placeholder="12 digit standard national unique ID" maxlength="12" required>
+                        <div class="error-message" id="errAadhaarNumber">Enter valid structural 12 digit personal database verification ID context.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="aadhaarUpload">Aadhaar Scan Upload <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="aadhaarUpload" name="aadhaarUpload" class="form-control" accept=".pdf,image/*" required>
+                        </div>
+                        <div class="error-message" id="errAadhaarUpload">Aadhaar document layout scan needed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="panNumber">PAN Number <span class="required">*</span></label>
+                        <input type="text" id="panNumber" name="panNumber" class="form-control" placeholder="10 digit alphanumeric tax profile tracking" maxlength="10" required>
+                        <div class="error-message" id="errPanNumber">Enter valid structured 10 character tax allocation validation ID code.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="panUpload">PAN Scan Upload <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="panUpload" name="panUpload" class="form-control" accept=".pdf,image/*" required>
+                        </div>
+                        <div class="error-message" id="errPanUpload">Tax account document upload required.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="qualificationUpload">Qualification Certificate Upload (PDF) <span class="required">*</span></label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="qualificationUpload" name="qualificationUpload" class="form-control" accept=".pdf" required>
+                        </div>
+                        <div class="error-message" id="errQualificationUpload">Academic validation transcript data mapping certificate file mandatory.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title">
+                    <i class="fa-solid fa-shield-halved"></i> Section 7: System Identity Allocation & Authentication Layout
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="username">Username <span class="required">*</span></label>
+                        <input type="text" id="username" name="username" class="form-control" placeholder="Unique system login handle" required>
+                        <div class="error-message" id="errUsername">Platform tracking identifier key is required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password <span class="required">*</span></label>
+                        <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                        <div class="error-message" id="errPassword">Password specification configuration entry mandatory.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="••••••••" required>
+                        <div class="error-message" id="errConfirmPassword">Passwords matching state check failed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <div class="form-radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="Active" checked> Active
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="status" value="Inactive"> Inactive
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="teachers-management.html" class="btn btn-secondary" id="btnCancel">Cancel</a>
+                <button type="button" class="btn btn-danger" id="btnReset">Reset Form</button>
+                <button type="submit" class="btn btn-primary" id="btnSave">Save Teacher Record</button>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="alert-toast" id="successToast">
+        <i class="fa-solid fa-circle-check fa-lg"></i>
+        <span>Data Matrix Synchronization Active: Teacher instance created cleanly inside local record layouts.</span>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeFormEngine();
+        });
+
+        function initializeFormEngine() {
+            autoGenerateTeacherUniqueSequenceId();
+            configureSalaryAutoCalculationPipeline();
+            setupFormInteractivitySubmissionPipeline();
+        }
+
+        /**
+         * PSEUDO UNIQUE SCHEMATIC TRACKING KEYS ENGINE
+         * Generates pseudo persistent database unique sequence identifiers
+         */
+        function autoGenerateTeacherUniqueSequenceId() {
+            // Emulates typical runtime primary autoincrement calculations tracking mapping keys sequence
+            const randomSeedSequence = Math.floor(1000 + Math.random() * 9000);
+            document.getElementById("teacherId").value = `TCH${randomSeedSequence}`;
+        }
+
+        /**
+         * MATH PIPELINE TRANSACTION TRACKING PIPELINES
+         * Synchronizes state checks on structural basic financial salary components matrix metrics
+         */
+        function configureSalaryAutoCalculationPipeline() {
+            const basicInput = document.getElementById("basicSalary");
+            const allowanceInput = document.getElementById("allowances");
+            const deductionInput = document.getElementById("deductions");
+
+            const executeCalculation = () => {
+                const basic = parseFloat(basicInput.value) || 0;
+                const allowance = parseFloat(allowanceInput.value) || 0;
+                const deduction = parseFloat(deductionInput.value) || 0;
+
+                // Net Salary Calculation Execution Formula Logic Mapping Context
+                const computedNetSalary = basic + allowance - deduction;
+                document.getElementById("netSalary").value = Math.max(0, computedNetSalary).toFixed(2);
+            };
+
+            basicInput.addEventListener("input", executeCalculation);
+            allowanceInput.addEventListener("input", executeCalculation);
+            deductionInput.addEventListener("input", executeCalculation);
+        }
+
+        /**
+         * MASTER TRANSACTION CONTROL HANDLER PIPELINE VALIDATION ENGINE
+         */
+        function setupFormInteractivitySubmissionPipeline() {
+            const form = document.getElementById("addTeacherForm");
+            const resetBtn = document.getElementById("btnReset");
+
+            resetBtn.addEventListener("click", () => {
+                if(confirm("Are you sure you want to completely clear down all input parameters filled inside current workspace form context matrix?")) {
+                    form.reset();
+                    autoGenerateTeacherUniqueSequenceId();
+                    document.getElementById("netSalary").value = "0.00";
+                    clearFormValidationBanners();
+                }
+            });
+
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                clearFormValidationBanners();
+
+                if (validateFormLayoutConstraints()) {
+                    executePersistanceTransactionPipeline();
+                } else {
+                    focusFirstInvalidInputElement();
+                }
+            });
+        }
+
+        /**
+         * DATA MATRICES REGEX PATTERNS LOGICAL ENGINE
+         * Evaluates business level layout processing logic data type structures
+         */
+        function validateFormLayoutConstraints() {
+            let integrityCheckPassed = true;
+
+            // 1. Text Field Length Verification Tracking Logic
+            const requiredFields = [
+                { id: "teacherName", errId: "errTeacherName" },
+                { id: "fatherName", errId: "errFatherName" },
+                { id: "motherName", errId: "errMotherName" },
+                { id: "gender", errId: "errGender" },
+                { id: "dob", errId: "errDob" },
+                { id: "mobileNumber", errId: "errMobileNumber" },
+                { id: "emailAddress", errId: "errEmailAddress" },
+                { id: "address", errId: "errAddress" },
+                { id: "city", errId: "errCity" },
+                { id: "state", errId: "errState" },
+                { id: "pincode", errId: "errPincode" },
+                { id: "department", errId: "errDepartment" },
+                { id: "designation", errId: "errDesignation" },
+                { id: "qualification", errId: "errQualification" },
+                { id: "assignedSubjects", errId: "errAssignedSubjects" },
+                { id: "basicSalary", errId: "errBasicSalary" },
+                { id: "bankName", errId: "errBankName" },
+                { id: "accountHolderName", errId: "errAccountHolderName" },
+                { id: "accountNumber", errId: "errAccountNumber" },
+                { id: "ifscCode", errId: "errIfscCode" },
+                { id: "teacherPhoto", errId: "errTeacherPhoto" },
+                { id: "aadhaarNumber", errId: "errAadhaarNumber" },
+                { id: "aadhaarUpload", errId: "errAadhaarUpload" },
+                { id: "panNumber", errId: "errPanNumber" },
+                { id: "panUpload", errId: "errPanUpload" },
+                { id: "qualificationUpload", errId: "errQualificationUpload" },
+                { id: "username", errId: "errUsername" },
+                { id: "password", errId: "errPassword" },
+                { id: "confirmPassword", errId: "errConfirmPassword" },
+                { id: "joiningDate", errId: "errJoiningDate" }
+            ];
+
+            requiredFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (!inputElement || !inputElement.value.trim()) {
+                    displayValidationErrorMessage(field.errId, true);
+                    integrityCheckPassed = false;
+                }
+            });
+
+            // 2. Mobile Numbers Verification RegEx Format Engines
+            const mobileRegexPattern = /^[6-9]\d{9}$/;
+            const primaryMobile = document.getElementById("mobileNumber").value.trim();
+            if (primaryMobile && !mobileRegexPattern.test(primaryMobile)) {
+                displayValidationErrorMessage("errMobileNumber", true, "Provide valid 10-digit primary structural communication network numeric code entry.");
+                integrityCheckPassed = false;
+            }
+
+            const altMobile = document.getElementById("alternateMobileNumber").value.trim();
+            if (altMobile && !mobileRegexPattern.test(altMobile)) {
+                displayValidationErrorMessage("errAltMobileNumber", true);
+                integrityCheckPassed = false;
+            }
+
+            // 3. Email Pattern Logic Constraints Matching Matrix Engine
+            const emailRegexPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const targetEmailAddressStr = document.getElementById("emailAddress").value.trim();
+            if (targetEmailAddressStr && !emailRegexPattern.test(targetEmailAddressStr)) {
+                displayValidationErrorMessage("errEmailAddress", true, "Format mismatch pattern check against platform routing criteria matrix layers failed.");
+                integrityCheckPassed = false;
+            }
+
+            // 4. Postal Code Field Processing Metrics Engine Tracker Block
+            const pincodeRegexPattern = /^\d{6}$/;
+            const currentZipPincodeStr = document.getElementById("pincode").value.trim();
+            if (currentZipPincodeStr && !pincodeRegexPattern.test(currentZipPincodeStr)) {
+                displayValidationErrorMessage("errPincode", true);
+                integrityCheckPassed = false;
+            }
+
+            // 5. Advanced National Identity Verification String Format Validation
+            const aadhaarPattern = /^\d{12}$/;
+            const currentAadhaarDataStr = document.getElementById("aadhaarNumber").value.trim();
+            if (currentAadhaarDataStr && !aadhaarPattern.test(currentAadhaarDataStr)) {
+                displayValidationErrorMessage("errAadhaarNumber", true);
+                integrityCheckPassed = false;
+            }
+
+            const panPattern = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i;
+            const currentPanDataStr = document.getElementById("panNumber").value.trim();
+            if (currentPanDataStr && !panPattern.test(currentPanDataStr)) {
+                displayValidationErrorMessage("errPanNumber", true);
+                integrityCheckPassed = false;
+            }
+
+            // 6. Identity Clearance Password Equality State Check Processing Pipeline Engine
+            const passStr = document.getElementById("password").value;
+            const confPassStr = document.getElementById("confirmPassword").value;
+            if (passStr !== confPassStr) {
+                displayValidationErrorMessage("errConfirmPassword", true, "Cryptography synchronization validation match error: Authentication configuration parameters equality verification failed.");
+                integrityCheckPassed = false;
+            }
+
+            return integrityCheckPassed;
+        }
+
+        function displayValidationErrorMessage(elementId, stateVisibility, alternateCustomMessageText = null) {
+            const messageDOMTarget = document.getElementById(elementId);
+            if (messageDOMTarget) {
+                if (alternateCustomMessageText) {
+                    messageDOMTarget.textContent = alternateCustomMessageText;
+                }
+                messageDOMTarget.style.display = stateVisibility ? "block" : "none";
+                
+                // Track dynamic visualization highlight border modifications context layout wrapper properties
+                const associatedInputId = elementId.replace("err", "");
+                const lookupKey = associatedInputId.charAt(0).toLowerCase() + associatedInputId.slice(1);
+                const inputTargetNode = document.getElementById(lookupKey);
+                if (inputTargetNode && stateVisibility) {
+                    inputTargetNode.style.borderColor = "var(--danger)";
+                }
+            }
+        }
+
+        function clearFormValidationBanners() {
+            const clearBanners = document.querySelectorAll(".error-message");
+            clearBanners.forEach(banner => {
+                banner.style.display = "none";
+            });
+
+            const inputs = document.querySelectorAll(".form-control");
+            inputs.forEach(input => {
+                input.style.borderColor = "var(--border-color)";
+            });
+        }
+
+        function focusFirstInvalidInputElement() {
+            const firstErrorVisible = Array.from(document.querySelectorAll(".error-message")).find(b => b.style.display === "block");
+            if (firstErrorVisible) {
+                const associatedInputId = firstErrorVisible.id.replace("err", "");
+                const targetKeyString = associatedInputId.charAt(0).toLowerCase() + associatedInputId.slice(1);
+                const focusTarget = document.getElementById(targetKeyString);
+                if (focusTarget) {
+                    focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    focusTarget.focus();
+                }
+            }
+        }
+
+        /**
+         * CLIENT AGENT STORAGE OPERATIONS PIPELINE HANDSHAKE REPLICATION HOOK
+         */
+        function executePersistanceTransactionPipeline() {
+            const activeFormDOMRef = document.getElementById("addTeacherForm");
+            const dataCarrierPayloadBuilder = new FormData(activeFormDOMRef);
+
+            // Serialization Object Extraction Mapping Architecture
+            const plainSerializedStatePayload = {};
+            dataCarrierPayloadBuilder.forEach((value, key) => {
+                if (!(value instanceof File)) {
+                    plainSerializedStatePayload[key] = value;
+                } else {
+                    plainSerializedStatePayload[key] = value.name; // Keep tracking descriptor strings
+                }
+            });
+
+            console.log("Structured System Processing Architecture Payload Data Dump Successfully Constructed:", plainSerializedStatePayload);
+
+            /* BACKEND NODEJS API ENDPOINT STRUCTURAL DATA HANDSHAKE BRIDGE REFERENCE NOTE:
+             * Operational Destination Path Route Target: POST /api/teachers
+             *
+             * =========================================================================================
+             * Express ROUTE CONTROLLER FRAMEWORK IMPLEMENTATION BLUEPRINT HOOK EXAMPLES:
+             * =========================================================================================
+             * app.post('/api/teachers', upload.fields([
+             * { name: 'teacherPhoto', maxCount: 1 },
+             * { name: 'aadhaarUpload', maxCount: 1 },
+             * { name: 'panUpload', maxCount: 1 },
+             * { name: 'qualificationUpload', maxCount: 1 }
+             * ]), async (req, res) => {
+             * try {
+             * const { teacherId, teacherName, fatherName, motherName, gender, dob, mobileNumber, emailAddress, address, city, state, pincode, department, designation, qualification, assignedSubjects, basicSalary, allowances, deductions, netSalary, bankName, accountHolderName, accountNumber, ifscCode, username, password, status } = req.body;
+             *
+             * // Apply cryptographically secure password structural encryption algorithms before target storage writing
+             * const securedPasswordHash = await bcrypt.hash(password, 10);
+             *
+             * const insertQueryStatementStr = `INSERT INTO teachers_master (teacher_id, name, father_name, mother_name, gender, dob, mobile, email, address, city, state, pincode, department, designation, qualification, assigned_subjects, basic_salary, allowances, deductions, net_salary, bank_name, acc_holder, acc_no, ifsc, username, password_hash, status) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+             *
+             * await db.query(insertQueryStatementStr, [teacherId, teacherName, fatherName, motherName, gender, dob, mobileNumber, emailAddress, address, city, state, pincode, department, designation, qualification, assignedSubjects, basicSalary, allowances, deductions, netSalary, bankName, accountHolderName, accountNumber, ifscCode, username, securedPasswordHash, status]);
+             *
+             * return res.status(201).json({ success: true, message: 'Teacher operational profile structure created cleanly inside master school enterprise cluster.' });
+             * } catch(err) {
+             * return res.status(500).json({ success: false, error: err.message });
+             * }
+             * });
+             */
+
+            // Trigger Runtime Notification Success Alert Animations Module Layer Context UI
+            const successToastNode = document.getElementById("successToast");
+            successToastNode.classList.add("show");
+
+            // Block interactivity system states to insulate database commit processing sequence transitions
+            document.getElementById("btnSave").disabled = true;
+
+            setTimeout(() => {
+                successToastNode.classList.remove("show");
+                // Navigate back inside the scope mapping workflow index records tracker view engine layer
+                window.location.href = "teachers-management.html";
+            }, 3500);
+        }
+    </script>
+</body>
+</html>

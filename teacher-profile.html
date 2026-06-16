@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Profile | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ERP Layout Sidebar Workspace Base */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Main Workspace Section */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* Profile Top Header Module Card */
+        .profile-header-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .profile-meta-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-large-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border-color);
+        }
+
+        .profile-title-info h2 {
+            font-size: 22px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-title-info p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .badge-active { background-color: #e6f4ea; color: var(--success); }
+        .badge-inactive { background-color: #fce8e6; color: var(--danger); }
+        .badge-paid { background-color: #e6f4ea; color: var(--success); }
+
+        .header-action-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background-color: #123070; }
+        
+        .btn-secondary { background-color: var(--white); color: var(--primary-color); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+        
+        .btn-warning { background-color: var(--secondary-color); color: var(--primary-color); font-weight: 600; }
+        .btn-warning:hover { background-color: #bfa015; }
+
+        /* Multi-Column Workspace Architecture */
+        .profile-grid-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .profile-main-pane, .profile-side-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .info-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card-title i { color: var(--secondary-color); }
+
+        /* Data Matrix Output Layout Layouts */
+        .details-layout-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .details-layout-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .data-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .data-item.full-width {
+            grid-column: span 3;
+        }
+
+        .data-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .data-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        /* Attendance Progress Components */
+        .attendance-analytics-module {
+            margin-top: 15px;
+        }
+
+        .progress-bar-track {
+            background-color: #e2e8f0;
+            height: 12px;
+            border-radius: 50px;
+            overflow: hidden;
+            margin-top: 8px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-fill {
+            background-color: var(--success);
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s ease;
+        }
+
+        /* Document Vault Layout Components */
+        .document-vault-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background-color: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            margin-bottom: 10px;
+        }
+
+        .doc-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .doc-meta i {
+            font-size: 20px;
+            color: #ef4444;
+        }
+
+        .doc-action-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-mini-action {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .btn-mini-action:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        /* Timeline Metric Log Streams Components */
+        .activity-stream-timeline {
+            position: relative;
+            padding-left: 20px;
+            border-left: 2px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stream-node {
+            position: relative;
+        }
+
+        .stream-node::before {
+            content: '';
+            position: absolute;
+            left: -27px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--white);
+        }
+
+        .stream-node-time {
+            font-size: 11px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .stream-node-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 2px;
+        }
+
+        /* Print Configuration Layout Layer Optimization Overrides */
+        @media print {
+            .sidebar, .header-action-btns, .btn-mini-action, .doc-action-links {
+                display: none !important;
+            }
+            body { background-color: #fff; }
+            .main-content { padding: 0; width: 100%; }
+            .profile-grid-container { grid-template-columns: 1fr; }
+            .info-card, .profile-header-card { box-shadow: none !important; border: 1px solid var(--border-color); }
+        }
+
+        /* Responsive Layout Grid Adaptation Breakpoints */
+        @media (max-width: 1200px) {
+            .profile-grid-container {
+                grid-template-columns: 1fr;
+            }
+            .details-layout-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .data-item.full-width {
+                grid-column: span 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 15px; }
+            .brand { margin-bottom: 15px; }
+            .main-content { padding: 15px; }
+            .profile-header-card { flex-direction: column; align-items: flex-start; }
+            .details-layout-grid, .details-layout-grid.two-col { grid-template-columns: 1fr; }
+            .data-item.full-width { grid-column: span 1; }
+            .header-action-btns .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="teachers-management.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
+    </div>
+
+    <div class="main-content" id="teacherProfileRoot">
+        
+        <div class="profile-header-card">
+            <div class="profile-meta-block">
+                <img src="" id="headPhoto" class="profile-large-avatar" alt="Faculty Photo">
+                <div class="profile-title-info">
+                    <h2 id="headName">--------</h2>
+                    <p><span id="headDesignation">----</span> | <span id="headDepartment">----</span></p>
+                    <p style="font-weight: 600; color: var(--primary-color);">ID: <span id="headTeacherId">----</span></p>
+                    <span id="headStatusBadge" class="badge">----</span>
+                </div>
+            </div>
+            <div class="header-action-btns">
+                <a href="teachers-management.html" class="btn btn-secondary" id="btnBack"><i class="fa-solid fa-arrow-left"></i> Back to Teachers</a>
+                <button type="button" class="btn btn-secondary" id="btnPrintProfile"><i class="fa-solid fa-print"></i> Print Profile</button>
+                <a href="" class="btn btn-secondary" id="btnAllocationLink"><i class="fa-solid fa-network-wired"></i> Class Allocation</a>
+                <a href="" class="btn btn-warning" id="btnEditLink"><i class="fa-solid fa-user-pen"></i> Edit Teacher</a>
+            </div>
+        </div>
+
+        <div class="profile-grid-container">
+            
+            <div class="profile-main-pane">
+                
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-address-card"></i> Personal Information</div>
+                    <div class="details-layout-grid" id="personalInfoMatrix">
+                        <div class="data-item">
+                            <span class="data-label">Teacher ID</span>
+                            <span class="data-value" id="lblTeacherId">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Teacher Name</span>
+                            <span class="data-value" id="lblTeacherName">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Father's Name</span>
+                            <span class="data-value" id="lblFatherName">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Mother's Name</span>
+                            <span class="data-value" id="lblMotherName">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Gender</span>
+                            <span class="data-value" id="lblGender">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Date of Birth</span>
+                            <span class="data-value" id="lblDob">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Blood Group</span>
+                            <span class="data-value" id="lblBloodGroup">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Marital Status</span>
+                            <span class="data-value" id="lblMaritalStatus">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Mobile Number</span>
+                            <span class="data-value" id="lblMobile">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Alternate Mobile</span>
+                            <span class="data-value" id="lblAltMobile">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Email Address</span>
+                            <span class="data-value" id="lblEmail">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Pincode</span>
+                            <span class="data-value" id="lblPincode">----</span>
+                        </div>
+                        <div class="data-item full-width">
+                            <span class="data-label">Full Residential Address</span>
+                            <span class="data-value" id="lblFullAddress">----</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-user-graduate"></i> Professional Information</div>
+                    <div class="details-layout-grid">
+                        <div class="data-item">
+                            <span class="data-label">Department</span>
+                            <span class="data-value" id="lblDepartment">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Designation</span>
+                            <span class="data-value" id="lblDesignation">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Qualification</span>
+                            <span class="data-value" id="lblQualification">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Specialization Scope</span>
+                            <span class="data-value" id="lblSpecialization">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Experience Metric</span>
+                            <span class="data-value" id="lblExperience">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Official Joining Date</span>
+                            <span class="data-value" id="lblJoiningDate">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Employment Classification</span>
+                            <span class="data-value" id="lblEmpType">----</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-chalkboard"></i> Academic Class & Subject Assignments Mapping Matrix</div>
+                    <div class="details-layout-grid">
+                        <div class="data-item">
+                            <span class="data-label">Class Teacher Designation Role Target</span>
+                            <span class="data-value" id="lblClassTeacherOf">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Assigned Core Classes</span>
+                            <span class="data-value" id="lblAssignedClasses">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Assigned Sections</span>
+                            <span class="data-value" id="lblAssignedSections">----</span>
+                        </div>
+                        <div class="data-item full-width">
+                            <span class="data-label">Assigned Core Syllabus Subjects</span>
+                            <span class="data-value" id="lblAssignedSubjects">----</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-money-check-dollar"></i> Salary & Payroll Financial Configuration Metrics</div>
+                    <div class="details-layout-grid">
+                        <div class="data-item">
+                            <span class="data-label">Basic Fixed Salary Components</span>
+                            <span class="data-value" id="lblBasicSalary">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Aggregated Allowances</span>
+                            <span class="data-value" id="lblAllowances">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">System Structural Deductions</span>
+                            <span class="data-value" id="lblDeductions">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Computed Net Monthly Salary Pay</span>
+                            <span class="data-value" style="color: var(--success); font-weight: 700;" id="lblNetSalary">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Current Billing Settlement Status</span>
+                            <span id="lblSalaryStatus" class="badge">----</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-building-columns"></i> Mapped Settlement Clearing Bank Account Details</div>
+                    <div class="details-layout-grid">
+                        <div class="data-item">
+                            <span class="data-label">Bank Institution Name</span>
+                            <span class="data-value" id="lblBankName">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Account Holder Legal Registration Name</span>
+                            <span class="data-value" id="lblAccountHolder">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Bank Clearing Account Number Mapping</span>
+                            <span class="data-value" id="lblAccountNumber">----</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Routing System IFSC Identification Key</span>
+                            <span class="data-value" id="lblIfscCode">----</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="profile-side-pane">
+                
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-calendar-check"></i> Attendance Tracking Metrics</div>
+                    <div class="attendance-analytics-module">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="data-label" style="font-weight: 700;">Operational Rate</span>
+                            <span class="data-value" style="color: var(--success); font-size: 16px;" id="lblAttendancePct">0%</span>
+                        </div>
+                        <div class="progress-bar-track">
+                            <div class="progress-bar-fill" id="pbAttendanceFill"></div>
+                        </div>
+                        <div class="details-layout-grid two-col" style="gap: 12px;">
+                            <div class="data-item">
+                                <span class="data-label">Total Working Days</span>
+                                <span class="data-value" id="lblTotalDays">0</span>
+                            </div>
+                            <div class="data-item">
+                                <span class="data-label">Present Record</span>
+                                <span class="data-value" id="lblPresentDays">0</span>
+                            </div>
+                            <div class="data-item">
+                                <span class="data-label">Absent Matrix</span>
+                                <span class="data-value" id="lblAbsentDays">0</span>
+                            </div>
+                            <div class="data-item">
+                                <span class="data-label">Sanctioned Leave</span>
+                                <span class="data-value" id="lblLeaveDays">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-chart-line"></i> Institutional Performance Auditing</div>
+                    <div class="details-layout-grid two-col" style="gap: 15px; grid-template-columns: 1fr;">
+                        <div class="data-item">
+                            <span class="data-label">Students Matrix Assigned</span>
+                            <span class="data-value" id="lblStudentsAssigned">0</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Active Classes Handled</span>
+                            <span class="data-value" id="lblClassesHandled">0</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Exam Evaluation Metric Profile Performance Rate</span>
+                            <span class="data-value" style="color: var(--primary-color);" id="lblExamPerformance">0%</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Faculty Performance Evaluation Index Rating</span>
+                            <span class="data-value" style="color: var(--warning);" id="lblTeacherRating">0 / 5</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Internal Management Appraisal Remarks</span>
+                            <span class="data-value" style="font-weight: 500; font-style: italic; font-size: 13px;" id="lblRemarks">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-shield-halved"></i> Cloud Documents Storage Vault</div>
+                    <div id="documentVaultListingContainer">
+                        
+                        <div class="document-vault-item">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-file-invoice"></i>
+                                <div>
+                                    <div class="data-value" style="font-size: 13px;">National Verification UID (Aadhaar)</div>
+                                    <span class="data-label" id="lblAadhaarRedacted">############</span>
+                                </div>
+                            </div>
+                            <div class="doc-action-links">
+                                <button type="button" class="btn-mini-action btnMockDocView">View</button>
+                            </div>
+                        </div>
+
+                        <div class="document-vault-item">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-file-signature"></i>
+                                <div>
+                                    <div class="data-value" style="font-size: 13px;">Tax Classification Code (PAN)</div>
+                                    <span class="data-label" id="lblPanCode">----------</span>
+                                </div>
+                            </div>
+                            <div class="doc-action-links">
+                                <button type="button" class="btn-mini-action btnMockDocView">View</button>
+                            </div>
+                        </div>
+
+                        <div class="document-vault-item">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-file-pdf" style="color: #22c55e;"></i>
+                                <div>
+                                    <div class="data-value" style="font-size: 13px;">Qualification Certification Dossier</div>
+                                    <span class="data-label">Highest Degree.pdf</span>
+                                </div>
+                            </div>
+                            <div class="doc-action-links">
+                                <button type="button" class="btn-mini-action btnMockDocView">View</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="card-title"><i class="fa-solid fa-clock-rotate-left"></i> Real-time ERP System Operations Log Activity</div>
+                    <div class="activity-stream-timeline" id="activityStreamLogContainer">
+                        <div class="stream-node">
+                            <div class="stream-node-time" id="actTime1">--</div>
+                            <div class="stream-node-text" id="actTxt1">Attendance metrics updated inside academic schema workspace.</div>
+                        </div>
+                        <div class="stream-node">
+                            <div class="stream-node-time" id="actTime2">--</div>
+                            <div class="stream-node-text" id="actTxt2">Term Evaluation Examination Marks Submitted.</div>
+                        </div>
+                        <div class="stream-node">
+                            <div class="stream-node-time" id="actTime3">--</div>
+                            <div class="stream-node-text" id="actTxt3">Digital Curriculum Homework Dossier Assigned.</div>
+                        </div>
+                        <div class="stream-node">
+                            <div class="stream-node-time" id="actTime4">--</div>
+                            <div class="stream-node-text" id="actTxt4">Circular Bulletin Framework Notice Published.</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        /**
+         * COMMERCIAL GRADE ENTERPRISE MASTER RECORD OBJECT STRUCTURE DATA TARGET
+         * Matches structural object specifications derived from schema layout expectations
+         */
+        const targetTeacherProfileRecordInstance = {
+            teacherId: "T001",
+            name: "Amit Sharma",
+            fatherName: "Ram Prakash Sharma",
+            motherName: "Saraswati Devi",
+            gender: "Male",
+            dob: "1985-08-14",
+            bloodGroup: "O+",
+            maritalStatus: "Married",
+            mobile: "9876543210",
+            altMobile: "9123456789",
+            email: "amit.sharma@rspublicschool.edu.in",
+            address: "House 412, Sector 4, Vikas Nagar Block B",
+            city: "Maharajganj",
+            state: "Uttar Pradesh",
+            pincode: "273303",
+            department: "Science",
+            designation: "PGT Senior Faculty",
+            qualification: "M.Sc Physics, B.Ed",
+            specialization: "Quantum Mechanics, Applied Thermodynamics",
+            experience: "12 Years Academic Service",
+            joiningDate: "2014-07-01",
+            employmentType: "Full Time Permanent Status",
+            classTeacherOf: "Class 12-A",
+            assignedClasses: "Class 11, Class 12",
+            assignedSections: "A, B, C",
+            assignedSubjects: "Physics, Advanced Mechanics, Core Laboratory Practicals",
+            basicSalary: 54000.00,
+            allowances: 12500.00,
+            deductions: 4200.00,
+            salaryStatus: "Settled & Paid",
+            bankName: "State Bank of India",
+            accountHolder: "Amit Sharma",
+            accountNumber: "30491827461",
+            ifscCode: "SBIN0001234",
+            aadhaarMasked: "[Aadhaar Redacted]",
+            panCode: "ABCPS1234Q",
+            attendance: {
+                totalDays: 220,
+                presentDays: 208,
+                absentDays: 4,
+                leaveDays: 8
+            },
+            performance: {
+                studentsAssigned: 145,
+                classesHandled: 6,
+                examPerformancePct: 94.8,
+                rating: "4.8 / 5.0",
+                remarks: "Outstanding service quality performance metrics noted. Maintains an impeccable syllabus completion track timeline framework."
+            },
+            recentActivity: [
+                { time: "2026-06-16 09:15 AM", text: "Daily Class 12-A Attendance Updated inside standard academic module registry." },
+                { time: "2026-06-15 04:30 PM", text: "Unit Test 2 Evaluation Performance Marks Matrix uploaded to Core DB." },
+                { time: "2026-06-14 11:00 AM", text: "Digital Physics Homework Syllabus Assignment published to all assigned batches." },
+                { time: "2026-06-11 02:15 PM", text: "Laboratory Security Procedures Advisory Notice published to institutional notification streams." }
+            ],
+            photoUrl: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150"
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            executeProfileDataMappingLifecycle();
+        });
+
+        /**
+         * CORE DATABASE INGESTION DECORATOR MAPPER
+         * Dynamically translates structured query object metrics maps into structural UI tokens
+         */
+        function executeProfileDataMappingLifecycle() {
+            
+            /* BACKEND HTTP REST API PIPELINE DATABIND HANDSHAKE REPLICATION NOTE:
+             * Expected Data Ingestion Query Mechanism Path Route Context:
+             * GET /api/teachers/:id
+             *
+             * =========================================================================================
+             * Express Node.js & MySQL Integration Service Script Architecture Endpoint Layout Blueprint:
+             * =========================================================================================
+             * app.get('/api/teachers/:id', async (req, res) => {
+             * try {
+             * const facultyId = req.params.id;
+             * const [rows] = await db.query('SELECT * FROM teachers_master WHERE teacher_id = ?', [facultyId]);
+             * if(rows.length === 0) return res.status(404).json({ success: false, message: 'Record instance missing.' });
+             * * // Process dynamic mapping resolution for child complex object parameters sub-schemas
+             * const profileDataPayload = parseRelationalRecordTransforms(rows[0]);
+             * return res.status(200).json(profileDataPayload);
+             * } catch (error) {
+             * return res.status(500).json({ success: true, error: error.message });
+             * }
+             * });
+             */
+
+            const data = targetTeacherProfileRecordInstance;
+
+            // 1. Dynamic Binding of Navigation Link Directives Context Mapping Properties
+            document.getElementById("btnEditLink").setAttribute("href", `teacher-edit.html?id=${data.teacherId}`);
+            document.getElementById("btnAllocationLink").setAttribute("href", `teacher-allocation.html?id=${data.teacherId}`);
+
+            // 2. Profile Header Top Component Element Injectors
+            document.getElementById("headPhoto").setAttribute("src", data.photoUrl);
+            document.getElementById("headName").textContent = data.name;
+            document.getElementById("headDesignation").textContent = data.designation;
+            document.getElementById("headDepartment").textContent = data.department;
+            document.getElementById("headTeacherId").textContent = data.teacherId;
+            
+            const headStatus = document.getElementById("headStatusBadge");
+            headStatus.textContent = "Active Faculty Status";
+            headStatus.classList.add("badge-active");
+
+            // 3. Section 1 Component Data Mappings Layer
+            document.getElementById("lblTeacherId").textContent = data.teacherId;
+            document.getElementById("lblTeacherName").textContent = data.name;
+            document.getElementById("lblFatherName").textContent = data.fatherName;
+            document.getElementById("lblMotherName").textContent = data.motherName;
+            document.getElementById("lblGender").textContent = data.gender;
+            document.getElementById("lblDob").textContent = data.dob;
+            document.getElementById("lblBloodGroup").textContent = data.bloodGroup || "Not Specified";
+            document.getElementById("lblMaritalStatus").textContent = data.maritalStatus;
+            document.getElementById("lblMobile").textContent = data.mobile;
+            document.getElementById("lblAltMobile").textContent = data.altMobile || "None Assigned";
+            document.getElementById("lblEmail").textContent = data.email;
+            document.getElementById("lblPincode").textContent = data.pincode;
+            document.getElementById("lblFullAddress").textContent = `${data.address}, ${data.city}, ${data.state}`;
+
+            // 4. Section 2 Component Professional Parameters Ingestion
+            document.getElementById("lblDepartment").textContent = data.department;
+            document.getElementById("lblDesignation").textContent = data.designation;
+            document.getElementById("lblQualification").textContent = data.qualification;
+            document.getElementById("lblSpecialization").textContent = data.specialization || "General Curriculum Scope";
+            document.getElementById("lblExperience").textContent = data.experience;
+            document.getElementById("lblJoiningDate").textContent = data.joiningDate;
+            document.getElementById("lblEmpType").textContent = data.employmentType;
+
+            // 5. Section 3 Academic Scope Configurations
+            document.getElementById("lblClassTeacherOf").textContent = data.classTeacherOf || "No Formal Allocation";
+            document.getElementById("lblAssignedClasses").textContent = data.assignedClasses;
+            document.getElementById("lblAssignedSections").textContent = data.assignedSections;
+            document.getElementById("lblAssignedSubjects").textContent = data.assignedSubjects;
+
+            // 6. Section 4 Financial Payroll Structuring
+            document.getElementById("lblBasicSalary").textContent = `₹${data.basicSalary.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById("lblAllowances").textContent = `₹${data.allowances.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            document.getElementById("lblDeductions").textContent = `₹${data.deductions.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            
+            const calculatedNetVal = data.basicSalary + data.allowances - data.deductions;
+            document.getElementById("lblNetSalary").textContent = `₹${calculatedNetVal.toLocaleString('en-IN', { minimumFractionDigits: 2 })}`;
+            
+            const salaryStatusBadge = document.getElementById("lblSalaryStatus");
+            salaryStatusBadge.textContent = data.salaryStatus;
+            salaryStatusBadge.classList.add("badge-paid");
+
+            // 7. Section 5 Clearing Bank Context Data Mappings
+            document.getElementById("lblBankName").textContent = data.bankName;
+            document.getElementById("lblAccountHolder").textContent = data.accountHolder;
+            document.getElementById("lblAccountNumber").textContent = data.accountNumber;
+            document.getElementById("lblIfscCode").textContent = data.ifscCode;
+
+            // 8. Section 6 Attendance Calculation Analytical Logic Processing
+            const att = data.attendance;
+            const computedPercentage = ((att.presentDays / att.totalDays) * 100).toFixed(1);
+            document.getElementById("lblAttendancePct").textContent = `${computedPercentage}%`;
+            document.getElementById("pbAttendanceFill").style.width = `${computedPercentage}%`;
+            document.getElementById("lblTotalDays").textContent = att.totalDays;
+            document.getElementById("lblPresentDays").textContent = att.presentDays;
+            document.getElementById("lblAbsentDays").textContent = att.absentDays;
+            document.getElementById("lblLeaveDays").textContent = att.leaveDays;
+
+            // 9. Section 7 Management Performance Auditing Evaluation Matrix Metrics Injection
+            const perf = data.performance;
+            document.getElementById("lblStudentsAssigned").textContent = perf.studentsAssigned;
+            document.getElementById("lblClassesHandled").textContent = perf.classesHandled;
+            document.getElementById("lblExamPerformance").textContent = `${perf.examPerformancePct}% Pass Performance Rate`;
+            document.getElementById("lblTeacherRating").textContent = perf.rating;
+            document.getElementById("lblRemarks").textContent = perf.remarks;
+
+            // 10. Documents Vault Verification System Keys Configuration
+            document.getElementById("lblPanCode").textContent = data.panCode;
+
+            // 11. Transaction Execution Timeline Log Injection Engine Block Layout Loop Mapping
+            document.getElementById("actTime1").textContent = data.recentActivity[0].time;
+            document.getElementById("actTxt1").textContent = data.recentActivity[0].text;
+            document.getElementById("actTime2").textContent = data.recentActivity[1].time;
+            document.getElementById("actTxt2").textContent = data.recentActivity[1].text;
+            document.getElementById("actTime3").textContent = data.recentActivity[2].time;
+            document.getElementById("actTxt3").textContent = data.recentActivity[2].text;
+            document.getElementById("actTime4").textContent = data.recentActivity[3].time;
+            document.getElementById("actTxt4").textContent = data.recentActivity[3].text;
+
+            // Setup Operational Control Handlers
+            setupInterfaceActionControlListeners();
+        }
+
+        /**
+         * GLOBAL CONTROLS SUBSYSTEM ROUTING HANDLERS
+         */
+        function setupInterfaceActionControlListeners() {
+            // Document System Sheet Print Trigger Pipeline Binding Action Context
+            document.getElementById("btnPrintProfile").addEventListener("click", () => {
+                window.print();
+            });
+
+            // Mock File Preview Dialog Verification Handler Loop Injection
+            const viewButtons = document.querySelectorAll(".btn-mock-doc-view, .btn-mini-action");
+            viewButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    alert("Data Integrity Verification Link Notice: Secure operational repository asset payload streaming infrastructure configuration handshake layer is mocked inside localized commercial demo profiles workspace view mode layout.");
+                });
+            });
+        }
+    </script>
+</body>
+</html>

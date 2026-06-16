@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Management | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --danger: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Placeholder for ERP Structure Context */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* Top Header Action Bar */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-title h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .page-title p {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-top: 4px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #123070;
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        /* Dashboard Summary Cards */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .card:nth-child(2) { border-left-color: var(--success); }
+        .card:nth-child(3) { border-left-color: var(--secondary-color); }
+        .card:nth-child(4) { border-left-color: #3b82f6; }
+
+        .card-details h3 {
+            font-size: 14px;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .card-details .count {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .card-icon {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+        }
+
+        /* Advanced Search Filter Section */
+        .search-section {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 30px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-transform: uppercase;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive Data Table Section */
+        .table-container {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        thead {
+            background-color: #f8fafc;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        th {
+            padding: 16px 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        td {
+            padding: 14px 20px;
+            vertical-align: middle;
+        }
+
+        .teacher-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .badge-active {
+            background-color: #e6f4ea;
+            color: var(--success);
+        }
+
+        .badge-inactive {
+            background-color: #fce8e6;
+            color: var(--danger);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .btn-action {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-view { background-color: #eff6ff; color: #2563eb; }
+        .btn-view:hover { background-color: #2563eb; color: var(--white); }
+        
+        .btn-edit { background-color: #fef9c3; color: #ca8a04; }
+        .btn-edit:hover { background-color: #ca8a04; color: var(--white); }
+        
+        .btn-alloc { background-color: #f3e8ff; color: #9333ea; }
+        .btn-alloc:hover { background-color: #9333ea; color: var(--white); }
+        
+        .btn-delete { background-color: #fee2e2; color: #dc2626; }
+        .btn-delete:hover { background-color: #dc2626; color: var(--white); }
+
+        .no-records {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        /* Print Specific Layout Optimization */
+        @media print {
+            .sidebar, .search-section, .action-btns, .actions-cell, th:last-child, td:last-child {
+                display: none !important;
+            }
+            body {
+                background-color: #fff;
+            }
+            .main-content {
+                padding: 0;
+                width: 100%;
+            }
+            .card {
+                border: 1px solid var(--border-color) !important;
+                box-shadow: none !important;
+            }
+            table {
+                border: 1px solid #000;
+            }
+            th, td {
+                padding: 10px;
+                border-bottom: 1px solid #000;
+            }
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1200px) {
+            .dashboard-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .search-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+            .brand {
+                margin-bottom: 15px;
+            }
+            .main-content {
+                padding: 15px;
+            }
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="teachers.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-money-check-dollar"></i> Finance ERP</a>
+    </div>
+
+    <div class="main-content" id="teacherList">
+        
+        <div class="header-actions">
+            <div class="page-title">
+                <h1>Teacher Management</h1>
+                <p>Monitor, configure, and allocate institute faculty operational metrics.</p>
+            </div>
+            <div class="action-btns">
+                <button type="button" class="btn btn-secondary" id="btnPrint"><i class="fa-solid fa-print"></i> Print List</button>
+                <button type="button" class="btn btn-secondary" id="btnExport"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                <a href="teacher-add.html" class="btn btn-primary" id="btnAddTeacher"><i class="fa-solid fa-user-plus"></i> Add Teacher</a>
+            </div>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-details">
+                    <h3>Total Teachers</h3>
+                    <div class="count" id="lblTotal">0</div>
+                </div>
+                <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Active Teachers</h3>
+                    <div class="count" id="lblActive">0</div>
+                </div>
+                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-user-check"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Class Teachers</h3>
+                    <div class="count" id="lblClassTeachers">0</div>
+                </div>
+                <div class="card-icon" style="color: var(--secondary-color);"><i class="fa-solid fa-user-tie"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Subject Teachers</h3>
+                    <div class="count" id="lblSubjectTeachers">0</div>
+                </div>
+                <div class="card-icon" style="color: #3b82f6;"><i class="fa-solid fa-book-reader"></i></div>
+            </div>
+        </div>
+
+        <div class="search-section" id="teacherSearch">
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="searchId">Teacher ID</label>
+                    <input type="text" id="searchId" class="form-control" placeholder="e.g. T001">
+                </div>
+                <div class="form-group">
+                    <label for="searchName">Teacher Name</label>
+                    <input type="text" id="searchName" class="form-control" placeholder="Search by name...">
+                </div>
+                <div class="form-group">
+                    <label for="searchMobile">Mobile Number</label>
+                    <input type="text" id="searchMobile" class="form-control" placeholder="Search by mobile...">
+                </div>
+                <div class="form-group">
+                    <label for="searchSubject">Subject</label>
+                    <input type="text" id="searchSubject" class="form-control" placeholder="e.g. Mathematics">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table id="teacherTable">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th>Teacher ID</th>
+                            <th>Teacher Name</th>
+                            <th>Department</th>
+                            <th>Subject</th>
+                            <th>Mobile</th>
+                            <th>Status</th>
+                            <th style="min-width: 180px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTableBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /**
+         * INITIAL COMMERCIAL DEMO SAMPLE DATA MATRIX
+         * Match Object Model constraints intended for operational relational structures
+         */
+        let teachersData = [
+            { id: "T001", name: "Dr. Alok Ranjan", department: "Science", subject: "Physics", mobile: "9876543210", status: "Active", isClassTeacher: true, photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" },
+            { id: "T002", name: "Meenakshi Sharma", department: "Mathematics", subject: "Calculus", mobile: "8765432109", status: "Active", isClassTeacher: true, photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" },
+            { id: "T003", name: "Rajesh Verma", department: "Languages", subject: "English Literature", mobile: "7654321098", status: "Inactive", isClassTeacher: false, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" },
+            { id: "T004", name: "Ananya Deshmukh", department: "Humanities", subject: "History", mobile: "6543210987", status: "Active", isClassTeacher: false, photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" }
+        ];
+
+        // Ensure state bindings apply smoothly after DOM is fully available
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeApplication();
+        });
+
+        function initializeApplication() {
+            renderTeacherTable(teachersData);
+            calculateDashboardMetrics(teachersData);
+            setupEventBindings();
+        }
+
+        /**
+         * GRAPHICAL INTERFACE DATA INTERPRETATION AND METRICS AGGREGATION LAYER
+         * Future Integration:
+         * Complete execution values should be mapped directly to aggregate counts from database payloads
+         * e.g., SELECT COUNT(*) FROM teachers...
+         */
+        function calculateDashboardMetrics(data) {
+            const total = data.length;
+            const active = data.filter(t => t.status === "Active").length;
+            const classTeachers = data.filter(t => t.isClassTeacher).length;
+            const subjectTeachers = total - classTeachers;
+
+            document.getElementById("lblTotal").textContent = total;
+            document.getElementById("lblActive").textContent = active;
+            document.getElementById("lblClassTeachers").textContent = classTeachers;
+            document.getElementById("lblSubjectTeachers").textContent = subjectTeachers;
+        }
+
+        /**
+         * CORE DYNAMIC CONTENT ELEMENT INJECTION LAYER
+         * Maps backend design specifications into secure, standard DOM objects
+         */
+        function renderTeacherTable(data) {
+            const tbody = document.getElementById("teacherTableBody");
+            tbody.innerHTML = ""; // Clear existing render tree context
+
+            if (data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="no-records">No teacher matching your filter matrix criteria found.</td></tr>`;
+                return;
+            }
+
+            /* HTTP REST API ENDPOINT TARGET REPLICATION BRIDGE NOTE:
+             * Data parsed below loops down elements mapped natively from the array objects.
+             * BACKEND ROUTE REFERENCE CONNECTION: GET /api/teachers
+             */
+            data.forEach(teacher => {
+                const tr = document.createElement("tr");
+
+                // Avatar Fallback Handler Implementation Matrix
+                const userPhoto = teacher.photo ? teacher.photo : "https://via.placeholder.com/100";
+                const badgeClass = teacher.status === "Active" ? "badge-active" : "badge-inactive";
+
+                tr.innerHTML = `
+                    <td><img src="${userPhoto}" class="teacher-avatar" alt="${teacher.name}"></td>
+                    <td><strong>${teacher.id}</strong></td>
+                    <td>${teacher.name}</td>
+                    <td>${teacher.department}</td>
+                    <td>${teacher.subject}</td>
+                    <td>${teacher.mobile}</td>
+                    <td><span class="badge ${badgeClass}">${teacher.status}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            <a href="teacher-profile.html?id=${teacher.id}" class="btn-action btn-view" title="View Profile"><i class="fa-solid fa-eye"></i></a>
+                            <a href="teacher-edit.html?id=${teacher.id}" class="btn-action btn-edit" title="Edit Teacher"><i class="fa-solid fa-pen"></i></a>
+                            <a href="teacher-allocation.html?id=${teacher.id}" class="btn-action btn-alloc" title="Allocation Management"><i class="fa-solid fa-network-wired"></i></a>
+                            <button type="button" class="btn-action btn-delete" data-id="${teacher.id}" title="Delete Record"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Bind individual dynamic row elements to the operational context
+            bindDynamicTableActions();
+        }
+
+        /**
+         * EVENT ROUTING MANAGEMENT COMPONENT LAYER
+         * Configures search matrix inputs, functional data exports, and tracking
+         */
+        function setupEventBindings() {
+            // Search Input Event Query Bindings
+            document.getElementById("searchId").addEventListener("input", executesFilteringPipeline);
+            document.getElementById("searchName").addEventListener("input", executesFilteringPipeline);
+            document.getElementById("searchMobile").addEventListener("input", executesFilteringPipeline);
+            document.getElementById("searchSubject").addEventListener("input", executesFilteringPipeline);
+
+            // Global System Print Operational Handling
+            document.getElementById("btnPrint").addEventListener("click", () => {
+                window.print();
+            });
+
+            // CSV/Excel Simulated Data Export Interface Pipeline
+            document.getElementById("btnExport").addEventListener("click", () => {
+                exportTeacherMatrixCSV();
+            });
+        }
+
+        /**
+         * ACTION TERMINATION ROW BINDINGS
+         * Attach structural event loops back onto dynamic elements securely
+         */
+        function bindDynamicTableActions() {
+            const deleteButtons = document.querySelectorAll(".btn-delete");
+            deleteButtons.forEach(button => {
+                button.addEventListener("click", (e) => {
+                    const teacherId = e.currentTarget.getAttribute("data-id");
+                    processRecordDeletionRequest(teacherId);
+                });
+            });
+        }
+
+        /**
+         * CLIENT FILTER PIPELINE PROCESSING ALGORIHM
+         * Filters the standard data matrix against runtime application inputs
+         */
+        function executesFilteringPipeline() {
+            const fId = document.getElementById("searchId").value.toLowerCase().trim();
+            const fName = document.getElementById("searchName").value.toLowerCase().trim();
+            const fMobile = document.getElementById("searchMobile").value.toLowerCase().trim();
+            const fSubject = document.getElementById("searchSubject").value.toLowerCase().trim();
+
+            const subset = teachersData.filter(teacher => {
+                const matchId = teacher.id.toLowerCase().includes(fId);
+                const matchName = teacher.name.toLowerCase().includes(fName);
+                const matchMobile = teacher.mobile.toLowerCase().includes(fMobile);
+                const matchSubject = teacher.subject.toLowerCase().includes(fSubject);
+
+                return matchId && matchName && matchMobile && matchSubject;
+            });
+
+            renderTeacherTable(subset);
+        }
+
+        /**
+         * DELETION OPERATIONS MANAGER
+         * Performs security confirmation validation steps prior to altering records matrix
+         */
+        function processRecordDeletionRequest(id) {
+            if (confirm(`CRITICAL SECURITY WARNING: Are you certain you want to permanently delete Teacher Profile Record [ID: ${id}] from the ERP systems schema? This action is irreversible.`)) {
+                
+                /* BACKEND TARGET STORAGE CONNECTIVE FRAMEWORK ROUTE REFERENCE BRIDGE:
+                 * Target Route Node: DELETE /api/teachers/:id
+                 * * SQL Transaction Implementation Architecture Context:
+                 * connection.query('DELETE FROM teachers WHERE teacher_id = ?', [id], (err, result) => { ... });
+                 */
+                
+                // Client-side local persistence array mutation simulation logic
+                teachersData = teachersData.filter(t => t.id !== id);
+                
+                // Synchronize system application user interface views layout
+                executesFilteringPipeline();
+                calculateDashboardMetrics(teachersData);
+                
+                alert(`Data Integrity Sync Success: Teacher Record entry ${id} successfully scrubbed from persistent layout memory layer.`);
+            }
+        }
+
+        /**
+         * SPREADSHEET MATRIX TRANSLATION UTILITY FRAMEWORK (CSV FORMAT)
+         * Generates standardized content payloads safe for loading into spreadsheet editors
+         */
+        function exportTeacherMatrixCSV() {
+            let csv = "Teacher ID,Teacher Name,Department,Subject,Mobile,Status\n";
+            teachersData.forEach(t => {
+                csv += `"${t.id}","${t.name}","${t.department}","${t.subject}","${t.mobile}","${t.status}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", `RSPS_Teacher_Export_${new Date().toISOString().slice(0,10)}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        /**
+         * FUTURE EXPRESS + MYSQL BACKEND INTEGRATION MATRIX INTERFACE TEMPLATE
+         * * // Client side fetch boilerplate mapping architecture setup layout:
+         * * // 1. GET ALL TEACHERS (READ)
+         * async function fetchAllTeachersFromDb() {
+         * try {
+         * const response = await fetch('/api/teachers');
+         * teachersData = await response.json();
+         * renderTeacherTable(teachersData);
+         * calculateDashboardMetrics(teachersData);
+         * } catch (err) {
+         * console.error("Critical Data Synchronization Handshake Error: ", err);
+         * }
+         * }
+         * * // 2. POST NEW TEACHER ENTRY (CREATE)
+         * // Target Route: POST /api/teachers
+         * // Payload Structure JSON: { id, name, department, subject, mobile, status, isClassTeacher }
+         * * // 3. PUT MODIFY UPDATE DATA ROW (UPDATE)
+         * // Target Route: PUT /api/teachers/:id
+         * * // 4. DELETE SYSTEM TARGET ID ENTRY (DELETE)
+         * // Target Route: DELETE /api/teachers/:id
+         */
+    </script>
+</body>
+</html>

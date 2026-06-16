@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marks Entry Management | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Container */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Main Workspace Container */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* RBAC Debug Header Mode Toggle Switcher */
+        .rbac-switch-panel {
+            background-color: var(--white);
+            padding: 15px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .rbac-info h2 { font-size: 15px; color: var(--primary-color); font-weight: 700; }
+        .rbac-info p { font-size: 12px; color: var(--text-light); }
+        
+        .role-btn-group {
+            display: flex;
+            background-color: #e2e8f0;
+            padding: 4px;
+            border-radius: 30px;
+        }
+
+        .role-toggle-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            color: var(--text-light);
+            transition: all 0.2s;
+        }
+
+        .role-toggle-btn.active[data-role="ADMIN"] { background-color: var(--primary-color); color: var(--white); }
+        .role-toggle-btn.active[data-role="TEACHER"] { background-color: var(--secondary-color); color: var(--primary-color); }
+
+        /* Actions Header Top Component Layout Panel Layer */
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .page-title h1 { font-size: 24px; color: var(--primary-color); font-weight: 700; }
+        .page-title p { font-size: 14px; color: var(--text-light); margin-top: 2px; }
+
+        .top-action-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background-color: #123070; }
+        .btn-secondary { background-color: var(--white); color: var(--primary-color); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #f8fafc; }
+        .btn-warning { background-color: var(--secondary-color); color: var(--primary-color); }
+        .btn-warning:hover { background-color: #bfa015; }
+        .btn-success { background-color: var(--success); color: var(--white); }
+        .btn-success:hover { background-color: #059669; }
+
+        /* Analytics Status Cards Grid Layer Display */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .card:nth-child(2) { border-left-color: var(--success); }
+        .card:nth-child(3) { border-left-color: var(--warning); }
+        .card:nth-child(4) { border-left-color: #3b82f6; }
+
+        .card-details h3 { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .card-details .count { font-size: 24px; font-weight: 700; color: var(--primary-color); }
+
+        .card-icon {
+            font-size: 22px; width: 44px; height: 44px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #f1f5f9; color: var(--primary-color);
+        }
+
+        /* Filter Controls Matrix Block Form Layout Card */
+        .search-section {
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            align-items: end;
+        }
+
+        .search-grid.bottom-row { grid-template-columns: 2fr 2fr; margin-top: 15px; border-top: 1px dashed #e2e8f0; padding-top: 15px; }
+
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group label { font-size: 12px; font-weight: 600; color: var(--text-light); text-transform: uppercase; }
+        
+        .form-control {
+            padding: 10px 12px; border: 1px solid var(--border-color);
+            border-radius: var(--radius); font-size: 14px; outline: none;
+            transition: border-color 0.2s; width: 100%; background-color: var(--white);
+        }
+        .form-control:focus { border-color: var(--primary-color); }
+
+        .filter-btn-group { display: flex; gap: 10px; justify-content: flex-end; }
+
+        /* Data Matrix Grid Table Framework Panel Content */
+        .table-container {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .table-responsive { width: 100%; overflow-x: auto; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        thead { background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; }
+        th { padding: 14px 16px; font-weight: 600; color: var(--primary-color); text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px; }
+        tbody tr { border-bottom: 1px solid #e2e8f0; transition: background-color 0.2s; }
+        tbody tr:hover { background-color: #f8fafc; }
+        td { padding: 12px 16px; vertical-align: middle; }
+
+        /* Marks Editing Inputs Inlined */
+        .marks-input {
+            width: 75px; padding: 6px 8px; border: 1px solid var(--border-color);
+            border-radius: 4px; font-weight: 600; text-align: center; color: var(--primary-color);
+        }
+        .marks-input:focus { border-color: var(--primary-color); outline: none; background-color: #fffdec; }
+        
+        .remarks-input { width: 100%; min-width: 120px; padding: 6px 8px; border: 1px solid var(--border-color); border-radius: 4px; }
+
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 50px; font-size: 11px; font-weight: 600; text-align: center; }
+        .badge-success { background-color: #e6f4ea; color: var(--success); }
+        .badge-danger { background-color: #fce8e6; color: var(--danger); }
+        .badge-warning { background-color: #fff3cd; color: var(--warning); }
+
+        /* Result Preview Aggregate Summary Blocks Column */
+        .preview-summary-card {
+            background-color: #0b1f4b;
+            color: var(--white);
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .preview-title {
+            font-size: 14px; font-weight: 700; color: var(--secondary-color);
+            text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 15px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .preview-metrics-grid {
+            display: grid; grid-template-columns: repeat(6, 1fr); gap: 15px;
+        }
+
+        .preview-pill {
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 12px; border-radius: 6px; border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        .preview-pill div:first-child { font-size: 11px; text-transform: uppercase; color: #a0aec0; font-weight: 500; }
+        .preview-pill div:last-child { font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--white); }
+        .preview-pill.highlight-pill div:last-child { color: var(--secondary-color); }
+
+        /* Save Commit Actions Control Panel Base Row Layout */
+        .global-form-footer-actions {
+            display: flex; justify-content: space-between; align-items: center;
+            background-color: var(--white); padding: 20px;
+            border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 40px;
+            gap: 15px; flex-wrap: wrap;
+        }
+        .action-right-cluster { display: flex; gap: 12px; }
+
+        /* Simulated Automated Save System Badge Layout */
+        .autosave-ticker {
+            font-size: 12px; font-weight: 500; color: var(--text-light);
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+        .autosave-pulse-dot {
+            width: 8px; height: 8px; background-color: var(--success);
+            border-radius: 50%; display: inline-block;
+        }
+        .autosave-pulse-dot.syncing { background-color: var(--warning); animation: pulseAnimation 1s infinite alternate; }
+
+        @keyframes pulseAnimation { from { opacity: 0.4; } to { opacity: 1; } }
+
+        /* Operation Toast Banners Elements Layer Matrix */
+        .alert-toast {
+            position: fixed; top: 20px; right: 20px; background-color: var(--primary-color);
+            color: var(--white); padding: 16px 25px; border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3); display: flex;
+            align-items: center; gap: 12px; z-index: 2000;
+            transform: translateY(-100px); opacity: 0; transition: all 0.4s ease-in-out;
+            font-weight: 500; border-left: 4px solid var(--secondary-color);
+        }
+        .alert-toast.show { transform: translateY(0); opacity: 1; }
+
+        /* Custom Permissions Mapped Elements Configuration Guard */
+        [data-permission] { display: none !important; }
+
+        /* Responsive Breakpoints View Rules Layer UI Adaptations */
+        @media (max-width: 1400px) {
+            .search-grid { grid-template-columns: repeat(3, 1fr); }
+            .preview-metrics-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .search-grid { grid-template-columns: repeat(2, 1fr); }
+            .search-grid.bottom-row { grid-template-columns: 1fr; }
+            .header-actions { flex-direction: column; align-items: flex-start; }
+            .top-action-btns { width: 100%; }
+            .top-action-btns .btn { flex: 1; justify-content: center; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 15px; }
+            .brand { margin-bottom: 15px; }
+            .main-content { padding: 15px; }
+            .search-grid { grid-template-columns: 1fr; }
+            .dashboard-cards { grid-template-columns: 1fr; }
+            .preview-metrics-grid { grid-template-columns: repeat(2, 1fr); }
+            .global-form-footer-actions { flex-direction: column-reverse; align-items: stretch; }
+            .action-right-cluster { flex-direction: column; }
+            .action-right-cluster .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="results-management.html" class="menu-item active"><i class="fa-solid fa-square-poll-vertical"></i> Exam Results</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-money-check-dollar"></i> Finance ERP</a>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="rbac-switch-panel">
+            <div class="rbac-info">
+                <h2>Role-Based Access Control (RBAC) Runtime Simulator Engine</h2>
+                <p>Toggle client credential tokens to verify interface visibility boundaries matching enterprise privileges constraints rules.</p>
+            </div>
+            <div class="role-btn-group">
+                <button type="button" class="role-toggle-btn active" data-role="ADMIN"><i class="fa-solid fa-user-gear"></i> ADMIN Profile View</button>
+                <button type="button" class="role-toggle-btn" data-role="TEACHER"><i class="fa-solid fa-chalkboard-user"></i> TEACHER Profile View</button>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div class="page-title">
+                <h1>Marks Entry Management</h1>
+                <p>Register, parse, aggregate, and commit score data matrices tracking batches academic records.</p>
+            </div>
+            <div class="top-action-btns">
+                <button type="button" id="btnExportPdf" class="btn btn-secondary"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+                <button type="button" id="btnExportExcel" class="btn btn-secondary"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                <button type="button" id="btnPrintSheet" class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print Marks Sheet</button>
+                <a href="results-management.html" class="btn btn-secondary"><i class="fa-solid fa-chevron-left"></i> Back to Results</a>
+            </div>
+        </div>
+
+        <div class="dashboard-cards">
+            <div class="card">
+                <div class="card-details">
+                    <h3>Total Students</h3>
+                    <div class="count" id="lblTotalStudents">0</div>
+                </div>
+                <div class="card-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Marks Entered</h3>
+                    <div class="count" id="lblMarksEntered">0</div>
+                </div>
+                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-circle-check"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Pending Marks</h3>
+                    <div class="count" id="lblPendingMarks">0</div>
+                </div>
+                <div class="card-icon" style="color: var(--danger);"><i class="fa-solid fa-clock"></i></div>
+            </div>
+            <div class="card">
+                <div class="card-details">
+                    <h3>Results Generated</h3>
+                    <div class="count" id="lblResultsGenerated">0</div>
+                </div>
+                <div class="card-icon" style="color: #3b82f6;"><i class="fa-solid fa-calculator"></i></div>
+            </div>
+        </div>
+
+        <div class="search-section" id="marksEntryFilterPanel">
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="ddlSession">Academic Session</label>
+                    <select id="ddlSession" class="form-control">
+                        <option value="2025-2026">2025-2026</option>
+                        <option value="2024-2025">2024-2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ddlExamType">Exam Type Module</label>
+                    <select id="ddlExamType" class="form-control">
+                        <option value="Half Yearly">Half Yearly</option>
+                        <option value="Final Examination">Final Examination</option>
+                        <option value="Periodic Test I">Periodic Test I</option>
+                        <option value="Periodic Test II">Periodic Test II</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ddlClass">Grade Class</label>
+                    <select id="ddlClass" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="ddlSection">Section Division</label>
+                    <select id="ddlSection" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="search-grid bottom-row">
+                <div class="form-group">
+                    <label for="ddlSubject">Course Subject Syllabus</label>
+                    <select id="ddlSubject" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="txtSearchStudent">Dynamic Filter / Search Student Row</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="txtSearchStudent" class="form-control" placeholder="Search entry by name/admission ID...">
+                        <div class="filter-btn-group">
+                            <button type="button" id="btnResetFilters" class="btn btn-secondary"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                            <button type="button" id="btnLoadDataset" class="btn btn-primary"><i class="fa-solid fa-cloud-arrow-down"></i> Load Students</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-responsive">
+                <table id="tblMarksEntryGrid">
+                    <thead>
+                        <tr>
+                            <th style="width: 80px;">Roll No</th>
+                            <th>Admission No</th>
+                            <th>Student Name</th>
+                            <th>Class</th>
+                            <th>Section</th>
+                            <th>Subject</th>
+                            <th style="width: 100px;">Max Marks</th>
+                            <th style="width: 110px;">Obtained Marks</th>
+                            <th style="width: 90px;">Percentage</th>
+                            <th style="width: 80px;">Grade</th>
+                            <th style="width: 120px;">Outcome Status</th>
+                            <th>Internal Audit Remarks / Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyMarksEntryRowsContainer">
+                        <tr><td colspan="12" class="no-records" style="text-align:center; padding:30px; color:var(--text-light); font-style:italic;">Choose operational query parameters selections criteria, then trigger 'Load Students' data pipeline framework.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="preview-summary-card" id="resultPreviewSummarySection">
+            <div class="preview-title"><i class="fa-solid fa-chart-line"></i> Current Batch Composite Calculation Metrics Summary Previews</div>
+            <div class="preview-metrics-grid">
+                <div class="preview-pill">
+                    <div>Gross Max Marks</div>
+                    <div id="lblSumMaxMarks">0</div>
+                </div>
+                <div class="preview-pill">
+                    <div>Gross Score Yield</div>
+                    <div id="lblSumObtainedMarks">0</div>
+                </div>
+                <div class="preview-pill highlight-pill">
+                    <div>Batch Mean Percent</div>
+                    <div id="lblAvgBatchPercentage">0.0%</div>
+                </div>
+                <div class="preview-pill">
+                    <div>Calculated Mean Grade</div>
+                    <div id="lblCalculatedMeanGrade">-</div>
+                </div>
+                <div class="preview-pill" style="border-left: 3px solid var(--success);">
+                    <div>Students Passed</div>
+                    <div id="lblCountStudentsPassed" style="color: var(--success);">0</div>
+                </div>
+                <div class="preview-pill" style="border-left: 3px solid var(--danger);">
+                    <div>Students Failed</div>
+                    <div id="lblCountStudentsFailed" style="color: var(--danger);">0</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="global-form-footer-actions">
+            <div class="autosave-ticker">
+                <span class="autosave-pulse-dot" id="dotAutoSaveTicker"></span>
+                <span id="lblAutoSaveStatus">ERP Engine Interactivity Secure Link Active.</span>
+            </div>
+            <div class="action-right-cluster">
+                <button type="button" id="btnDraftSave" class="btn btn-secondary"><i class="fa-solid fa-file-signature"></i> Save Draft</button>
+                <button type="button" id="btnUpdateMarks" class="btn btn-warning" data-permission="edit_any_marks"><i class="fa-solid fa-pen-to-square"></i> Update Marks</button>
+                <button type="button" id="btnGenerateResults" class="btn btn-primary" data-permission="generate_results"><i class="fa-solid fa-calculator"></i> Generate Results</button>
+                <button type="button" id="btnPublishResults" class="btn btn-success" data-permission="publish_results"><i class="fa-solid fa-bullhorn"></i> Publish Results live</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="alert-toast" id="toastMessageAlertOverlay">
+        <i class="fa-solid fa-shield-halved fa-lg" id="toastIconNode"></i>
+        <span id="toastBodyTextStringValue">Platform Operations Matrix Initialized cleanly.</span>
+    </div>
+
+    <script>
+        /**
+         * INITIAL OPERATIONAL PRIVILEGES SCHEMAS DICTIONARIES CODES REFERENCES MATRIX
+         */
+        const rbacPermissionsScopeMatrixSchema = {
+            ADMIN: [
+                "access_all_classes", "access_all_sections", "access_all_subjects",
+                "enter_marks", "edit_any_marks", "generate_results", "publish_results",
+                "lock_results", "unlock_results", "delete_results", "export_results", "print_reports"
+            ],
+            TEACHER: [
+                "access_assigned_only", "enter_marks", "edit_own_marks_only", "view_marks", "generate_previews"
+            ]
+        };
+
+        const activeTeacherSessionScopeConstraints = {
+            id: "T001",
+            role: "TEACHER",
+            assignedClasses: ["Class 10", "Class 11"],
+            assignedSections: ["A", "B"],
+            assignedSubjects: ["Mathematics", "Science"]
+        };
+
+        /**
+         * SEED RECONCILIATION REPOS PAYLOADS ARRAYS SETS DATA LAYERS MATRIX
+         */
+        const schoolContextClassesMasterList = ["Class 10", "Class 11", "Class 12"];
+        const schoolContextSectionsMasterList = ["A", "B", "C"];
+        const schoolContextSubjectsMasterList = ["Mathematics", "Science", "Physics", "Chemistry", "English Literature"];
+
+        let volatileStudentsRecordCollectionCache = [
+            { rollNo: "01", admissionNo: "ADM2026001", name: "Rahul Kumar Maurya", className: "Class 12", section: "A", subject: "Physics", maxMarks: 100, obtainedMarks: "", percentage: 0, grade: "-", outcome: "Pending", remarks: "" },
+            { rollNo: "02", admissionNo: "ADM2026002", name: "Priya Singh", className: "Class 12", section: "A", subject: "Physics", maxMarks: 100, obtainedMarks: "", percentage: 0, grade: "-", outcome: "Pending", remarks: "" },
+            { rollNo: "03", admissionNo: "ADM2026003", name: "Aditya Pratap Narayan", className: "Class 12", section: "A", subject: "Physics", maxMarks: 100, obtainedMarks: "", percentage: 0, grade: "-", outcome: "Pending", remarks: "" },
+            { rollNo: "04", admissionNo: "ADM2026004", name: "Ananya Mishra", className: "Class 12", section: "A", subject: "Physics", maxMarks: 100, obtainedMarks: "", percentage: 0, grade: "-", outcome: "Pending", remarks: "" },
+            { rollNo: "05", admissionNo: "ADM2026005", name: "Vikramaditya Rao", className: "Class 12", section: "A", subject: "Physics", maxMarks: 100, obtainedMarks: "", percentage: 0, grade: "-", outcome: "Pending", remarks: "" }
+        ];
+
+        /**
+         * ACTIVE TRACKING VARIABLE REFERENCE IDENTIFIERS STATE POINTERS
+         */
+        const currentUserIdentityStateToken = {
+            role: "ADMIN", // Fallback system startup initialization mode configuration profile context state default variable pointer 
+            id: "SYS_ADMIN_USER"
+        };
+
+        let activeLoadedDatasetWorkingMatrix = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initializeMarksManagementSystemEngine();
+        });
+
+        function initializeMarksManagementSystemEngine() {
+            setupRoleSwitcherInterfaceSimulatorControls();
+            evaluateSecurityAccessControlsViewStateLifecycle();
+            setupInteractiveActionControlEventListeners();
+        }
+
+        /**
+         * RBAC RUNTIME ENVIRONMENT SWITCH HANDLERS INTERFACE INITIALIZATION
+         */
+        function setupRoleSwitcherInterfaceSimulatorControls() {
+            const roleButtonsList = document.querySelectorAll(".role-toggle-btn");
+            roleButtonsList.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    roleButtonsList.forEach(b => b.classList.remove("active"));
+                    e.currentTarget.classList.add("active");
+
+                    const selectedToggleRoleKeyStr = e.currentTarget.getAttribute("data-role");
+                    currentUserIdentityStateToken.role = selectedToggleRoleKeyStr;
+                    currentUserIdentityStateToken.id = selectedToggleRoleKeyStr === "TEACHER" ? activeTeacherSessionScopeConstraints.id : "SYS_ADMIN_USER";
+
+                    triggerPlatformOverlayToastNotification("fa-shield-halved", `Security Matrix Session Context Mutated: Parsing view layers targeting role [${selectedToggleRoleKeyStr}]`);
+                    evaluateSecurityAccessControlsViewStateLifecycle();
+                });
+            });
+        }
+
+        /**
+         * SYSTEM ACCESS SECURITY LIFECYCLE MONITOR PIPELINE
+         * Re-evaluates privileges limits across form drop menus filters lists items and button matrices elements
+         */
+        function evaluateSecurityAccessControlsViewStateLifecycle() {
+            parseFormFiltersScopeVisibilityLimits();
+            parseGlobalActionControlElementsVisibilityMatrix();
+            
+            // Clean table down during roles alterations transitions transformations to ensure zero dirty state leaks
+            document.getElementById("tbodyMarksEntryRowsContainer").innerHTML = `
+                <tr><td colspan="12" class="no-records" style="text-align:center; padding:30px; color:var(--text-light); font-style:italic;">Role views switched. Select validation parameters scope, then choose 'Load Students' data utility.</td></tr>
+            `;
+            activeLoadedDatasetWorkingMatrix = [];
+            calculateLiveBatchSummaryMetricsPreviewDossier();
+        }
+
+        /**
+         * DROPDOWNS SECURITY ISOLATION BOUNDARIES COMPILER
+         * Renders options lists parameters according to constraints derived from current session tokens
+         */
+        function parseFormFiltersScopeVisibilityLimits() {
+            const ddlClass = document.getElementById("ddlClass");
+            const ddlSection = document.getElementById("ddlSection");
+            const ddlSubject = document.getElementById("ddlSubject");
+
+            const currentGrantedPrivilegeScopeList = rbacPermissionsScopeMatrixSchema[currentUserIdentityStateToken.role];
+            const hasUnrestrictedGlobalScopeAccess = currentGrantedPrivilegeScopeList.includes("access_all_classes");
+
+            // 1. Class Choices Filtering Logic Ingestion Maps
+            ddlClass.innerHTML = "";
+            const computedTargetClassesDataSource = hasUnrestrictedGlobalScopeAccess ? schoolContextClassesMasterList : activeTeacherSessionScopeConstraints.assignedClasses;
+            computedTargetClassesDataSource.forEach(c => {
+                const opt = document.createElement("option"); opt.value = c; opt.textContent = c; ddlClass.appendChild(opt);
+            });
+
+            // 2. Section Selections Filter Constraints Binding Mapping
+            ddlSection.innerHTML = "";
+            const computedTargetSectionsDataSource = hasUnrestrictedGlobalScopeAccess ? schoolContextSectionsMasterList : activeTeacherSessionScopeConstraints.assignedSections;
+            computedTargetSectionsDataSource.forEach(s => {
+                const opt = document.createElement("option"); opt.value = s; opt.textContent = s; ddlSection.appendChild(opt);
+            });
+
+            // 3. Subject Selections List Constraints Allocation Mapping
+            ddlSubject.innerHTML = "";
+            const computedTargetSubjectsDataSource = hasUnrestrictedGlobalScopeAccess ? schoolContextSubjectsMasterList : activeTeacherSessionScopeConstraints.assignedSubjects;
+            computedTargetSubjectsDataSource.forEach(s => {
+                const opt = document.createElement("option"); opt.value = s; opt.textContent = s; ddlSubject.appendChild(opt);
+            });
+        }
+
+        /**
+         * DECLARATIVE ELEMENT PERMISSIONS VISIBILITY PARSER
+         * Intersects components tags data parameters against active granted privileges codes collections arrays
+         */
+        function parseGlobalActionControlElementsVisibilityMatrix() {
+            const activeGrantedPrivilegesList = rbacPermissionsScopeMatrixSchema[currentUserIdentityStateToken.role];
+            const allPermissionBoundControlNodesList = document.querySelectorAll("[data-permission]");
+
+            allPermissionBoundControlNodesList.forEach(node => {
+                const requiredScopeTokenPermissionStr = node.getAttribute("data-permission");
+
+                if (activeGrantedPrivilegesList.includes(requiredScopeTokenPermissionStr)) {
+                    node.style.setProperty("display", "inline-flex", "important");
+                } else {
+                    node.style.setProperty("display", "none", "important");
+                }
+            });
+        }
+
+        /**
+         * CONTROLS EVENT HANDLERS DECOUPLED DISPATCH ROUTER BINDINGS PIPELINE
+         */
+        function setupInteractiveActionControlEventListeners() {
+            
+            // Primary Dataset Data Ingestion Pipeline Fetch Simulator Trigger Call Action Binding 
+            document.getElementById("btnLoadDataset").addEventListener("click", executeStudentsDatasetLoadingPipeline);
+
+            // Inlined Keypress Client-Side Dynamic Dynamic Search Filtering Input Field Event Bindings
+            document.getElementById("txtSearchStudent").addEventListener("input", executeClientInlinedSearchFilterPipeline);
+
+            // Form Fields Configuration Reset Utility Link Actions Controller
+            document.getElementById("btnResetFilters").addEventListener("click", () => {
+                document.getElementById("txtSearchStudent").value = "";
+                executeStudentsDatasetLoadingPipeline();
+            });
+
+            // System Document Operations Utilities Event Targets Binding Closures
+            document.getElementById("btnExportPdf").addEventListener("click", () => { alert("PDF Document Generator Module: Compiling report workspace metrics profiles data streams to execute structural vector rendering download pipeline..."); });
+            document.getElementById("btnExportExcel").addEventListener("click", () => { alert("Spreadsheet Grid Serialization Framework: Transmitting active data tables loops variables cache matrices collections down into CSV/Excel spreadsheet document files bytes stream pipeline..."); });
+            document.getElementById("btnPrintSheet").addEventListener("click", () => { window.print(); });
+
+            // Master Core Action Buttons Command Flow Dispatch Controllers Pipelines
+            document.getElementById("btnDraftSave").addEventListener("click", () => { triggerMutedLocalAutoSaveActionSimulation("Manual Workspace State Core Draft Backup Save Action Completed Cleanly."); });
+            document.getElementById("btnUpdateMarks").addEventListener("click", () => { triggerPlatformOverlayToastNotification("fa-floppy-disk", "Database Sync Request: Transmitting overwritten parameters metrics updates to synchronize existing historical persistent records data sets layers..."); });
+            
+            document.getElementById("btnGenerateResults").addEventListener("click", () => {
+                triggerPlatformOverlayToastNotification("fa-calculator", "ACID Compute Engine Transaction Triggered: Evaluating batch composite distributions models, committing calculations metrics formulas weights matrices across schema structures...");
+                setTimeout(() => {
+                    document.getElementById("lblResultsGenerated").textContent = activeLoadedDatasetWorkingMatrix.length;
+                    triggerPlatformOverlayToastNotification("fa-circle-check", "Transaction Processing Successful: Structural transcript evaluation profiles generated flawlessly inside operational background records tables rows.");
+                }, 1500);
+            });
+
+            document.getElementById("btnPublishResults").addEventListener("click", () => {
+                
+                /* BACKEND TARGET CORES DB PERSISTENCE COMMIT ROUTE CONNECTOR REFERENCE HOOK:
+                 * Path Target Route Address Endpoint: POST /api/results/publish
+                 * SQL Implementation Context: UPDATE marks_master SET publication_visibility_state = 1 WHERE class_id = ? AND subject_id = ?
+                 */
+                triggerPlatformOverlayToastNotification("fa-spin fa-spinner", "Enterprise Broadcast Infrastructure Hook Active: Modifying record visibility keys states, broadcast processing parameters pipeline initialization routines streaming...");
+                setTimeout(() => {
+                    triggerPlatformOverlayToastNotification("fa-bullhorn", "System Broadcast Complete Notice: Batch transcript profiles marks sheets set to active public live state view configuration inside portal directory modules clusters.");
+                }, 2000);
+            });
+        }
+
+        /**
+         * CORE STUDENT WORKSPACE BATCH LOADING PIPELINE UTILITY
+         * Resolves parameters values selects targets fields to construct localized active workbench grid arrays
+         */
+        function executeStudentsDatasetLoadingPipeline() {
+            const chosenClass = document.getElementById("ddlClass").value;
+            const chosenSection = document.getElementById("ddlSection").value;
+            const chosenSubject = document.getElementById("ddlSubject").value;
+
+            /* FUTURE API PLUG-AND-PLAY NETWORK CONNECTOR BRIDGE BLUEPRINT:
+             * Expected Data Fetch Ingestion Route Vector Path Target: GET /api/students?className=Class12&section=A&subject=Physics
+             */
+
+            // Clone structural row datasets items from core persistent mock arrays trace layer into active workbench cache
+            activeLoadedDatasetWorkingMatrix = JSON.parse(JSON.stringify(volatileStudentsRecordCollectionCache));
+            
+            // Map filtering parameters tags contexts cleanly values properties metrics down across nodes
+            activeLoadedDatasetWorkingMatrix.forEach(row => {
+                row.className = chosenClass;
+                row.section = chosenSection;
+                row.subject = chosenSubject;
+            });
+
+            triggerPlatformOverlayToastNotification("fa-cloud-arrow-down", `Data Pipeline Handshake Ingestion Complete: Mapped ${activeLoadedDatasetWorkingMatrix.length} active row instances targets matching filter criteria.`);
+            
+            renderMarksEntryDynamicInputGridTable(activeLoadedDatasetWorkingMatrix);
+            calculateLiveBatchSummaryMetricsPreviewDossier();
+        }
+
+        /**
+         * WORKBENCH INTERACTION RENDERING GRID MACHINE 
+         * Formulates responsive dynamic tabular row templates, processing layout nodes directly into table containers structures
+         */
+        function renderMarksEntryDynamicInputGridTable(dataset) {
+            const tbody = document.getElementById("tbodyMarksEntryRowsContainer");
+            tbody.innerHTML = "";
+
+            if (dataset.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="12" class="no-records" style="text-align:center; padding:30px; color:var(--text-light); font-style:italic;">No target student rows records matched validation filter search scopes strings choices parameters checks.</td></tr>`;
+                return;
+            }
+
+            dataset.forEach((row, index) => {
+                const tr = document.createElement("tr");
+
+                const statusBadgeStyleClassStr = row.outcome === "Pass" ? "badge-success" : (row.outcome === "Fail" ? "badge-danger" : "badge-warning");
+
+                tr.innerHTML = `
+                    <td><strong>${row.rollNo}</strong></td>
+                    <td><code>${row.admissionNo}</code></td>
+                    <td><strong>${row.name}</strong></td>
+                    <td>${row.className}</td>
+                    <td>Section ${row.section}</td>
+                    <td>${row.subject}</td>
+                    <td><span class="text-light" style="font-weight:600;">${row.maxMarks}</span></td>
+                    <td>
+                        <input type="number" class="marks-input txtRowScoreInputCell" data-index="${index}" min="0" max="${row.maxMarks}" placeholder="0" value="${row.obtainedMarks}">
+                    </td>
+                    <td><strong class="lblRowPercentageOutputCell" style="font-size:14px; color:var(--primary-color);">${row.percentage}%</strong></td>
+                    <td><strong class="lblRowGradeOutputCell" style="font-size:14px;">${row.grade}</strong></td>
+                    <td><span class="badge ${statusBadgeStyleClassStr} lblRowOutcomeStatusOutputCell">${row.outcome}</span></td>
+                    <td>
+                        <input type="text" class="remarks-input txtRowRemarksInputCell" data-index="${index}" placeholder="Add evaluation note..." value="${row.remarks}">
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+            bindDynamicRowCellsValueChangeAutoCalculationPipelines();
+        }
+
+        /**
+         * DYNAMIC INPUT CELL COMPUTATION MATRICES LISTENER ATTACHMENTS
+         * Links realtime tracking formulas calculation updates hooks directly inside rows inputs data fields values
+         */
+        function bindDynamicRowCellsValueChangeAutoCalculationPipelines() {
+            
+            // 1. Core Evaluation Marks Input Processing Pipe Target Listeners
+            const scoreInputNodesList = document.querySelectorAll(".txtRowScoreInputCell");
+            scoreInputNodesList.forEach(inputNode => {
+                inputNode.addEventListener("input", (e) => {
+                    const targetIndexPositionKeyInt = parseInt(e.target.getAttribute("data-index"), 10);
+                    const targetedDataRowObjectReference = activeLoadedDatasetWorkingMatrix[targetIndexPositionKeyInt];
+                    
+                    let validatedRawScoreInputValueNum = parseFloat(e.target.value);
+
+                    // Safeguard Bound Constraints Check Over Max Score Allowances Limits Parameters Verification
+                    if (isNaN(validatedRawScoreInputValueNum) || validatedRawScoreInputValueNum < 0) {
+                        validatedRawScoreInputValueNum = "";
+                    } else if (validatedRawScoreInputValueNum > targetedDataRowObjectReference.maxMarks) {
+                        alert(`Configuration Input Limit Boundary Exception: Score entry value index cannot exceed specified maximum limits allowances parameter threshold cap of [${targetedDataRowObjectReference.maxMarks}] marks.`);
+                        validatedRawScoreInputValueNum = targetedDataRowObjectReference.maxMarks;
+                        e.target.value = targetedDataRowObjectReference.maxMarks;
+                    }
+
+                    // Write updated validated data value directly back inside volatile dataset cache properties
+                    targetedDataRowObjectReference.obtainedMarks = validatedRawScoreInputValueNum;
+
+                    // Execute core algebraic calculations formulas transforms pipeline mapping logic
+                    executeRowDataCalculationsFormulaPipeline(targetedDataRowObjectReference, e.target.parentElement.parentElement);
+                    calculateLiveBatchSummaryMetricsPreviewDossier();
+                    triggerMutedLocalAutoSaveActionSimulation(); // Emulate automated silent background synchronization routines tracking transactions loops 
+                });
+            });
+
+            // 2. Remarks Core Text Entry Persistence Sync Listener
+            const remarksInputNodesList = document.querySelectorAll(".txtRowRemarksInputCell");
+            remarksInputNodesList.forEach(remarksNode => {
+                remarksNode.addEventListener("input", (e) => {
+                    const targetIndexPositionKeyInt = parseInt(e.target.getAttribute("data-index"), 10);
+                    activeLoadedDatasetWorkingMatrix[targetIndexPositionKeyInt].remarks = e.target.value;
+                });
+            });
+        }
+
+        /**
+         * SYSTEM MATHEMATICAL ALGEBRAIC CALCULATION FORMULAS TRANSLATION MATRIX ENGINE
+         * Applies institution grading rules logic over runtime scores updates variables loops properties boundaries
+         */
+        function executeRowDataCalculationsFormulaPipeline(rowObject, rowDomRowFrameReferenceNode) {
+            if (rowObject.obtainedMarks === "" || isNaN(rowObject.obtainedMarks)) {
+                rowObject.percentage = 0;
+                rowObject.grade = "-";
+                rowObject.outcome = "Pending";
+            } else {
+                // Compute Percentage Trace Metric Base Ratio Formula Mapping Layer Context
+                const computedPct = (rowObject.obtainedMarks / rowObject.maxMarks) * 100;
+                rowObject.percentage = Math.round(computedPct * 10) / 10; // Precision trailing scaling limit index bounds
+
+                // Pass Fail Threshold Matrix Resolution Evaluator Rule
+                rowObject.outcome = rowObject.percentage >= 33.0 ? "Pass" : "Fail";
+
+                // Standardized Institutional Grading Schema Rules Boundaries Configurations Map Parsing Layer Logic
+                if (rowObject.percentage >= 90.0) rowObject.grade = "A+";
+                else if (rowObject.percentage >= 80.0) rowObject.grade = "A";
+                else if (rowObject.percentage >= 70.0) rowObject.grade = "B+";
+                else if (rowObject.percentage >= 60.0) rowObject.grade = "B";
+                else if (rowObject.percentage >= 50.0) rowObject.grade = "C";
+                else if (rowObject.percentage >= 33.0) rowObject.grade = "D";
+                else rowObject.grade = "F";
+            }
+
+            // Sync structural text outputs back into specific row dom coordinate nodes targets addresses paths elements
+            rowDomRowFrameReferenceNode.querySelector(".lblRowPercentageOutputCell").textContent = `${rowObject.percentage}%`;
+            rowDomRowFrameReferenceNode.querySelector(".lblRowGradeOutputCell").textContent = rowObject.grade;
+            
+            const statusBadgeNode = rowDomRowFrameReferenceNode.querySelector(".lblRowOutcomeStatusOutputCell");
+            statusBadgeNode.textContent = rowObject.outcome;
+            statusBadgeNode.className = `badge lblRowOutcomeStatusOutputCell ${rowObject.outcome === "Pass" ? "badge-success" : (rowObject.outcome === "Fail" ? "badge-danger" : "badge-warning")}`;
+        }
+
+        /**
+         * RUNTIME COLLECTIVE COMPOSITE METRICS SUMMATION SUMMARY ENGINE
+         * Processes mathematical aggregations loops across workbench datasets to update preview dashboard indicators blocks
+         */
+        function calculateLiveBatchSummaryMetricsPreviewDossier() {
+            let runningSumMaxMarks = 0;
+            let runningSumObtainedMarks = 0;
+            let totalScoredEntriesCount = 0;
+            let countPassed = 0;
+            let countFailed = 0;
+
+            activeLoadedDatasetWorkingMatrix.forEach(row => {
+                if (row.obtainedMarks !== "" && !isNaN(row.obtainedMarks)) {
+                    runningSumMaxMarks += row.maxMarks;
+                    runningSumObtainedMarks += row.obtainedMarks;
+                    totalScoredEntriesCount++;
+
+                    if (row.outcome === "Pass") countPassed++;
+                    if (row.outcome === "Fail") countFailed++;
+                }
+            });
+
+            const computedAvgBatchPct = runningSumMaxMarks > 0 ? ((runningSumObtainedMarks / runningSumMaxMarks) * 100).toFixed(1) : "0.0";
+            
+            // Formulate composite global mean cohort letter grade string target values matches
+            let meanCohortGradeLabelStr = "-";
+            const parsedAvgFloatVal = parseFloat(computedAvgBatchPct);
+            if (totalScoredEntriesCount > 0) {
+                if (parsedAvgFloatVal >= 90.0) meanCohortGradeLabelStr = "A+ Cohort Performance";
+                else if (parsedAvgFloatVal >= 80.0) meanCohortGradeLabelStr = "A Mean standard";
+                else if (parsedAvgFloatVal >= 70.0) meanCohortGradeLabelStr = "B+ Average Yield";
+                else if (parsedAvgFloatVal >= 60.0) meanCohortGradeLabelStr = "B Average Bounds";
+                else if (parsedAvgFloatVal >= 50.0) meanCohortGradeLabelStr = "C Clear Track";
+                else if (parsedAvgFloatVal >= 33.0) meanCohortGradeLabelStr = "D Critical Level";
+                else meanCohortGradeLabelStr = "F Deficient Rate Alert";
+            }
+
+            // Ingest computed aggregates metrics values back inside text elements tokens fields addresses properties
+            document.getElementById("lblSumMaxMarks").textContent = runningSumMaxMarks;
+            document.getElementById("lblSumObtainedMarks").textContent = runningSumObtainedMarks;
+            document.getElementById("lblAvgBatchPercentage").textContent = `${computedAvgBatchPct}%`;
+            document.getElementById("lblCalculatedMeanGrade").textContent = meanCohortGradeLabelStr;
+            document.getElementById("lblCountStudentsPassed").textContent = countPassed;
+            document.getElementById("lblCountStudentsFailed").textContent = countFailed;
+
+            // Sync analytical metrics indicators back into total dashboard metrics layers counters modules properties cards counters bounds
+            document.getElementById("lblTotalStudents").textContent = activeLoadedDatasetWorkingMatrix.length;
+            document.getElementById("lblMarksEntered").textContent = totalScoredEntriesCount;
+            document.getElementById("lblPendingMarks").textContent = activeLoadedDatasetWorkingMatrix.length - totalScoredEntriesCount;
+        }
+
+        /**
+         * LOCAL CLIENT WORKFLOW FILTERS MATRIX INTERPRETER OUT-OF-BAND ENGINE
+         * Performs search keyword filtering down across inline rendered row elements lists structures
+         */
+        function executeClientInlinedSearchFilterPipeline() {
+            const keywordSearchTextStr = document.getElementById("txtSearchStudent").value.toLowerCase().trim();
+            
+            if (activeLoadedDatasetWorkingMatrix.length === 0) return;
+
+            const rowsNodesCollectionElementsList = document.getElementById("tbodyMarksEntryRowsContainer").querySelectorAll("tr");
+            
+            activeLoadedDatasetWorkingMatrix.forEach((row, index) => {
+                const associatedDomRowNodeTarget = rowsNodesCollectionElementsList[index];
+                if (!associatedDomRowNodeTarget) return;
+
+                const matchKeywordConditionStateCheck = !keywordSearchTextStr || 
+                                                        row.name.toLowerCase().includes(keywordSearchTextStr) || 
+                                                        row.admissionNo.toLowerCase().includes(keywordSearchTextStr);
+
+                if (matchKeywordConditionStateCheck) {
+                    associatedDomRowNodeTarget.style.display = "table-row";
+                } else {
+                    associatedDomRowNodeTarget.style.display = "none";
+                }
+            });
+        }
+
+        /**
+         * SILENT ASYNC TRANSACTION SIMULATOR AUTOMATION ENGINE HOOK
+         * Simulates seamless background network transmissions saving data modifications trace frames objects models layout
+         */
+        let networkAutoSaveTimerThrottlePointer = null;
+        function triggerMutedLocalAutoSaveActionSimulation(alternateCustomMessageStrTextValue = null) {
+            const dotNode = document.getElementById("dotAutoSaveTicker");
+            const labelNode = document.getElementById("lblAutoSaveStatus");
+
+            dotNode.className = "autosave-pulse-dot syncing";
+            labelNode.textContent = "Auto-saving current entries updates modifications cache blocks framework layout draft...";
+
+            clearTimeout(networkAutoSaveTimerThrottlePointer);
+            networkAutoSaveTimerThrottlePointer = setTimeout(() => {
+                dotNode.className = "autosave-pulse-dot";
+                labelNode.textContent = alternateCustomMessageStrTextValue ? alternateCustomMessageStrTextValue : "Data auto-saved onto localized workspace snapshot tracking memory.";
+            }, 1200);
+        }
+
+        /**
+         * ANIMATION TOAST OVERLAY OVERVIEW BANNER VISUALIZER CONTROLLER UTILITY
+         */
+        function triggerPlatformOverlayToastNotification(iconFontAwesomeClassStr, messageBodyStringTextValue) {
+            const toastFrameNode = document.getElementById("toastMessageAlertOverlay");
+            const iconNode = document.getElementById("toastIconNode");
+            const textNode = document.getElementById("toastBodyTextStringValue");
+
+            iconNode.className = `fa-solid ${iconFontAwesomeClassStr} fa-lg`;
+            textNode.textContent = messageBodyStringTextValue;
+
+            toastFrameNode.classList.add("show");
+            setTimeout(() => { toastFrameNode.classList.remove("show"); }, 4000);
+        }
+    </script>
+
+    </body>
+</html>

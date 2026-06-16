@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Report Card | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --border-dark: #0f172a;
+            --border-light: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius: 8px;
+            --success: #15803d;
+            --danger: #b91c1c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ERP Layout Layout Left Panels Sidebar */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+            transition: display 0.3s;
+        }
+
+        .brand {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Workspace Wrapper Base */
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: auto;
+        }
+
+        /* Functional Utility Top Control Header Panel Bar */
+        .control-header-panel {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .control-title h2 { font-size: 15px; color: var(--primary-color); font-weight: 700; }
+        .control-title p { font-size: 12px; color: var(--text-light); }
+        
+        .control-btns-cluster { display: flex; gap: 10px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+        }
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background-color: #123070; }
+        .btn-secondary { background-color: var(--white); color: var(--primary-color); border: 1px solid var(--border-light); }
+        .btn-secondary:hover { background-color: #f8fafc; }
+
+        /* =========================================================================================
+         * CORE STRUCTURAL REPORT CARD CONTAINER LAYOUT FRAMEWORK (A4 COMPACT DESIGN FOR NO OVERFLOW)
+         * ========================================================================================= */
+        .report-card-container-printable {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--white);
+            padding: 25px 30px;
+            border: 3px double var(--primary-color);
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+
+        /* School Top Header Logo Branding Module Grid */
+        .school-branding-header-block {
+            display: grid;
+            grid-template-columns: 80px 1fr 140px;
+            align-items: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            gap: 15px;
+        }
+
+        .school-logo-frame img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .school-identity-meta {
+            text-align: center;
+        }
+
+        .school-identity-meta h1 {
+            font-size: 24px;
+            color: var(--primary-color);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+        }
+
+        .school-identity-meta p {
+            font-size: 11px;
+            color: var(--text-color);
+            font-weight: 500;
+            margin-top: 1px;
+        }
+
+        .school-identity-meta .affiliation-notice {
+            font-size: 10px;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-top: 2px;
+            letter-spacing: 0.5px;
+        }
+
+        .report-doc-title-pill {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .report-doc-title-pill h2 {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 5px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .report-doc-title-pill p {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-top: 4px;
+        }
+
+        /* Student Biography Profile Card Meta Information Layout Grid */
+        .student-biography-meta-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 15px;
+            border: 1px solid var(--border-dark);
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #fafbfc;
+        }
+
+        .biography-fields-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            row-gap: 6px;
+            column-gap: 15px;
+        }
+
+        .biography-row-field {
+            display: flex;
+            font-size: 12px;
+            align-items: baseline;
+        }
+
+        .biography-label {
+            font-weight: 600;
+            color: var(--primary-color);
+            min-width: 115px;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        .biography-value {
+            font-weight: 700;
+            color: #0f172a;
+            border-bottom: 1px dashed var(--border-light);
+            flex-grow: 1;
+            padding-left: 4px;
+            font-size: 11px;
+        }
+
+        .biography-student-avatar-frame img {
+            width: 75px;
+            height: 90px;
+            object-fit: cover;
+            border: 1px solid var(--border-dark);
+            padding: 2px;
+            background-color: var(--white);
+        }
+
+        /* Tables Structural Layout Components Grid Configuration */
+        .table-title-banner {
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 5px 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0;
+            border: 1px solid var(--border-dark);
+            border-bottom: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 11px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border-dark);
+        }
+
+        th, td {
+            padding: 5px 8px;
+            border: 1px solid var(--border-dark);
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+        }
+
+        tbody tr { background-color: var(--white); }
+        
+        .text-center { text-align: center; }
+        .font-bold { font-weight: 700; }
+
+        /* Multi Column Split Subpanels Tables Rows */
+        .twin-split-tables-container {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+            align-items: start;
+        }
+
+        .twin-split-tables-container table { margin-bottom: 0; }
+
+        /* Summary Matrix Metrics Yield Framework Row Block Layout */
+        .summary-results-strip {
+            border: 1px solid var(--border-dark);
+            background-color: #f8fafc;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .summary-strip-pill { font-size: 11px; font-weight: 600; }
+        .summary-strip-pill span:first-child { color: var(--primary-color); text-transform: uppercase; font-size: 10px; }
+        .summary-strip-pill span:last-child { color: #000; font-weight: 800; margin-left: 2px; }
+
+        /* Appraisal Assessment Comments Text Field Blocks Box */
+        .evaluation-appraisal-remarks-card {
+            border: 1px solid var(--border-dark);
+            padding: 10px;
+            background-color: var(--white);
+            margin-bottom: 15px;
+        }
+
+        .evaluation-appraisal-remarks-card h4 {
+            font-size: 10px; text-transform: uppercase; color: var(--primary-color); font-weight: 700;
+            letter-spacing: 0.5px; margin-bottom: 4px; border-bottom: 1px solid var(--border-light); padding-bottom: 2px;
+        }
+        .evaluation-appraisal-remarks-card p { font-size: 11px; font-style: italic; color: #334155; line-height: 1.4; }
+
+        .compliance-promotion-badge-inline {
+            margin-top: 6px; font-size: 11px; font-weight: 700; color: var(--primary-color);
+        }
+
+        /* Verification Signatures Clearance Board Section Module Row Container */
+        .signature-clearance-board-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 35px;
+            padding-top: 5px;
+            align-items: end;
+            text-align: center;
+        }
+
+        .signature-block-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            height: 65px;
+        }
+
+        .signature-line-placeholder {
+            width: 100%;
+            border-top: 1px solid var(--border-dark);
+            margin-top: 5px;
+            padding-top: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .school-seal-emblem-mock {
+            width: 65px; height: 65px; border: 2px dashed rgba(11, 31, 75, 0.3);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 8px; font-weight: 700; color: rgba(11, 31, 75, 0.4);
+            text-transform: uppercase; line-height: 1.1; transform: rotate(-15deg);
+        }
+
+        /* =========================================================================================
+         * STRICT PRINTER SPECIFIC HARDWARE LAYOUT OVERRIDES STYLES (A4 SINGLE PAGE OPTIMIZATION FOCUS)
+         * ========================================================================================= */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+            
+            /* Hide UI Elements */
+            .sidebar, 
+            .control-header-panel, 
+            .control-btns-cluster {
+                display: none !important;
+            }
+            
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+                padding: 0; 
+                margin: 0;
+            }
+            
+            .main-content {
+                padding: 0; 
+                margin: 0; 
+                width: 100%; 
+                overflow: hidden;
+            }
+            
+            .report-card-container-printable {
+                max-width: 100% !important;
+                width: 100% !important;
+                box-shadow: none !important;
+                border: 2px solid #000000 !important;
+                padding: 0 !important; /* Reset layout margins for strict containment */
+                margin: 0 !important;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+            }
+            
+            th { 
+                background-color: #e2e8f0 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            
+            .report-doc-title-pill h2 { 
+                background-color: #0B1F4B !important; 
+                color: #d4a017 !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+            
+            .table-title-banner { 
+                background-color: #0B1F4B !important; 
+                color: #ffffff !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+            }
+        }
+
+        /* Responsive UI Scaling Fallbacks for Mobile Workspace Display previews */
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 15px; }
+            .brand { margin-bottom: 15px; }
+            .main-content { padding: 15px; }
+            .twin-split-tables-container { grid-template-columns: 1fr; }
+            .biography-fields-container { grid-template-columns: 1fr; }
+            .signature-clearance-board-row { grid-template-columns: repeat(2, 1fr); row-gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="#" class="menu-item active"><i class="fa-solid fa-square-poll-vertical"></i> Exam Results</a>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="control-header-panel">
+            <div class="control-title">
+                <h2>Progress Report Card Ledger Output View</h2>
+                <p>सीबीएसई / आईसीएसी संरेखित मानकीकृत अकादमिक रिपोर्ट दस्तावेज उत्पादन प्रणाली ।</p>
+            </div>
+            <div class="control-btns-cluster">
+                <button type="button" class="btn btn-primary" id="btnPrintReportCardTrigger"><i class="fa-solid fa-print"></i> Print Report Card</button>
+            </div>
+        </div>
+
+        <div class="report-card-container-printable" id="printableReportCardTargetFrame">
+            
+            <div class="school-branding-header-block">
+                <div class="school-logo-frame">
+                    <img src="rslogo.png.png" onerror="this.src='https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&q=80&w=150'; this.onerror=null;" alt="[LOGO]">
+                </div>
+                <div class="school-identity-meta">
+                    <h1>R.S. Public School</h1>
+                    <p>Khutaha Bazar, Maharajganj, Uttar Pradesh - 273303</p>
+                    <div class="affiliation-notice">Recognized & Co-Educational Senior Secondary Institution Registry Framework</div>
+                </div>
+                <div class="report-doc-title-pill">
+                    <h2 id="lblHeaderExamType">Annual Examination</h2>
+                    <p id="lblHeaderSession">Session: --------</p>
+                </div>
+            </div>
+
+            <div class="student-biography-meta-grid">
+                <div class="biography-fields-container">
+                    <div class="biography-row-field"><span class="biography-label">Student Name:</span><span class="biography-value" id="lblBioName">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Admission Number:</span><span class="biography-value" id="lblBioAdmissionNo">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Class Room Grade:</span><span class="biography-value" id="lblBioClass">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Section Division:</span><span class="biography-value" id="lblBioSection">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Roll Number:</span><span class="biography-value" id="lblBioRollNo">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Date of Birth:</span><span class="biography-value" id="lblBioDob">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Father's Name:</span><span class="biography-value" id="lblBioFatherName">--------</span></div>
+                    <div class="biography-row-field"><span class="biography-label">Mother's Name:</span><span class="biography-value" id="lblBioMotherName">--------</span></div>
+                </div>
+                <div class="biography-student-avatar-frame">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=120" id="imgStudentPhoto" alt="Student Profile Photography ID">
+                </div>
+            </div>
+
+            <div class="table-title-banner">Part I: Academic Scholastic Achievement Report Ledger Sheet</div>
+            <table id="tblScholasticPerformanceGrid">
+                <thead>
+                    <tr>
+                        <th>Core Course Curriculum Syllabus Subject Node</th>
+                        <th class="text-center" style="width: 120px;">Maximum Marks</th>
+                        <th class="text-center" style="width: 120px;">Obtained Marks</th>
+                        <th class="text-center" style="width: 110px;">Percentage</th>
+                        <th class="text-center" style="width: 90px;">Grade</th>
+                        <th class="text-center" style="width: 110px;">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyScholasticPerformanceRowsContainer">
+                </tbody>
+            </table>
+
+            <div class="summary-results-strip">
+                <div class="summary-strip-pill"><span>Gross Max:</span><span id="lblStripMaxMarks">0</span></div>
+                <div class="summary-strip-pill"><span>Gross Yield:</span><span id="lblStripObtainedMarks">0</span></div>
+                <div class="summary-strip-pill"><span>Percentage:</span><span id="lblStripPercentage">0.0%</span></div>
+                <div class="summary-strip-pill"><span>Composite Grade:</span><span id="lblStripGrade">-</span></div>
+                <div class="summary-strip-pill"><span>Cohort Rank:</span><span id="lblStripRank">--</span></div>
+                <div class="summary-strip-pill"><span>Final Outcome:</span><span id="lblStripOutcome">Pending</span></div>
+            </div>
+
+            <div class="twin-split-tables-container">
+                <div>
+                    <div class="table-title-banner">Part II: Co-Scholastic Metrics Evaluation Index (A-E)</div>
+                    <table id="tblCoScholasticPerformanceGrid">
+                        <thead>
+                            <tr>
+                                <th>Co-Scholastic Domain Parameter Field</th>
+                                <th class="text-center" style="width: 90px;">Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyCoScholasticPerformanceRowsContainer">
+                        </tbody>
+                    </table>
+                </div>
+
+                <div>
+                    <div class="table-title-banner">Part III: Attendance Verification Tracker</div>
+                    <table id="tblAttendanceSummaryGrid">
+                        <thead>
+                            <tr>
+                                <th>Attendance Verification Metric Property</th>
+                                <th class="text-center" style="width: 100px;">Value Log</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Total Formal Session Working Days</td><td class="text-center font-bold" id="lblAttTotalDays">0</td></tr>
+                            <tr><td>Recorded Verified Present Days</td><td class="text-center font-bold" id="lblAttPresentDays">0</td></tr>
+                            <tr><td>Absent Matrix Parameter Trace</td><td class="text-center font-bold" id="lblAttAbsentDays">0</td></tr>
+                            <tr><td>Aggregated Attendance Level</td><td class="text-center font-bold" style="color:var(--primary-color);" id="lblAttPercentage">0.0%</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="evaluation-appraisal-remarks-card">
+                <h4>Class Teacher Comprehensive Assessment Appraisals & Remarks</h4>
+                <p id="lblClassTeacherRemarksParagraphBodyStr">--------</p>
+                <div class="compliance-promotion-badge-inline" id="lblPromotionStatusComplianceWrapperLine">
+                    Graduation Promotion Status Clearance Assessment: <span id="lblPromotionStatusTextStringValue" style="text-transform:uppercase; font-weight:800;">Pending Formula Evaluation</span>
+                </div>
+            </div>
+
+            <div class="signature-clearance-board-row">
+                <div class="signature-block-node">
+                    <div class="signature-line-placeholder">Class Teacher Signature</div>
+                </div>
+                <div class="signature-block-node">
+                    <div class="signature-line-placeholder">Exam Incharge Signature</div>
+                </div>
+                <div class="signature-block-node">
+                    <div class="school-seal-emblem-mock">
+                        R.S. Public<br>School Seal<br>Maharajganj
+                    </div>
+                    <div class="signature-line-placeholder" style="margin-top:0;">School Emblem Seal</div>
+                </div>
+                <div class="signature-block-node">
+                    <div class="signature-line-placeholder">Principal Signatory Authority</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px; border-top: 1px dashed var(--border-light); padding-top: 4px; font-size: 9px; color: var(--text-light); text-align: right; font-style: italic;">
+                System Document Verification Tracking ID Trace: RSPS-ERP-REP-2026-984321A. Result Declaration Generated On Target Timestamp: <span id="lblDeclarationDate">2026-06-16</span>.
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const targetReportCardDatasetMasterInstancePayload = {
+            admissionNo: "ADM2026101",
+            rollNo: "14",
+            studentName: "Shweta Miliya",
+            className: "Class 12",
+            section: "Section A",
+            fatherName: "Rajendra Prasad Miliya",
+            motherName: "Savitri Devi Miliya",
+            dob: "2008-11-23",
+            mobile: "9451238843",
+            sessionPeriod: "2025-2026",
+            examTypeModuleLabel: "Annual Final Progress Assessment",
+            resultDeclarationDateFormattedStr: "2026-03-28",
+            cohortRankPositionStringIndex: "3rd Place",
+            classTeacherAssessmentAppraisalRemarksBodyStr: "Shweta has maintained an exceptional performance matrix timeline trace throughout this entire session tenure period. She displays advanced cognitive comprehension processing traits inside literature and information technology domains. Her cooperative leadership instincts inside co-scholastic group tasks parameters are exemplary.",
+            promotionAdvancementDecisionClassificationCode: "Promoted to Undergraduate Foundation Tier Degree Stream / Completed Senior Secondary Graduation Layout Clearance Matrix Check",
+            photoAvatarUrlAddressPath: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=120",
+            scholasticPerformanceMarksTableDataCarrierList: [
+                { subjectName: "English Core Syllabus Module", maxMarks: 100, obtainedMarks: 88 },
+                { subjectName: "Hindi Elective Textual Composition", maxMarks: 100, obtainedMarks: 85 },
+                { subjectName: "Mathematics Foundation Logic", maxMarks: 100, obtainedMarks: 95 },
+                { subjectName: "Science & Engineering Core Theories", maxMarks: 100, obtainedMarks: 92 },
+                { subjectName: "Social Science History & Economics", maxMarks: 100, obtainedMarks: 78 },
+                { subjectName: "Computer Architecture & Python Programming Foundations", maxMarks: 100, obtainedMarks: 94 },
+                { subjectName: "General Knowledge & Global Current Affairs Tracking", maxMarks: 50, obtainedMarks: 44 }
+            ],
+            coScholasticPerformanceGradingDomainFieldsList: [
+                { propertyFieldLabel: "Institutional Discipline & Dress Code Compliance", assignedLetterGrade: "A+" },
+                { propertyFieldLabel: "Competitive Sports Athletics & Teamwork Cooperation", assignedLetterGrade: "A" },
+                { propertyFieldLabel: "Fine Arts & Visual Craft Innovations Designing", assignedLetterGrade: "B+" },
+                { propertyFieldLabel: "Advanced Practical Computer Skills Lab Implementations", assignedLetterGrade: "A+" },
+                { propertyFieldLabel: "Vocal Communication Skills & Presentation", assignedLetterGrade: "A" },
+                { propertyFieldLabel: "General Behavior Metrics & Peer Interactivity", assignedLetterGrade: "A" }
+            ],
+            attendanceMetricsTrackerLogObjectPayload: {
+                totalFormalWorkingDays: 218,
+                recordedPresentDaysCount: 201,
+                calculatedAbsentDaysCount: 17
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            executeReportCardCompilationLifecycle();
+        });
+
+        function executeReportCardCompilationLifecycle() {
+            const data = targetReportCardDatasetMasterInstancePayload;
+
+            // 1. Ingest Master Top Branding Dynamic Document Header Values Mappings Properties
+            document.getElementById("lblHeaderSession").textContent = `Session: ${data.sessionPeriod}`;
+            document.getElementById("lblHeaderExamType").textContent = data.examTypeModuleLabel;
+            document.getElementById("lblDeclarationDate").textContent = data.resultDeclarationDateFormattedStr;
+
+            // 2. Ingest Biography Profile Card Values Text Fields Strings Mappings
+            document.getElementById("lblBioName").textContent = data.studentName;
+            document.getElementById("lblBioAdmissionNo").textContent = data.admissionNo;
+            document.getElementById("lblBioClass").textContent = data.className;
+            document.getElementById("lblBioSection").textContent = data.section;
+            document.getElementById("lblBioRollNo").textContent = data.rollNo;
+            document.getElementById("lblBioDob").textContent = data.dob;
+            document.getElementById("lblBioFatherName").textContent = data.fatherName;
+            document.getElementById("lblBioMotherName").textContent = data.motherName;
+            document.getElementById("imgStudentPhoto").setAttribute("src", data.photoAvatarUrlAddressPath);
+
+            // 3. Render Academic Scholastic Performance Table Lines Nodes Underneath Formula Calculations
+            let runningSumMaxMarks = 0;
+            let runningSumObtainedMarks = 0;
+
+            const tbodyScholasticTableContainer = document.getElementById("tbodyScholasticPerformanceRowsContainer");
+            tbodyScholasticTableContainer.innerHTML = "";
+
+            data.scholasticPerformanceMarksTableDataCarrierList.forEach(row => {
+                runningSumMaxMarks += row.maxMarks;
+                runningSumObtainedMarks += row.obtainedMarks;
+
+                const subjectPctRatioVal = (row.obtainedMarks / row.maxMarks) * 100;
+                
+                let rowLetterGradeSymbol = "F";
+                if (subjectPctRatioVal >= 90) rowLetterGradeSymbol = "A+";
+                else if (subjectPctRatioVal >= 80) rowLetterGradeSymbol = "A";
+                else if (subjectPctRatioVal >= 70) rowLetterGradeSymbol = "B+";
+                else if (subjectPctRatioVal >= 60) rowLetterGradeSymbol = "B";
+                else if (subjectPctRatioVal >= 50) rowLetterGradeSymbol = "C";
+                else if (subjectPctRatioVal >= 33) rowLetterGradeSymbol = "D";
+
+                const subjectOutcomeStatusLabelStr = subjectPctRatioVal >= 33.0 ? "Passed" : "Failed";
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td><strong>${row.subjectName}</strong></td>
+                    <td class="text-center font-bold" style="color:var(--text-light);">${row.maxMarks}</td>
+                    <td class="text-center font-bold" style="color:var(--primary-color);">${row.obtainedMarks}</td>
+                    <td class="text-center">${subjectPctRatioVal.toFixed(1)}%</td>
+                    <td class="text-center font-bold">${rowLetterGradeSymbol}</td>
+                    <td class="text-center"><span style="font-weight:600; color:${subjectPctRatioVal >= 33.0 ? 'var(--success)' : 'var(--danger)'};">${subjectOutcomeStatusLabelStr}</span></td>
+                `;
+                tbodyScholasticTableContainer.appendChild(tr);
+            });
+
+            // 4. Compute Final Aggregate Values Ratios for Results Summary Strip Banner
+            const finalComputedAggregatePercentageFloatVal = (runningSumObtainedMarks / runningSumMaxMarks) * 100;
+            
+            let finalCompositeLetterGradeSymbolStr = "F";
+            if (finalComputedAggregatePercentageFloatVal >= 90.0) finalCompositeLetterGradeSymbolStr = "A+";
+            else if (finalComputedAggregatePercentageFloatVal >= 80.0) finalCompositeLetterGradeSymbolStr = "A";
+            else if (finalComputedAggregatePercentageFloatVal >= 70.0) finalCompositeLetterGradeSymbolStr = "B+";
+            else if (finalComputedAggregatePercentageFloatVal >= 60.0) finalCompositeLetterGradeSymbolStr = "B";
+            else if (finalComputedAggregatePercentageFloatVal >= 50.0) finalCompositeLetterGradeSymbolStr = "C";
+            else if (finalComputedAggregatePercentageFloatVal >= 33.0) finalCompositeLetterGradeSymbolStr = "D";
+
+            const finalVerificationOutcomeClassificationLabelStr = finalComputedAggregatePercentageFloatVal >= 33.0 ? "PASS" : "FAIL";
+
+            document.getElementById("lblStripMaxMarks").textContent = runningSumMaxMarks;
+            document.getElementById("lblStripObtainedMarks").textContent = runningSumObtainedMarks;
+            document.getElementById("lblStripPercentage").textContent = `${finalComputedAggregatePercentageFloatVal.toFixed(1)}%`;
+            document.getElementById("lblStripGrade").textContent = finalCompositeLetterGradeSymbolStr;
+            document.getElementById("lblStripRank").textContent = data.cohortRankPositionStringIndex;
+            
+            const outcomeTextNodeSpan = document.getElementById("lblStripOutcome");
+            outcomeTextNodeSpan.textContent = finalVerificationOutcomeClassificationLabelStr;
+            outcomeTextNodeSpan.style.color = finalComputedAggregatePercentageFloatVal >= 33.0 ? "var(--success)" : "var(--danger)";
+
+            // 5. Render Part II Co-Scholastic Performance Table Lines Nodes Grid Tree Layout
+            const tbodyCoScholasticTableContainer = document.getElementById("tbodyCoScholasticPerformanceRowsContainer");
+            tbodyCoScholasticTableContainer.innerHTML = "";
+
+            data.coScholasticPerformanceGradingDomainFieldsList.forEach(row => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td>${row.propertyFieldLabel}</td>
+                    <td class="text-center font-bold" style="color:var(--primary-color);">${row.assignedLetterGrade}</td>
+                `;
+                tbodyCoScholasticTableContainer.appendChild(tr);
+            });
+
+            // 6. Populate Part III Attendance Verification Log Matrix Numbers Indicators Counters
+            const att = data.attendanceMetricsTrackerLogObjectPayload;
+            const computedAttendancePercentageFloatRatioVal = (att.recordedPresentDaysCount / att.totalFormalWorkingDays) * 100;
+
+            document.getElementById("lblAttTotalDays").textContent = att.totalFormalWorkingDays;
+            document.getElementById("lblAttPresentDays").textContent = att.recordedPresentDaysCount;
+            document.getElementById("lblAttAbsentDays").textContent = att.calculatedAbsentDaysCount;
+            document.getElementById("lblAttPercentage").textContent = `${computedAttendancePercentageFloatRatioVal.toFixed(1)}%`;
+
+            // 7. Ingest Teacher Assessment Evaluation Comments & Graduation Promotion Status Label Strings
+            document.getElementById("lblClassTeacherRemarksParagraphBodyStr").textContent = data.classTeacherAssessmentAppraisalRemarksBodyStr;
+            
+            const targetPromotionStatusLabelContainerStringNode = document.getElementById("lblPromotionStatusTextStringValue");
+            targetPromotionStatusLabelContainerStringNode.textContent = data.promotionAdvancementDecisionClassificationCode;
+            targetPromotionStatusLabelContainerStringNode.style.color = finalComputedAggregatePercentageFloatVal >= 33.0 ? "var(--success)" : "var(--danger)";
+
+            setupInterfaceActionControlListeners();
+        }
+
+        function setupInterfaceActionControlListeners() {
+            document.getElementById("btnPrintReportCardTrigger").addEventListener("click", () => {
+                window.print();
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Teacher Profile | R.S. Public School ERP</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F4B;
+            --secondary-color: #d4a017;
+            --bg-color: #f4f7fc;
+            --text-color: #333333;
+            --text-light: #666666;
+            --white: #ffffff;
+            --border-color: #cbd5e1;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ERP Layout Sidebar Workspace Base */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 20px;
+            flex-shrink: 0;
+        }
+
+        .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 12px 15px;
+            color: #a0aec0;
+            text-decoration: none;
+            border-radius: var(--radius);
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+
+        .menu-item.active, .menu-item:hover {
+            background-color: rgba(212, 160, 23, 0.15);
+            color: var(--secondary-color);
+        }
+
+        /* Main Workspace Section */
+        .main-content {
+            flex-grow: 1;
+            padding: 30px;
+            overflow-x: hidden;
+        }
+
+        /* Top Header Area Panel */
+        .profile-header-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .profile-meta-block {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .profile-large-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--border-color);
+        }
+
+        .profile-title-info h2 {
+            font-size: 22px;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-title-info p {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .badge-active { background-color: #e6f4ea; color: var(--success); }
+        .badge-inactive { background-color: #f1f5f9; color: var(--text-light); }
+        .badge-suspended { background-color: #fef3c7; color: var(--warning); }
+        .badge-resigned { background-color: #fce8e6; color: var(--danger); }
+
+        .header-action-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary { background-color: var(--primary-color); color: var(--white); }
+        .btn-primary:hover { background-color: #123070; }
+        
+        .btn-secondary { background-color: var(--white); color: var(--primary-color); border: 1px solid var(--border-color); }
+        .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
+
+        .btn-danger { background-color: var(--danger); color: var(--white); }
+        .btn-danger:hover { background-color: #dc2626; }
+
+        /* Form Configuration Fields Layout */
+        form {
+            width: 100%;
+        }
+
+        .section-card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-top: 4px solid var(--primary-color);
+        }
+
+        .section-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .section-card-title i {
+            color: var(--secondary-color);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.span-2 { grid-column: span 2; }
+        .form-group.span-4 { grid-column: span 4; }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .form-group label .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+
+        .form-control {
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+            background-color: var(--white);
+            color: var(--text-color);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(11, 31, 75, 0.1);
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #f1f5f9;
+            color: var(--text-light);
+            cursor: not-allowed;
+            border-color: #e2e8f0;
+        }
+
+        .form-radio-group {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            height: 40px;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .radio-label input[type="radio"] {
+            width: 17px;
+            height: 17px;
+            accent-color: var(--primary-color);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* Form Operational Controls Footer Panel */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 50px;
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .action-right-cluster {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Alert Toast Confirmation Screen Element */
+        .alert-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--success);
+            color: var(--white);
+            padding: 16px 25px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.4s ease-in-out;
+            font-weight: 500;
+        }
+
+        .alert-toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive UI Device Adapters */
+        @media (max-width: 1200px) {
+            .form-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 992px) {
+            .form-grid { grid-template-columns: repeat(2, 1fr); }
+            .form-group.span-2 { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; padding: 15px; }
+            .brand { margin-bottom: 15px; }
+            .main-content { padding: 15px; }
+            .profile-header-card { flex-direction: column; align-items: flex-start; }
+            .form-grid { grid-template-columns: 1fr; }
+            .form-group.span-2, .form-group.span-4 { grid-column: span 1; }
+            .form-actions { flex-direction: column; align-items: stretch; }
+            .action-right-cluster { flex-direction: column; }
+            .btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="brand">
+            <i class="fa-solid fa-school"></i> R.S. Public School
+        </div>
+        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+        <a href="teachers-management.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
+        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
+    </div>
+
+    <div class="main-content">
+        
+        <div class="profile-header-card">
+            <div class="profile-meta-block">
+                <img src="" id="headPhoto" class="profile-large-avatar" alt="Faculty Avatar">
+                <div class="profile-title-info">
+                    <h2 id="headName">--------</h2>
+                    <p>Editing Target Configuration Framework Entity Profile</p>
+                    <p style="font-weight: 600; color: var(--primary-color); margin-top: 2px;">ID Key: <span id="headTeacherId">----</span></p>
+                    <div id="headStatusBadge" class="badge">----</div>
+                    <p style="font-size: 11px; color: var(--text-light); margin-top: 6px;"><i class="fa-solid fa-clock-rotate-left"></i> Last Database Sync Commit: <span id="lblLastUpdated">--/--/----</span></p>
+                </div>
+            </div>
+            <div class="header-action-btns">
+                <a href="" class="btn btn-secondary" id="btnBackToProfileTop"><i class="fa-solid fa-chevron-left"></i> Back to Profile</a>
+            </div>
+        </div>
+
+        <form id="editTeacherForm" name="editTeacherForm" enctype="multipart/form-data" novalidate>
+            
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-user"></i> Section 1: Personal Information Modification Layer</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="teacherId">Teacher ID (Immutable Field Key)</label>
+                        <input type="text" id="teacherId" name="teacherId" class="form-control" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="teacherName">Teacher Name <span class="required">*</span></label>
+                        <input type="text" id="teacherName" name="teacherName" class="form-control" required>
+                        <div class="error-message" id="errTeacherName">Teacher name entry string is a mandatory configuration property.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="fatherName">Father's Name <span class="required">*</span></label>
+                        <input type="text" id="fatherName" name="fatherName" class="form-control" required>
+                        <div class="error-message" id="errFatherName">Father name property required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="motherName">Mother's Name <span class="required">*</span></label>
+                        <input type="text" id="motherName" name="motherName" class="form-control" required>
+                        <div class="error-message" id="errMotherName">Mother name context validation required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender <span class="required">*</span></label>
+                        <select id="gender" name="gender" class="form-control" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <div class="error-message" id="errGender">Please resolve core gender field specification mapping.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span class="required">*</span></label>
+                        <input type="date" id="dob" name="dob" class="form-control" required>
+                        <div class="error-message" id="errDob">System calendar record tracking birthdate parameter needed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="bloodGroup">Blood Group</label>
+                        <select id="bloodGroup" name="bloodGroup" class="form-control">
+                            <option value="">-- Select Blood Group --</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="maritalStatus">Marital Status</label>
+                        <select id="maritalStatus" name="maritalStatus" class="form-control">
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="teacherPhotoUpload">Overwrite Faculty Profile Photo</label>
+                        <input type="file" id="teacherPhotoUpload" name="teacherPhotoUpload" class="form-control" accept="image/*">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-address-book"></i> Section 2: Communication & Contact Infrastructure Matrix</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="mobileNumber">Mobile Number <span class="required">*</span></label>
+                        <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" maxlength="10" required>
+                        <div class="error-message" id="errMobileNumber">Provide a valid structural 10-digit primary communication channel key sequence.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="alternateMobileNumber">Alternate Mobile Number</label>
+                        <input type="tel" id="alternateMobileNumber" name="alternateMobileNumber" class="form-control" maxlength="10">
+                        <div class="error-message" id="errAltMobileNumber">Format mismatch parameter constraint checks for alternate mobile failed.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="emailAddress">Email Address <span class="required">*</span></label>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-control" required>
+                        <div class="error-message" id="errEmailAddress">Operational system email tracking structure format invalid.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="address">Full Residential Address <span class="required">*</span></label>
+                        <input type="text" id="address" name="address" class="form-control" required>
+                        <div class="error-message" id="errAddress">Primary geo residence physical location field trace mandatory.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City <span class="required">*</span></label>
+                        <input type="text" id="city" name="city" class="form-control" required>
+                        <div class="error-message" id="errCity">City boundary parameter required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="state">State <span class="required">*</span></label>
+                        <input type="text" id="state" name="state" class="form-control" required>
+                        <div class="error-message" id="errState">State jurisdictional tracking boundary context required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">Pincode <span class="required">*</span></label>
+                        <input type="text" id="pincode" name="pincode" class="form-control" maxlength="6" required>
+                        <div class="error-message" id="errPincode">Enter standard valid 6-digit postal zip routing area code parameters.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-briefcase"></i> Section 3: Professional Employment Scope Parameters</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="department">Department <span class="required">*</span></label>
+                        <select id="department" name="department" class="form-control" required>
+                            <option value="Science">Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Languages">Languages</option>
+                            <option value="Humanities">Humanities</option>
+                            <option value="Primary Department">Primary Department</option>
+                        </select>
+                        <div class="error-message" id="errDepartment">Please map corresponding primary academic workspace division allocation.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="designation">Designation Title <span class="required">*</span></label>
+                        <input type="text" id="designation" name="designation" class="form-control" required>
+                        <div class="error-message" id="errDesignation">Designation role parameter layout value mandatory.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="qualification">Qualification Credentials <span class="required">*</span></label>
+                        <input type="text" id="qualification" name="qualification" class="form-control" required>
+                        <div class="error-message" id="errQualification">Academic credentials transcript summaries mandatory.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="specialization">Syllabus Specialization Scope</label>
+                        <input type="text" id="specialization" name="specialization" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="experience">Experience Metrics Descriptor</label>
+                        <input type="text" id="experience" name="experience" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="joiningDate">Official Institutional Joining Date <span class="required">*</span></label>
+                        <input type="date" id="joiningDate" name="joiningDate" class="form-control" required>
+                        <div class="error-message" id="errJoiningDate">Formal joining timeline metrics initialization parameter missing.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label>Employment Classification Type <span class="required">*</span></label>
+                        <div class="form-radio-group">
+                            <label class="radio-label"><input type="radio" name="employmentType" value="Full Time"> Full Time</label>
+                            <label class="radio-label"><input type="radio" name="employmentType" value="Part Time"> Part Time</label>
+                            <label class="radio-label"><input type="radio" name="employmentType" value="Contract"> Contract</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-money-bill-wave"></i> Section 4: Compensation & Payroll Computational Metrics</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="basicSalary">Basic Monthly Fixed Salary <span class="required">*</span></label>
+                        <input type="number" id="basicSalary" name="basicSalary" class="form-control" min="0" required>
+                        <div class="error-message" id="errBasicSalary">Valid configuration base payroll currency baseline configuration missing.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="allowances">Aggregated Allowances Matrix</label>
+                        <input type="number" id="allowances" name="allowances" class="form-control" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="deductions">System Structural Deductions Baseline</label>
+                        <input type="number" id="deductions" name="deductions" class="form-control" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="netSalary">Computed Net Salary Yield (Calculated Value)</label>
+                        <input type="number" id="netSalary" name="netSalary" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-building-columns"></i> Section 5: Financial Processing Bank Clearing Target Parameters</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="bankName">Bank Institution Clearing Name <span class="required">*</span></label>
+                        <input type="text" id="bankName" name="bankName" class="form-control" required>
+                        <div class="error-message" id="errBankName">Bank structural identification text reference token needed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountHolder">Account Holder Name Context <span class="required">*</span></label>
+                        <input type="text" id="accountHolder" name="accountHolder" class="form-control" required>
+                        <div class="error-message" id="errAccountHolder">Legal registration account holder matching context entity label required.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="accountNumber">Bank Clearing Account Number Mapping <span class="required">*</span></label>
+                        <input type="text" id="accountNumber" name="accountNumber" class="form-control" required>
+                        <div class="error-message" id="errAccountNumber">Core clearing routing settlement reference data number string mandatory.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="ifscCode">System Clearance Routing IFSC Key Code <span class="required">*</span></label>
+                        <input type="text" id="ifscCode" name="ifscCode" class="form-control" maxlength="11" required>
+                        <div class="error-message" id="errIfscCode">Valid 11 character clearing code context tracker missing.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-folder-open"></i> Section 6: Secure Documents Storage Verification Vault Identifiers</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="aadhaarNumber">National Verification Unique Identification Number (Masked Variable Placeholder) <span class="required">*</span></label>
+                        <input type="text" id="aadhaarNumber" name="aadhaarNumber" class="form-control" required>
+                        <div class="error-message" id="errAadhaarNumber">Verification data parameter mandatory constraint matching failed.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="panNumber">Tax Identification Account Code (PAN Mapping String) <span class="required">*</span></label>
+                        <input type="text" id="panNumber" name="panNumber" class="form-control" maxlength="10" required>
+                        <div class="error-message" id="errPanNumber">Enter valid structural tax registration tracking identifier metrics.</div>
+                    </div>
+                    <div class="form-group span-2">
+                        <label for="qualificationUpload">Overwrite Qualification Degree Certificate Dossier (PDF File Upload)</label>
+                        <input type="file" id="qualificationUpload" name="qualificationUpload" class="form-control" accept=".pdf">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-card-title"><i class="fa-solid fa-toggle-on"></i> Section 7: Faculty System Security Lifecycle Operational Status</div>
+                <div class="form-grid">
+                    <div class="form-group span-4">
+                        <label>Active Operational System State</label>
+                        <div class="form-radio-group">
+                            <label class="radio-label"><input type="radio" name="status" value="Active"> Active Status Track</label>
+                            <label class="radio-label"><input type="radio" name="status" value="Inactive"> Inactive Status Track</label>
+                            <label class="radio-label"><input type="radio" name="status" value="Suspended"> Suspended Operational State</label>
+                            <label class="radio-label"><input type="radio" name="status" value="Resigned"> Formally Resigned File Entry</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-danger" id="btnDeleteTeacher"><i class="fa-solid fa-trash-can"></i> Delete Teacher Profile</button>
+                <div class="action-right-cluster">
+                    <button type="button" class="btn btn-secondary" id="btnResetChangesForm"><i class="fa-solid fa-rotate-left"></i> Reset Changes</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveChangesUpdate"><i class="fa-solid fa-floppy-disk"></i> Update Teacher Profile</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="alert-toast" id="successToast">
+        <i class="fa-solid fa-circle-check fa-lg"></i>
+        <span>System Database Synchronization Active: Teacher schema records successfully written and initialized.</span>
+    </div>
+
+    <script>
+        /**
+         * INITIAL OPERATIONAL COMMERCIAL RECONCILIATION SEED RECORD SAMPLE DATA OBJECT VALUE
+         */
+        const initialTeacherProfileMasterRecordPayload = {
+            id: "T001",
+            name: "Amit Sharma",
+            fatherName: "Ram Prakash Sharma",
+            motherName: "Saraswati Devi",
+            gender: "Male",
+            dob: "1985-08-14",
+            bloodGroup: "O+",
+            maritalStatus: "Married",
+            mobile: "9876543210",
+            altMobile: "9123456789",
+            email: "amit.sharma@rspublicschool.edu.in",
+            address: "House 412, Sector 4, Vikas Nagar Block B",
+            city: "Maharajganj",
+            state: "Uttar Pradesh",
+            pincode: "273303",
+            department: "Science",
+            designation: "PGT Senior Faculty",
+            qualification: "M.Sc Physics, B.Ed",
+            specialization: "Quantum Mechanics",
+            experience: "12 Years Academic Service",
+            joiningDate: "2014-07-01",
+            employmentType: "Full Time",
+            basicSalary: 54000,
+            allowances: 12500,
+            deductions: 4200,
+            bankName: "State Bank of India",
+            accountHolder: "Amit Sharma",
+            accountNumber: "30491827461",
+            ifscCode: "SBIN0001234",
+            aadhaarMaskedPlaceholder: "[Aadhaar Redacted]",
+            panCode: "ABCPS1234Q",
+            status: "Active",
+            lastUpdated: "2026-06-15"
+        };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            executeEditViewInitializationLifecycle();
+        });
+
+        function executeEditViewInitializationLifecycle() {
+            populateFormWorkspaceFromDataPayload(initialTeacherProfileMasterRecordPayload);
+            configureSalaryAutoCalculationPipeline();
+            setupFormInteractivitySubmissionPipeline();
+        }
+
+        /**
+         * RELATIONAL GRAPH DOM DATA INJECTION ENGINE
+         * Loads backend database transaction payloads into targeted interactive workspace form structures
+         */
+        function populateFormWorkspaceFromDataPayload(data) {
+            
+            /* BACKEND HTTP REST API PIPELINE DATABIND HANDSHAKE REPLICATION NOTE:
+             * Expected Data Ingestion Query Mechanism Path Route Context:
+             * GET /api/teachers/:id
+             */
+
+            // Top Header Context Layout Injections Mappings
+            document.getElementById("headPhoto").setAttribute("src", "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150");
+            document.getElementById("headName").textContent = data.name;
+            document.getElementById("headTeacherId").textContent = data.id;
+            document.getElementById("lblLastUpdated").textContent = data.lastUpdated;
+            
+            const headBadge = document.getElementById("headStatusBadge");
+            headBadge.textContent = `${data.status} Status Matrix`;
+            headBadge.className = `badge badge-${data.status.toLowerCase()}`;
+
+            // Set Up Navigation Dynamic Back Link Target Address Logic Configuration Properties
+            document.getElementById("btnBackToProfileTop").setAttribute("href", `teacher-profile.html?id=${data.id}`);
+
+            // Section 1 Dom Inputs Elements Extraction Population Matrix Layer
+            document.getElementById("teacherId").value = data.id;
+            document.getElementById("teacherName").value = data.name;
+            document.getElementById("fatherName").value = data.fatherName;
+            document.getElementById("motherName").value = data.motherName;
+            document.getElementById("gender").value = data.gender;
+            document.getElementById("dob").value = data.dob;
+            document.getElementById("bloodGroup").value = data.bloodGroup;
+            document.getElementById("maritalStatus").value = data.maritalStatus;
+
+            // Section 2 Communications Coordinates Data Setup Binding
+            document.getElementById("mobileNumber").value = data.mobile;
+            document.getElementById("alternateMobileNumber").value = data.altMobile;
+            document.getElementById("emailAddress").value = data.email;
+            document.getElementById("address").value = data.address;
+            document.getElementById("city").value = data.city;
+            document.getElementById("state").value = data.state;
+            document.getElementById("pincode").value = data.pincode;
+
+            // Section 3 Employment Metadata Properties Mapping Context
+            document.getElementById("department").value = data.department;
+            document.getElementById("designation").value = data.designation;
+            document.getElementById("qualification").value = data.qualification;
+            document.getElementById("specialization").value = data.specialization;
+            document.getElementById("experience").value = data.experience;
+            document.getElementById("joiningDate").value = data.joiningDate;
+            
+            // Radio Inputs Selector Resolution Logic For Employment Type
+            const empTypeRadios = document.getElementsByName("employmentType");
+            empTypeRadios.forEach(radio => {
+                if (radio.value === data.employmentType) radio.checked = true;
+            });
+
+            // Section 4 Financial Payroll Structuring
+            document.getElementById("basicSalary").value = data.basicSalary;
+            document.getElementById("allowances").value = data.allowances;
+            document.getElementById("deductions").value = data.deductions;
+            
+            const initialNetCalculatedVal = data.basicSalary + data.allowances - data.deductions;
+            document.getElementById("netSalary").value = initialNetCalculatedVal;
+
+            // Section 5 Banking Clearing Directives
+            document.getElementById("bankName").value = data.bankName;
+            document.getElementById("accountHolder").value = data.accountHolder;
+            document.getElementById("accountNumber").value = data.accountNumber;
+            document.getElementById("ifscCode").value = data.ifscCode;
+
+            // Section 6 Secure Documentation Identifiers
+            document.getElementById("aadhaarNumber").value = data.aadhaarMaskedPlaceholder;
+            document.getElementById("panNumber").value = data.panCode;
+
+            // Section 7 Radio Status Element Context Layout Loop Resolution Mapping Property Selection
+            const statusRadios = document.getElementsByName("status");
+            statusRadios.forEach(radio => {
+                if (radio.value === data.status) radio.checked = true;
+            });
+        }
+
+        /**
+         * MATH PIPELINE TRANSACTION TRACKING PIPELINES
+         * Synchronizes dynamic computing actions over numeric basic financial compensation components matrix
+         */
+        function configureSalaryAutoCalculationPipeline() {
+            const basicInput = document.getElementById("basicSalary");
+            const allowanceInput = document.getElementById("allowances");
+            const deductionInput = document.getElementById("deductions");
+
+            const executeCalculation = () => {
+                const basic = parseFloat(basicInput.value) || 0;
+                const allowance = parseFloat(allowanceInput.value) || 0;
+                const deduction = parseFloat(deductionInput.value) || 0;
+
+                const computedNetSalary = basic + allowance - deduction;
+                document.getElementById("netSalary").value = Math.max(0, computedNetSalary).toFixed(2);
+            };
+
+            basicInput.addEventListener("input", executeCalculation);
+            allowanceInput.addEventListener("input", executeCalculation);
+            deductionInput.addEventListener("input", executeCalculation);
+        }
+
+        /**
+         * MASTER TRANSACTION CONTROL INTERACTIVE ROUTER EVENT BINDINGS PIPELINE
+         */
+        function setupFormInteractivitySubmissionPipeline() {
+            const form = document.getElementById("editTeacherForm");
+            const resetBtn = document.getElementById("btnResetChangesForm");
+            const deleteBtn = document.getElementById("btnDeleteTeacher");
+
+            // Reset Subsystem Trigger Mechanism Configuration Handler
+            resetBtn.addEventListener("click", () => {
+                if(confirm("Are you sure you want to revert current workspace data updates back to original database query baseline states values?")) {
+                    clearFormValidationBanners();
+                    populateFormWorkspaceFromDataPayload(initialTeacherProfileMasterRecordPayload);
+                }
+            });
+
+            // Master Delete Data Entry Logic Controller Component Interactivity Pipeline Execution Hook
+            deleteBtn.addEventListener("click", () => {
+                const trackingEntityId = document.getElementById("teacherId").value;
+                if (confirm(`CRITICAL SECURITY NOTICE: Are you absolute certain you wish to completely scrub and delete Faculty Profile Record Instance [ID: ${trackingEntityId}] from institutional persistent databases? This action causes cascading schema drops and cannot be undone.`)) {
+                    
+                    /* BACKEND DELETION QUERY NODE TRANSACTION BRIDGE IMPLEMENTATION ROUTE HOOK REFERENCE NOTE:
+                     * Operational Destination Path Route Target: DELETE /api/teachers/:id
+                     * SQL Context: DELETE FROM teachers_master WHERE teacher_id = ?
+                     */
+                    console.log(`System Processing Architecture Request: Purging target instance entity data tracking metrics for node ${trackingEntityId}`);
+                    
+                    alert(`Data Scrub Status Synchronization Confirmation: Profile instance entry ${trackingEntityId} successfully deleted from core transactional memory layers.`);
+                    window.location.href = "teachers-management.html";
+                }
+            });
+
+            // Standard Record Update Save Trigger Execution Loop Block Handler Pipeline Ingestion
+            form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                clearFormValidationBanners();
+
+                if (validateFormLayoutConstraints()) {
+                    executeDatabaseUpdateMutationTransactionPipeline();
+                } else {
+                    focusFirstInvalidInputElement();
+                }
+            });
+        }
+
+        /**
+         * BUSINESS MODEL CONSTRAINTS LOGIC VERIFICATION STRATEGY PATTERNS ENGINE
+         */
+        function validateFormLayoutConstraints() {
+            let integrityCheckPassed = true;
+
+            const requiredTextFields = [
+                { id: "teacherName", errId: "errTeacherName" },
+                { id: "fatherName", errId: "errFatherName" },
+                { id: "motherName", errId: "errMotherName" },
+                { id: "dob", errId: "errDob" },
+                { id: "gender", errId: "errGender" },
+                { id: "mobileNumber", errId: "errMobileNumber" },
+                { id: "emailAddress", errId: "errEmailAddress" },
+                { id: "address", errId: "errAddress" },
+                { id: "city", errId: "errCity" },
+                { id: "state", errId: "errState" },
+                { id: "pincode", errId: "errPincode" },
+                { id: "department", errId: "errDepartment" },
+                { id: "designation", errId: "errDesignation" },
+                { id: "qualification", errId: "errQualification" },
+                { id: "joiningDate", errId: "errJoiningDate" },
+                { id: "basicSalary", errId: "errBasicSalary" },
+                { id: "bankName", errId: "errBankName" },
+                { id: "accountHolder", errId: "errAccountHolder" },
+                { id: "accountNumber", errId: "errAccountNumber" },
+                { id: "ifscCode", errId: "errIfscCode" },
+                { id: "aadhaarNumber", errId: "errAadhaarNumber" },
+                { id: "panNumber", errId: "errPanNumber" }
+            ];
+
+            requiredTextFields.forEach(field => {
+                const inputElement = document.getElementById(field.id);
+                if (!inputElement || !inputElement.value.trim()) {
+                    displayValidationErrorMessage(field.errId, true);
+                    integrityCheckPassed = false;
+                }
+            });
+
+            // Mobile Communications RegEx Verification Check Matching Filters
+            const mobilePatternRegex = /^[6-9]\d{9}$/;
+            const primaryMobileValueStr = document.getElementById("mobileNumber").value.trim();
+            if (primaryMobileValueStr && !mobilePatternRegex.test(primaryMobileValueStr)) {
+                displayValidationErrorMessage("errMobileNumber", true, "Provide a valid standard 10-digit primary communication channel path code string format.");
+                integrityCheckPassed = false;
+            }
+
+            // Email Address Syntax Structure Tracking Logic Evaluator
+            const emailPatternRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const targetEmailValueStr = document.getElementById("emailAddress").value.trim();
+            if (targetEmailValueStr && !emailPatternRegex.test(targetEmailValueStr)) {
+                displayValidationErrorMessage("errEmailAddress", true, "Syntactical routing structure format check failed against target domain expectations layers mapping.");
+                integrityCheckPassed = false;
+            }
+
+            // Pincode Character Bounds Validation Engine Tracker Module Block
+            const pincodePatternRegex = /^\d{6}$/;
+            const currentZipPincodeStr = document.getElementById("pincode").value.trim();
+            if (currentZipPincodeStr && !pincodePatternRegex.test(currentZipPincodeStr)) {
+                displayValidationErrorMessage("errPincode", true);
+                integrityCheckPassed = false;
+            }
+
+            // Tax Identification Identifier Bounds Verification Engine Block Matching
+            const panPatternRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/i;
+            const currentPanDataStr = document.getElementById("panNumber").value.trim();
+            if (currentPanDataStr && !panPatternRegex.test(currentPanDataStr)) {
+                displayValidationErrorMessage("errPanNumber", true);
+                integrityCheckPassed = false;
+            }
+
+            return integrityCheckPassed;
+        }
+
+        function displayValidationErrorMessage(elementId, stateVisibility, alternateCustomMessageText = null) {
+            const messageDOMTarget = document.getElementById(elementId);
+            if (messageDOMTarget) {
+                if (alternateCustomMessageText) {
+                    messageDOMTarget.textContent = alternateCustomMessageText;
+                }
+                messageDOMTarget.style.display = stateVisibility ? "block" : "none";
+                
+                const associatedInputId = elementId.replace("err", "");
+                const lookupKey = associatedInputId.charAt(0).toLowerCase() + associatedInputId.slice(1);
+                const inputTargetNode = document.getElementById(lookupKey);
+                if (inputTargetNode && stateVisibility) {
+                    inputTargetNode.style.borderColor = "var(--danger)";
+                }
+            }
+        }
+
+        function clearFormValidationBanners() {
+            const clearBanners = document.querySelectorAll(".error-message");
+            clearBanners.forEach(banner => { banner.style.display = "none"; });
+
+            const inputs = document.querySelectorAll(".form-control");
+            inputs.forEach(input => { input.style.borderColor = "var(--border-color)"; });
+        }
+
+        function focusFirstInvalidInputElement() {
+            const firstErrorVisible = Array.from(document.querySelectorAll(".error-message")).find(b => b.style.display === "block");
+            if (firstErrorVisible) {
+                const associatedInputId = firstErrorVisible.id.replace("err", "");
+                const targetKeyString = associatedInputId.charAt(0).toLowerCase() + associatedInputId.slice(1);
+                const focusTarget = document.getElementById(targetKeyString);
+                if (focusTarget) {
+                    focusTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    focusTarget.focus();
+                }
+            }
+        }
+
+        /**
+         * MUTATION INTEGRATION LOGIC COMMITS CONTROLLER HANDSHAKE
+         * Serializes data forms model to prepare async database requests pipelines transformations
+         */
+        function executeDatabaseUpdateMutationTransactionPipeline() {
+            const activeFormDOMRef = document.getElementById("editTeacherForm");
+            const dataCarrierPayloadBuilder = new FormData(activeFormDOMRef);
+            const targetTrackingEntityIdKey = document.getElementById("teacherId").value;
+
+            const plainSerializedStatePayload = {};
+            dataCarrierPayloadBuilder.forEach((value, key) => {
+                if (!(value instanceof File)) {
+                    plainSerializedStatePayload[key] = value;
+                } else {
+                    plainSerializedStatePayload[key] = value.name || "UnchangedFileDossierPropertyStream";
+                }
+            });
+
+            console.log(`Assembling Structural Data Object Model Mutation Blueprint Payload Data Dump for Row Tracking Reference Key Target Node [${targetTrackingEntityIdKey}]:`, plainSerializedStatePayload);
+
+            /* BACKEND NODEJS API ENDPOINT STRUCTURAL DATA HANDSHAKE BRIDGE REFERENCE NOTE:
+             * Operational Destination Path Route Target: PUT /api/teachers/:id
+             *
+             * =========================================================================================
+             * Express ROUTE CONTROLLER FRAMEWORK MUTATION CODE BLUEPRINT HOOK COMPONENT EXAMPLES:
+             * =========================================================================================
+             * app.put('/api/teachers/:id', upload.fields([
+             * { name: 'teacherPhotoUpload', maxCount: 1 },
+             * { name: 'qualificationUpload', maxCount: 1 }
+             * ]), async (req, res) => {
+             * try {
+             * const facultyLookupKeyId = req.params.id;
+             * const { teacherName, fatherName, motherName, gender, dob, mobileNumber, emailAddress, address, city, state, pincode, department, designation, qualification, specialization, experience, joiningDate, employmentType, basicSalary, allowances, deductions, netSalary, bankName, accountHolder, accountNumber, ifscCode, panNumber, status } = req.body;
+             *
+             * const updateQueryStatementStr = `UPDATE teachers_master SET name=?, father_name=?, mother_name=?, gender=?, dob=?, mobile=?, email=?, address=?, city=?, state=?, pincode=?, department=?, designation=?, qualification=?, specialization=?, experience=?, joining_date=?, employment_type=?, basic_salary=?, allowances=?, deductions=?, net_salary=?, bank_name=?, acc_holder=?, acc_no=?, ifsc=?, pan_number=?, status=?, last_updated=NOW() WHERE teacher_id=?`;
+             *
+             * const [executionResultStatus] = await db.query(updateQueryStatementStr, [teacherName, fatherName, motherName, gender, dob, mobileNumber, emailAddress, address, city, state, pincode, department, designation, qualification, specialization, experience, joiningDate, employmentType, basicSalary, allowances, deductions, netSalary, bankName, accountHolder, accountNumber, ifscCode, panNumber, status, facultyLookupKeyId]);
+             *
+             * return res.status(200).json({ success: true, message: 'Teacher enterprise row data changes committed cleanly onto schema records.' });
+             * } catch (error) {
+             * return res.status(500).json({ success: false, error: error.message });
+             * }
+             * });
+             */
+
+            const successToastNode = document.getElementById("successToast");
+            successToastNode.classList.add("show");
+            document.getElementById("btnSaveChangesUpdate").disabled = true;
+
+            setTimeout(() => {
+                successToastNode.classList.remove("show");
+                // Navigate back cleanly within tracking framework to historical parent profiles record overview card context
+                window.location.href = `teacher-profile.html?id=${targetTrackingEntityIdKey}`;
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

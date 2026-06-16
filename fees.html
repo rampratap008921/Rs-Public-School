@@ -1,261 +1,968 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Fee Management</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fee Management — R.S. Public School ERP</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/sidebar.css">
+<link rel="stylesheet" href="css/topbar.css">
 <style>
+  /* ─── TOKENS ─────────────────────────────────────────────── */
+  :root {
+    --bg:        #f4f7fc;
+    --surface:   #ffffff;
+    --panel:     #f8fafc;
+    --border:    #e2e8f0;
+    --border-hi: #cbd5e1;
+    --accent:    #0B1F4B;
+    --accent-lo: rgba(11,31,75,.08);
+    --accent-hi: #0B1F4B;
+    --secondary: #d4a017;
+    --secondary-lo: rgba(212,160,23,.12);
+    --green:     #16a34a;
+    --green-lo:  rgba(22,163,74,.1);
+    --amber:     #d97706;
+    --amber-lo:  rgba(217,119,6,.1);
+    --red:       #dc2626;
+    --red-lo:    rgba(220,38,38,.1);
+    --purple:    #9333ea;
+    --purple-lo: rgba(147,51,234,.1);
+    --text-1:    #1e293b;
+    --text-2:    #475569;
+    --text-3:    #64748b;
+    --mono:      'JetBrains Mono', monospace;
+    --sans:      'Inter', sans-serif;
+    --r-sm:      6px;
+    --r-md:      10px;
+    --r-lg:      14px;
+    --shadow:    0 10px 25px -5px rgba(0,0,0,.05), 0 8px 10px -6px rgba(0,0,0,.05);
+  }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+  /* ─── RESET ──────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 14px; }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text-1);
+         min-height: 100vh; display: flex; flex-direction: column; }
+  input, select, textarea, button { font-family: inherit; font-size: inherit; }
+  button { cursor: pointer; }
+  table { border-collapse: collapse; width: 100%; }
 
-body{
-background:#f4f7fc;
-}
+  /* ─── LAYOUT ─────────────────────────────────────────────── */
+  .app { display: flex; flex: 1; }
+  .main-content {
+    margin-left: 260px;
+    padding: 30px;
+    flex: 1;
+    background: var(--bg);
+  }
 
-.header{
-background:#0B1F4B;
-color:white;
-padding:20px 30px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
+  /* ─── PAGE HEADER ────────────────────────────────────────── */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title { font-size: 22px; font-weight: 700; letter-spacing: -.4px; color: var(--accent); }
+  .page-title span { color: var(--text-3); font-weight: 400; font-size: 13px;
+    display: block; margin-top: 2px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 16px; border-radius: var(--r-sm); font-size: 13px;
+    font-weight: 600; border: none; transition: all .15s; text-decoration: none;
+  }
+  .btn-primary { background: var(--accent); color: #fff; }
+  .btn-primary:hover { background: #05102a; }
+  .btn-ghost { background: var(--surface); color: var(--text-2); border: 1px solid var(--border); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+  .btn-ghost:hover { color: var(--text-1); border-color: var(--border-hi); background: var(--panel); }
+  .btn-success { background: var(--green); color: #fff; }
+  .btn-success:hover { background: #15803d; }
+  .btn-amber { background: var(--secondary); color: #fff; }
+  .btn-amber:hover { background: #b58610; }
+  .btn-danger { background: var(--red); color: #fff; }
 
-.header h1{
-color:#d4a017;
-}
+  /* ─── SEARCH STRIP ───────────────────────────────────────── */
+  .search-strip {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 16px 20px;
+    display: flex; align-items: flex-end; gap: 14px; margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .field label { font-size: 11px; font-weight: 600; color: var(--text-3);
+    letter-spacing: .5px; text-transform: uppercase; }
+  .field input, .field select {
+    background: var(--surface); border: 1px solid var(--border);
+    color: var(--text-1); padding: 9px 12px; border-radius: var(--r-sm);
+    outline: none; transition: border-color .15s;
+    font-family: var(--sans); font-size: 13px;
+  }
+  .field input::placeholder { color: var(--text-3); font-family: var(--sans); }
+  .field input:focus, .field select:focus { border-color: var(--secondary); }
+  .field select option { background: var(--surface); }
 
-.container{
-padding:30px;
-}
+  /* ─── STAT CARDS ─────────────────────────────────────────── */
+  .stats-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+  .stat-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 18px 20px;
+    display: flex; flex-direction: column; gap: 8px;
+    box-shadow: var(--shadow);
+  }
+  .stat-card .label { font-size: 11px; font-weight: 600; color: var(--text-3);
+    letter-spacing: .5px; text-transform: uppercase; }
+  .stat-card .value { font-size: 26px; font-weight: 700; font-family: var(--mono);
+    letter-spacing: -1px; color: var(--text-1); }
+  .stat-card .sub { font-size: 11px; color: var(--text-3); }
+  .stat-card .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .stat-card .change { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+  .clr-blue   { color: var(--accent); }
+  .clr-green  { color: var(--green); }
+  .clr-amber  { color: var(--amber); }
+  .clr-red    { color: var(--red); }
+  .clr-purple { color: var(--purple); }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-margin-bottom:30px;
-}
+  /* ─── TWO-COL LAYOUT ─────────────────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 340px 1fr; gap: 20px; align-items: start; }
 
-.card{
-background:white;
-padding:25px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
+  /* ─── CARD ───────────────────────────────────────────────── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-md); overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .card-header {
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--surface);
+  }
+  .card-title { font-size: 14px; font-weight: 700; letter-spacing: -.2px; color: var(--accent); }
+  .card-body { padding: 20px; }
+  .card-footer {
+    padding: 14px 20px; border-top: 1px solid var(--border);
+    background: var(--panel); display: flex; align-items: center; gap: 10px;
+  }
 
-.card h3{
-color:#0B1F4B;
-margin-bottom:10px;
-}
+  /* ─── STUDENT PROFILE CARD ───────────────────────────────── */
+  .profile-avatar {
+    width: 64px; height: 64px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--secondary));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 800; color: #fff; flex-shrink: 0;
+    border: 2px solid var(--border);
+  }
+  .profile-head { display: flex; gap: 14px; align-items: flex-start; }
+  .profile-name { font-size: 18px; font-weight: 700; letter-spacing: -.3px; color: var(--text-1); }
+  .profile-adm { font-family: var(--mono); font-size: 11px; color: var(--accent);
+    background: var(--accent-lo); padding: 2px 8px; border-radius: 20px;
+    display: inline-block; margin-top: 3px; font-weight: 600; }
+  .profile-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;
+  }
+  .pf-item .k { font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: .5px; color: var(--text-3); margin-bottom: 3px; }
+  .pf-item .v { font-size: 13px; font-weight: 500; color: var(--text-1); }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+  .status-active { background: var(--green-lo); color: var(--green); }
+  .status-pending { background: var(--amber-lo); color: var(--amber); }
 
-.card p{
-font-size:28px;
-font-weight:bold;
-color:#d4a017;
-}
+  /* ─── FEE STRUCTURE TABLE ────────────────────────────────── */
+  .tbl thead th {
+    background: var(--panel); color: var(--text-2); font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .7px; padding: 12px 14px;
+    text-align: left; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tbl tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  .tbl tbody tr:hover { background: var(--panel); }
+  .tbl tbody tr:last-child { border-bottom: none; }
+  .tbl tbody td { padding: 12px 14px; font-size: 13px; vertical-align: middle; color: var(--text-1); }
+  .tbl .mono { font-family: var(--mono); font-size: 12px; }
+  .tbl .right { text-align: right; }
+  .tbl .center { text-align: center; }
+  .tbl tfoot td {
+    padding: 12px 14px; font-size: 13px; font-weight: 700;
+    border-top: 2px solid var(--border-hi); background: var(--panel);
+    color: var(--text-1);
+  }
 
-.toolbar{
-display:flex;
-gap:15px;
-flex-wrap:wrap;
-margin-bottom:25px;
-}
+  /* ─── FEE COLLECTION FORM ────────────────────────────────── */
+  .form-grid { display: grid; gap: 14px; }
+  .form-grid.g2 { grid-template-columns: 1fr 1fr; }
+  .form-grid.g3 { grid-template-columns: 1fr 1fr 1fr; }
+  .input-wrap { display: flex; flex-direction: column; gap: 5px; flex: 1; }
+  .input-wrap label { font-size: 11px; font-weight: 600; color: var(--text-3);
+    letter-spacing: .5px; text-transform: uppercase; }
+  .input-wrap input, .input-wrap select, .input-wrap textarea {
+    background: var(--surface); border: 1px solid var(--border); color: var(--text-1);
+    padding: 9px 12px; border-radius: var(--r-sm); outline: none;
+    transition: border-color .15s; font-size: 13px; width: 100%;
+  }
+  .input-wrap input:focus, .input-wrap select:focus { border-color: var(--secondary); }
+  .input-wrap textarea { resize: vertical; min-height: 50px; }
 
-.toolbar input,
-.toolbar select{
-padding:12px;
-border:1px solid #ddd;
-border-radius:8px;
-}
+  /* ─── SECTION DIVIDER ────────────────────────────────────── */
+  .sec-divider {
+    display: flex; align-items: center; gap: 12px; margin: 20px 0 14px;
+  }
+  .sec-divider .sec-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px;
+    color: var(--text-2); white-space: nowrap;
+  }
+  .sec-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .sec-divider::before { content: ''; width: 3px; height: 12px;
+    background: var(--secondary); border-radius: 2px; flex-shrink: 0; }
 
-.table-card{
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-overflow-x:auto;
-}
+  /* ─── DISCOUNT + FINE INLINE ─────────────────────────────── */
+  .calc-box {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--r-md); padding: 14px 16px;
+  }
+  .calc-row { display: flex; justify-content: space-between; align-items: center;
+    padding: 7px 0; font-size: 13px; }
+  .calc-row + .calc-row { border-top: 1px dashed var(--border); }
+  .calc-row .k { color: var(--text-2); }
+  .calc-row .v { font-family: var(--mono); font-weight: 600; color: var(--text-1); }
+  .calc-row.total { border-top: 2px solid var(--border-hi); margin-top: 4px; padding-top: 10px; }
+  .calc-row.total .k { color: var(--text-1); font-weight: 700; }
+  .calc-row.total .v { font-size: 18px; color: var(--accent); font-weight: 700; }
 
-table{
-width:100%;
-border-collapse:collapse;
-}
+  /* ─── TIMELINE BADGES ────────────────────────────────────── */
+  .timeline-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    font-family: var(--mono);
+  }
+  .paid   { background: var(--green-lo);  color: var(--green); }
+  .partial{ background: var(--amber-lo);  color: var(--amber); }
+  .waived { background: var(--purple-lo); color: var(--purple); }
 
-th{
-background:#0B1F4B;
-color:white;
-padding:15px;
-text-align:left;
-}
+  /* ─── RECEIPT MODAL ──────────────────────────────────────── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6);
+    z-index: 1000; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r-lg); width: 580px; max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+  }
+  .modal-header {
+    padding: 18px 22px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .modal-body { padding: 22px; }
+  .modal-footer {
+    padding: 14px 22px; border-top: 1px solid var(--border);
+    display: flex; gap: 10px; justify-content: flex-end;
+  }
+  .close-btn {
+    background: none; border: none; color: var(--text-3); font-size: 18px; cursor: pointer;
+    transition: color .15s;
+  }
+  .close-btn:hover { color: var(--text-1); }
 
-td{
-padding:15px;
-border-bottom:1px solid #eee;
-}
+  /* Receipt print area */
+  .receipt {
+    background: #fff; color: #111; border-radius: var(--r-md);
+    padding: 24px; font-size: 12px; border: 1px solid #ddd;
+  }
+  .receipt-school { text-align: center; border-bottom: 2px solid #111; padding-bottom: 14px; margin-bottom: 14px; }
+  .receipt-school .name { font-size: 20px; font-weight: 800; letter-spacing: -.4px; color: #0B1F4B; }
+  .receipt-school .addr { font-size: 11px; color: #555; margin-top: 2px; }
+  .receipt-school .title { font-size: 13px; font-weight: 700; margin-top: 8px;
+    background: #0B1F4B; color: #fff; padding: 3px 16px; display: inline-block; border-radius: 4px; }
+  .receipt-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-bottom: 14px; }
+  .receipt-meta .rm-item .k { font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .5px; color: #666; }
+  .receipt-meta .rm-item .v { font-weight: 600; font-size: 12px; color: #111; }
+  .receipt table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+  .receipt thead th { border-bottom: 1px solid #111; padding: 6px 8px; font-size: 10px;
+    text-align: left; text-transform: uppercase; letter-spacing: .5px; color: #333; }
+  .receipt tbody td { padding: 6px 8px; border-bottom: 1px solid #eee; font-size: 12px; color: #111; }
+  .receipt tfoot td { padding: 6px 8px; font-weight: 700; border-top: 2px solid #111; color: #111; }
+  .receipt-sig { display: flex; justify-content: space-between; margin-top: 24px;
+    padding-top: 16px; border-top: 1px dashed #ccc; }
+  .receipt-sig .sig { text-align: center; }
+  .receipt-sig .sig .line { border-top: 1px solid #111; width: 120px; margin: 20px auto 4px; }
+  .receipt-sig .sig .lbl { font-size: 10px; color: #666; }
+  .receipt-watermark { text-align: center; color: #aaa; font-size: 10px; margin-top: 10px; }
 
-tr:hover{
-background:#fafafa;
-}
+  /* ─── TOAST ──────────────────────────────────────────────── */
+  .toast-area { position: fixed; bottom: 24px; right: 24px; z-index: 2000; display: flex;
+    flex-direction: column; gap: 8px; }
+  .toast {
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md);
+    padding: 14px 20px; font-size: 13px; font-weight: 500; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    display: flex; align-items: center; gap: 10px; min-width: 300px;
+    color: var(--text-1);
+    animation: slideIn .25s ease;
+  }
+  .toast.success { border-left: 4px solid var(--green); }
+  .toast.error   { border-left: 4px solid var(--red); }
+  .toast.info    { border-left: 4px solid var(--secondary); }
+  @keyframes slideIn { from { transform: translateX(60px); opacity: 0; } to { transform: none; opacity: 1; } }
 
-.paid{
-background:#28a745;
-color:white;
-padding:5px 10px;
-border-radius:20px;
-font-size:12px;
-}
+  /* ─── MISC ───────────────────────────────────────────────── */
+  .text-muted { color: var(--text-3); }
+  .text-mono  { font-family: var(--mono); }
+  .mt-4  { margin-top: 16px; }
+  .gap-8 { gap: 8px; }
+  .flex  { display: flex; }
+  .items-center { align-items: center; }
+  .hidden { display: none !important; }
 
-.due{
-background:#dc3545;
-color:white;
-padding:5px 10px;
-border-radius:20px;
-font-size:12px;
-}
+  .chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .5px;
+  }
+  .chip-blue   { background: var(--accent-lo); color: var(--accent); }
+  .chip-purple { background: var(--purple-lo); color: var(--purple); }
+  .chip-green  { background: var(--green-lo);  color: var(--green); }
 
-.print-btn{
-background:#d4a017;
-color:#0B1F4B;
-border:none;
-padding:8px 12px;
-border-radius:6px;
-font-weight:600;
-cursor:pointer;
-}
+  .progress-bar { background: var(--border); border-radius: 4px; height: 6px; width: 100%; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width .4s; }
 
+  @media print {
+    body { background: #fff; }
+    #sidebar-container, #topbar-container, .page-header, .search-strip, .stats-row,
+    .card, #mainContent { display: none !important; }
+    .modal-overlay { display: block !important; position: static !important;
+      background: none !important; backdrop-filter: none !important; }
+    .modal { box-shadow: none; border: none; max-height: none; width: 100%; }
+    .modal-header, .modal-footer { display: none; }
+    .receipt { border: 1px solid #ddd; }
+  }
 </style>
 </head>
-
 <body>
 
-<div class="header">
-<h1>R.S. Public School ERP</h1>
-<h3>Fee Management</h3>
+<div id="sidebar-container"></div>
+<div id="topbar-container"></div>
+
+<div class="app">
+
+<main class="main-content" id="mainContent">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Fee Collection Management</div>
+      <span style="color:var(--text-3);font-size:12px;">Search student → review structure → configure payment parameters → collect</span>
+    </div>
+    <div class="flex gap-8 items-center">
+      <button class="btn btn-ghost" onclick="openModal('bulkModal')">⬆ Bulk Import</button>
+      <button class="btn btn-primary" onclick="openModal('receiptModal')">🖨 Print Last Receipt</button>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="label">Today's Collection</div>
+      <div class="value clr-green">₹1,24,500</div>
+      <div class="change clr-green">▲ 18% vs yesterday</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Pending This Month</div>
+      <div class="value clr-amber">₹8,32,000</div>
+      <div class="change clr-amber">43 students pending</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Overdue (30+ days)</div>
+      <div class="value clr-red">₹2,15,800</div>
+      <div class="change clr-red">7 defaulters</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Annual Target</div>
+      <div class="value clr-blue">74%</div>
+      <div style="margin-top:4px;">
+        <div class="progress-bar"><div class="progress-fill" style="width:74%;background:var(--secondary);"></div></div>
+      </div>
+      <div class="sub">₹62.3L of ₹84L collected</div>
+    </div>
+  </div>
+
+  <div class="search-strip">
+    <div class="field" style="max-width:220px;">
+      <label>Admission No.</label>
+      <input type="text" id="admInput" placeholder="e.g. ADM2024001" onkeydown="if(event.key==='Enter') searchStudent()"/>
+    </div>
+    <div class="field" style="max-width:180px;">
+      <label>Session</label>
+      <select>
+        <option>2024–25</option>
+        <option>2023–24</option>
+        <option>2022–23</option>
+      </select>
+    </div>
+    <div class="field" style="max-width:160px;">
+      <label>Term / Quarter</label>
+      <select id="termSelect">
+        <option value="all">All Terms</option>
+        <option value="1">Term I (Apr–Jun)</option>
+        <option value="2">Term II (Jul–Sep)</option>
+        <option value="3">Term III (Oct–Dec)</option>
+        <option value="4">Term IV (Jan–Mar)</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" onclick="searchStudent()" style="flex-shrink:0;">
+      🔍 Search
+    </button>
+    <button class="btn btn-ghost" onclick="clearStudent()" style="flex-shrink:0;">
+      ✕ Clear
+    </button>
+  </div>
+
+  <div id="notFoundMsg" class="hidden" style="text-align:center;padding:40px;color:var(--text-3);">
+    <div style="font-size:40px;margin-bottom:10px;">🔍</div>
+    <div style="font-weight:700;font-size:15px;color:var(--text-2);">No Student Found</div>
+    <div style="font-size:12px;margin-top:4px;">Check the admission number and try again.</div>
+  </div>
+
+  <div id="studentArea" class="hidden">
+    <div class="two-col">
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Student Profile</span>
+            <span class="status-pill status-active" id="studentStatus">● Active</span>
+          </div>
+          <div class="card-body">
+            <div class="profile-head">
+              <div class="profile-avatar" id="profileInitials">AK</div>
+              <div>
+                <div class="profile-name" id="profileName">Aarav Kumar</div>
+                <div class="profile-adm" id="profileAdm">ADM2024001</div>
+                <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;">
+                  <span class="chip chip-blue" id="profileClassBadge">Class X</span>
+                  <span class="chip chip-purple" id="profileSectionBadge">Sec A</span>
+                </div>
+              </div>
+            </div>
+            <div class="profile-grid">
+              <div class="pf-item">
+                <div class="k">Admission No</div>
+                <div class="v text-mono" id="profileAdmNo">ADM2024001</div>
+              </div>
+              <div class="pf-item">
+                <div class="k">Student Name</div>
+                <div class="v" id="profileStudentName">Aarav Kumar</div>
+              </div>
+              <div class="pf-item">
+                <div class="k">Class</div>
+                <div class="v" id="profileClass">Class X</div>
+              </div>
+              <div class="pf-item">
+                <div class="k">Section</div>
+                <div class="v" id="profileSection">A</div>
+              </div>
+              <div class="pf-item">
+                <div class="k">Father Name</div>
+                <div class="v" id="profileFather">Rajesh Kumar</div>
+              </div>
+              <div class="pf-item">
+                <div class="k">Mobile</div>
+                <div class="v text-mono" id="profileContact">+91 98765 43210</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Fee Summary Block</span>
+          </div>
+          <div class="card-body">
+            <div class="calc-box">
+              <div class="calc-row">
+                <span class="k">Total Fee</span>
+                <span class="v" id="summaryTotalFee">₹72,000</span>
+              </div>
+              <div class="calc-row">
+                <span class="k">Paid Fee</span>
+                <span class="v clr-green" id="summaryPaidFee">₹57,000</span>
+              </div>
+              <div class="calc-row">
+                <span class="k">Balance Fee</span>
+                <span class="v clr-red" id="summaryBalanceFee">₹15,000</span>
+              </div>
+              <div class="calc-row total">
+                <span class="k">Current Payment</span>
+                <span class="v" id="summaryCurrentPayment">₹0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Fee Structure Table — Class X (2024–25)</span>
+          </div>
+          <table class="tbl" id="structureTable">
+            <thead>
+              <tr>
+                <th>Fee Head</th>
+                <th class="right">Total Fee (₹)</th>
+                <th class="right">Paid Fee (₹)</th>
+                <th class="right">Balance Fee (₹)</th>
+                <th class="center" style="width: 110px;">Pay Now</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Tuition Fee</b> <span class="chip chip-blue" style="margin-left:6px;">Monthly</span></td>
+                <td class="right mono">36,000</td>
+                <td class="right mono clr-green">27,000</td>
+                <td class="right mono clr-amber" id="due-0">9,000</td>
+                <td class="center"><input type="number" class="fee-pay-input" data-index="0" value="0" min="0" max="9000" style="width:90px;background:var(--panel);border:1px solid var(--border);color:var(--text-1);padding:5px 8px;border-radius:var(--r-sm);text-align:right;font-family:var(--mono);" oninput="calculateOutputs()"/></td>
+              </tr>
+              <tr>
+                <td><b>Development Fee</b> <span class="chip chip-purple" style="margin-left:6px;">Annually</span></td>
+                <td class="right mono">8,000</td>
+                <td class="right mono clr-green">8,000</td>
+                <td class="right mono text-muted" id="due-1">0</td>
+                <td class="center"><input type="number" class="fee-pay-input" data-index="1" value="0" min="0" max="0" style="width:90px;background:var(--panel);border:1px solid var(--border);color:var(--text-1);padding:5px 8px;border-radius:var(--r-sm);text-align:right;font-family:var(--mono);" oninput="calculateOutputs()"/></td>
+              </tr>
+              <tr>
+                <td><b>Transport Fee</b> <span class="chip chip-blue" style="margin-left:6px;">Monthly</span></td>
+                <td class="right mono">14,400</td>
+                <td class="right mono clr-green">9,600</td>
+                <td class="right mono clr-red" id="due-2">4,800</td>
+                <td class="center"><input type="number" class="fee-pay-input" data-index="2" value="0" min="0" max="4800" style="width:90px;background:var(--panel);border:1px solid var(--border);color:var(--text-1);padding:5px 8px;border-radius:var(--r-sm);text-align:right;font-family:var(--mono);" oninput="calculateOutputs()"/></td>
+              </tr>
+              <tr>
+                <td><b>Misc / Activity</b> <span class="chip chip-green" style="margin-left:6px;">Quarterly</span></td>
+                <td class="right mono">13,600</td>
+                <td class="right mono clr-green">12,400</td>
+                <td class="right mono clr-amber" id="due-3">1,200</td>
+                <td class="center"><input type="number" class="fee-pay-input" data-index="3" value="0" min="0" max="1200" style="width:90px;background:var(--panel);border:1px solid var(--border);color:var(--text-1);padding:5px 8px;border-radius:var(--r-sm);text-align:right;font-family:var(--mono);" oninput="calculateOutputs()"/></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td><b>Total Parameters</b></td>
+                <td class="right mono">₹72,000</td>
+                <td class="right mono clr-green">₹57,000</td>
+                <td class="right mono clr-red">₹15,000</td>
+                <td class="right mono text-muted" id="structureInputsSum" style="padding-right: 20px;">₹0</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Payment & Processing Fields</span>
+          </div>
+          <div class="card-body">
+            <div class="form-grid g3">
+              <div class="input-wrap">
+                <label>Discount Value (₹)</label>
+                <input type="number" id="discountInput" value="0" min="0" placeholder="0" oninput="calculateOutputs()"/>
+              </div>
+              <div class="input-wrap">
+                <label>Fine Value (₹)</label>
+                <input type="number" id="fineInput" value="0" min="0" placeholder="0" oninput="calculateOutputs()"/>
+              </div>
+              <div class="input-wrap">
+                <label>Payment Mode</label>
+                <select id="paymentModeSelect">
+                  <option value="Cash">Cash</option>
+                  <option value="Cheque">Cheque</option>
+                  <option value="UPI">UPI</option>
+                  <option value="NEFT">NEFT / NetBanking</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-grid g2 mt-4">
+              <div class="input-wrap">
+                <label>Transaction ID / Reference Number</label>
+                <input type="text" id="transactionIdInput" placeholder="e.g. TXN9876543210"/>
+              </div>
+              <div class="input-wrap">
+                <label>Remarks</label>
+                <textarea id="remarkInput" placeholder="Add explicit notes regarding this collection parameter..."></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body flex gap-8 items-center justify-between" style="padding: 16px 20px;">
+            <div class="flex gap-8">
+              <button class="btn btn-success" onclick="executeCollectFee()">✅ Collect Fee</button>
+              <button class="btn btn-ghost" onclick="openModal('receiptModal')">🖨 Print Receipt</button>
+              <button class="btn btn-amber" onclick="executeUpdateFee()">🔄 Update Fee</button>
+            </div>
+            <button class="btn btn-ghost text-muted" onclick="executeResetForm()">Reset Form Parameters</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title">Fee History Table</span>
+          </div>
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Receipt No.</th>
+                <th>Date</th>
+                <th>Fee Heads Breakdown</th>
+                <th>Mode</th>
+                <th class="right">Discount</th>
+                <th class="right">Fine</th>
+                <th class="right">Net Amount</th>
+                <th class="center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td class="mono clr-blue">RCP/24-25/1240</td>
+                <td>15 Jun 2025</td>
+                <td>Tuition, Transport Allocation Dues</td>
+                <td>Cash</td>
+                <td class="right mono clr-amber">–₹900</td>
+                <td class="right mono text-muted">—</td>
+                <td class="right mono">₹8,100</td>
+                <td class="center"><span class="timeline-badge paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td class="mono clr-blue">RCP/24-25/1198</td>
+                <td>12 May 2025</td>
+                <td>Tuition Head, Miscellaneous Q1</td>
+                <td>UPI</td>
+                <td class="right mono clr-amber">–₹900</td>
+                <td class="right mono text-muted">—</td>
+                <td class="right mono">₹8,300</td>
+                <td class="center"><span class="timeline-badge paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td class="mono clr-blue">RCP/24-25/1142</td>
+                <td>10 Apr 2025</td>
+                <td>Development Fee Structural Block</td>
+                <td>Cheque</td>
+                <td class="right mono clr-amber">–₹1,850</td>
+                <td class="right mono text-muted">—</td>
+                <td class="right mono">₹16,650</td>
+                <td class="center"><span class="timeline-badge paid">Paid</span></td>
+              </tr>
+              <tr>
+                <td class="mono clr-blue">RCP/24-25/0991</td>
+                <td>10 Feb 2025</td>
+                <td>Tuition Overdue Installment Balance</td>
+                <td>NEFT</td>
+                <td class="right mono text-muted">—</td>
+                <td class="right mono text-muted">—</td>
+                <td class="right mono">₹5,000</td>
+                <td class="center"><span class="timeline-badge partial">Partial</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</main>
 </div>
 
-<div class="container">
-
-<div class="cards">
-
-<div class="card">
-<h3>Total Collection</h3>
-<p>₹12,50,000</p>
+<div class="modal-overlay" id="receiptModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="font-weight:700; color:var(--accent);" id="modalReceiptNo">Fee Receipt — RCP/2024-25/1288</span>
+      <button class="close-btn" onclick="closeModal('receiptModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="receipt" id="printReceipt">
+        <div class="receipt-school">
+          <div class="name">R.S. Public School — Sector 12</div>
+          <div class="addr">12 Knowledge Park, Sector 12, New Delhi — 110 078 &nbsp;|&nbsp; Ph: 011-2234-5678</div>
+          <div style="margin-top:8px;">
+            <span class="title">Fee Receipt</span>
+          </div>
+        </div>
+        <div class="receipt-meta">
+          <div class="rm-item"><div class="k">Receipt No.</div><div class="v" id="rReceiptNo">RCP/2024-25/1288</div></div>
+          <div class="rm-item"><div class="k">Date</div><div class="v" id="rDate"></div></div>
+          <div class="rm-item"><div class="k">Admission No.</div><div class="v" id="rAdmNo">ADM2024001</div></div>
+          <div class="rm-item"><div class="k">Academic Year</div><div class="v">2024–25</div></div>
+          <div class="rm-item"><div class="k">Student Name</div><div class="v" id="rStudentName">Aarav Kumar</div></div>
+          <div class="rm-item"><div class="k">Class / Section</div><div class="v" id="rClassSection">Class X – A</div></div>
+          <div class="rm-item"><div class="k">Father's Name</div><div class="v" id="rFatherName">Rajesh Kumar</div></div>
+          <div class="rm-item"><div class="k">Payment Mode</div><div class="v" id="rMode">Cash</div></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Fee Breakdown Element</th>
+              <th style="text-align:right;">Allocated Collected Amount (₹)</th>
+            </tr>
+          </thead>
+          <tbody id="rLineItems">
+            <tr><td>Total Allocation Applied</td><td style="text-align:right;" id="rAppliedSum">0</td></tr>
+            <tr><td>Late Fine Element</td><td style="text-align:right;" id="rFineSum">0</td></tr>
+            <tr><td>Discount Element Concession</td><td style="text-align:right;" id="rDiscountSum">(0)</td></tr>
+          </tbody>
+          <tfoot>
+            <tr><td><b>Net Amount Collected Parameters</b></td><td style="text-align:right;"><b id="rNetSum">₹0</b></td></tr>
+          </tfoot>
+        </table>
+        <div style="font-size:11px;color:#555;margin-top:6px;border:1px dashed #ccc;padding:8px;border-radius:4px;">
+          Remarks: <b id="rRemarkText">—</b>
+        </div>
+        <div class="receipt-sig">
+          <div class="sig"><div class="line"></div><div class="lbl">Parent / Guardian</div></div>
+          <div class="sig"><div class="line"></div><div class="lbl">Fee Cashier</div></div>
+          <div class="sig"><div class="line"></div><div class="lbl">Accounts Head</div></div>
+        </div>
+        <div class="receipt-watermark">✦ Computer Generated Receipt — Node.js & MySQL Integration Ready ✦</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal('receiptModal')">Close</button>
+      <button class="btn btn-ghost" onclick="window.print()">🖨 Print</button>
+      <button class="btn btn-primary" onclick="showToast('Receipt downloaded as PDF','success')">⬇ Download PDF</button>
+    </div>
+  </div>
 </div>
 
-<div class="card">
-<h3>Pending Fees</h3>
-<p>₹2,10,000</p>
-</div>
+<div class="toast-area" id="toastArea"></div>
 
-<div class="card">
-<h3>Today's Collection</h3>
-<p>₹45,000</p>
-</div>
+<script src="js/sidebar.js"></script>
+<script src="js/topbar.js"></script>
+<script>
+  /* ─ Mock DB Structures (MySQL Table Schemas aligned to these keys) ─ */
+  const STUDENTS = {
+    'ADM2024001': {
+      admNo: 'ADM2024001', name: 'Aarav Kumar', initials: 'AK', class: 'Class X', section: 'A',
+      father: 'Rajesh Kumar', contact: '+91 98765 43210', status: 'Active',
+      totalFee: 72000, paidFee: 57000, balanceFee: 15000,
+      dues: [9000, 0, 4800, 1200]
+    },
+    'ADM2024002': {
+      admNo: 'ADM2024002', name: 'Priya Sharma', initials: 'PS', class: 'Class VIII', section: 'B',
+      father: 'Anil Sharma', contact: '+91 91234 56789', status: 'Active',
+      totalFee: 64000, paidFee: 64000, balanceFee: 0,
+      dues: [0, 0, 0, 0]
+    },
+    'ADM2023045': {
+      admNo: 'ADM2023045', name: 'Rahul Mehta', initials: 'RM', class: 'Class XII', section: 'C',
+      father: 'Suresh Mehta', contact: '+91 87654 32109', status: 'Pending',
+      totalFee: 80000, paidFee: 40000, balanceFee: 40000,
+      dues: [20000, 10000, 5000, 5000]
+    }
+  };
 
-<div class="card">
-<h3>This Month</h3>
-<p>₹4,80,000</p>
-</div>
+  let activeStudent = null;
 
-</div>
+  /* ─ Lifecycle Init ─ */
+  document.getElementById('rDate').textContent = new Date().toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
 
-<div class="toolbar">
+  /* ─ Search Processing Logic ─ */
+  function searchStudent() {
+    const adm = document.getElementById('admInput').value.trim().toUpperCase();
+    const student = STUDENTS[adm];
+    if (!student) {
+      activeStudent = null;
+      document.getElementById('studentArea').classList.add('hidden');
+      document.getElementById('notFoundMsg').classList.remove('hidden');
+      return;
+    }
+    activeStudent = JSON.parse(JSON.stringify(student)); // Deep copy mock data
+    document.getElementById('notFoundMsg').classList.add('hidden');
+    document.getElementById('studentArea').classList.remove('hidden');
+    
+    // Fill Profile Elements
+    document.getElementById('profileInitials').textContent = activeStudent.initials;
+    document.getElementById('profileName').textContent = activeStudent.name;
+    document.getElementById('profileAdm').textContent = activeStudent.admNo;
+    document.getElementById('profileClassBadge').textContent = activeStudent.class;
+    document.getElementById('profileSectionBadge').textContent = "Sec " + activeStudent.section;
+    
+    document.getElementById('profileAdmNo').textContent = activeStudent.admNo;
+    document.getElementById('profileStudentName').textContent = activeStudent.name;
+    document.getElementById('profileClass').textContent = activeStudent.class;
+    document.getElementById('profileSection').textContent = activeStudent.section;
+    document.getElementById('profileFather').textContent = activeStudent.father;
+    document.getElementById('profileContact').textContent = activeStudent.contact;
+    
+    const statusEl = document.getElementById('studentStatus');
+    statusEl.textContent = "● " + activeStudent.status;
+    statusEl.className = activeStudent.status === 'Active' ? 'status-pill status-active' : 'status-pill status-pending';
 
-<input type="text" placeholder="Search Student">
+    // Synchronize Table Maximum Dues Constraints
+    const rows = document.querySelectorAll('#structureTable tbody tr');
+    activeStudent.dues.forEach((dueAmt, index) => {
+      const inputField = rows[index].querySelector('.fee-pay-input');
+      const dueDisplay = document.getElementById(`due-${index}`);
+      dueDisplay.textContent = dueAmt === 0 ? '—' : dueAmt.toLocaleString('en-IN');
+      inputField.max = dueAmt;
+      inputField.value = 0;
+    });
 
-<select>
-<option>All Classes</option>
-<option>Playway</option>
-<option>Nursery</option>
-<option>LKG</option>
-<option>UKG</option>
-<option>Class 1</option>
-<option>Class 2</option>
-<option>Class 3</option>
-<option>Class 4</option>
-<option>Class 5</option>
-<option>Class 6</option>
-<option>Class 7</option>
-<option>Class 8</option>
-<option>Class 9</option>
-<option>Class 10</option>
-</select>
+    executeResetForm();
+    showToast(`Student record loaded: ${activeStudent.name}`,'info');
+  }
 
-<select>
-<option>Session 2025-26</option>
-<option>Session 2026-27</option>
-</select>
+  function clearStudent() {
+    document.getElementById('admInput').value='';
+    document.getElementById('studentArea').classList.add('hidden');
+    document.getElementById('notFoundMsg').classList.add('hidden');
+    activeStudent = null;
+  }
 
-</div>
+  /* ─ Core Fee Form Calculations ─ */
+  function calculateOutputs() {
+    if (!activeStudent) return;
 
-<div class="table-card">
+    let payNowSum = 0;
+    document.querySelectorAll('.fee-pay-input').forEach(input => {
+      let val = parseFloat(input.value) || 0;
+      let maxVal = parseFloat(input.max) || 0;
+      if (val > maxVal) {
+        val = maxVal;
+        input.value = val;
+      }
+      if (val < 0) {
+        val = 0;
+        input.value = 0;
+      }
+      payNowSum += val;
+    });
 
-<table>
+    const discount = Math.max(0, parseFloat(document.getElementById('discountInput').value) || 0);
+    const fine = Math.max(0, parseFloat(document.getElementById('fineInput').value) || 0);
+    
+    // Net calculation formula
+    const currentPaymentNet = Math.max(0, payNowSum + fine - discount);
 
-<thead>
-<tr>
-<th>Receipt No</th>
-<th>Student Name</th>
-<th>Class</th>
-<th>Total Fee</th>
-<th>Paid</th>
-<th>Due</th>
-<th>Status</th>
-<th>Action</th>
-</tr>
-</thead>
+    // Update displays inside sections
+    document.getElementById('structureInputsSum').textContent = '₹' + payNowSum.toLocaleString('en-IN');
+    
+    document.getElementById('summaryTotalFee').textContent = '₹' + activeStudent.totalFee.toLocaleString('en-IN');
+    document.getElementById('summaryPaidFee').textContent = '₹' + activeStudent.paidFee.toLocaleString('en-IN');
+    document.getElementById('summaryBalanceFee').textContent = '₹' + activeStudent.balanceFee.toLocaleString('en-IN');
+    document.getElementById('summaryCurrentPayment').textContent = '₹' + currentPaymentNet.toLocaleString('en-IN');
 
-<tbody>
+    // Update Print Receipt Elements instantly
+    document.getElementById('rAppliedSum').textContent = payNowSum.toLocaleString('en-IN');
+    document.getElementById('rFineSum').textContent = fine.toLocaleString('en-IN');
+    document.getElementById('rDiscountSum').textContent = `(${discount.toLocaleString('en-IN')})`;
+    document.getElementById('rNetSum').textContent = '₹' + currentPaymentNet.toLocaleString('en-IN');
+  }
 
-<tr>
-<td>R001</td>
-<td>Ram Kumar</td>
-<td>10</td>
-<td>₹18,000</td>
-<td>₹18,000</td>
-<td>₹0</td>
-<td><span class="paid">Paid</span></td>
-<td><button class="print-btn">Receipt</button></td>
-</tr>
+  /* ─ Actions Pipeline ─ */
+  function executeCollectFee() {
+    if (!activeStudent) return;
+    
+    let payNowSum = 0;
+    document.querySelectorAll('.fee-pay-input').forEach(input => {
+      payNowSum += parseFloat(input.value) || 0;
+    });
 
-<tr>
-<td>R002</td>
-<td>Mohan Singh</td>
-<td>8</td>
-<td>₹18,000</td>
-<td>₹10,000</td>
-<td>₹8,000</td>
-<td><span class="due">Due</span></td>
-<td><button class="print-btn">Receipt</button></td>
-</tr>
+    if (payNowSum === 0 && (parseFloat(document.getElementById('fineInput').value) || 0) === 0) {
+      showToast('Please enter an amount to collect in Pay Now fields or late fine.', 'error');
+      return;
+    }
 
-<tr>
-<td>R003</td>
-<td>Sohan Verma</td>
-<td>5</td>
-<td>₹18,000</td>
-<td>₹18,000</td>
-<td>₹0</td>
-<td><span class="paid">Paid</span></td>
-<td><button class="print-btn">Receipt</button></td>
-</tr>
+    const mode = document.getElementById('paymentModeSelect').value;
+    const discount = parseFloat(document.getElementById('discountInput').value) || 0;
+    const fine = parseFloat(document.getElementById('fineInput').value) || 0;
+    const currentPaymentNet = Math.max(0, payNowSum + fine - discount);
+    const remark = document.getElementById('remarkInput').value.trim() || 'Regular Collection installment';
 
-</tbody>
+    // Sync modal metadata
+    const generatedReceiptNo = "RCP/24-25/" + Math.floor(1300 + Math.random() * 900);
+    document.getElementById('modalReceiptNo').textContent = "Fee Receipt — " + generatedReceiptNo;
+    document.getElementById('rReceiptNo').textContent = generatedReceiptNo;
+    document.getElementById('rAdmNo').textContent = activeStudent.admNo;
+    document.getElementById('rStudentName').textContent = activeStudent.name;
+    document.getElementById('rClassSection').textContent = `${activeStudent.class} - ${activeStudent.section}`;
+    document.getElementById('rFatherName').textContent = activeStudent.father;
+    document.getElementById('rMode').textContent = mode;
+    document.getElementById('rRemarkText').textContent = remark;
 
-</table>
+    // Append dynamic history row simulation
+    const tbody = document.getElementById('historyTableBody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td class="mono clr-blue">${generatedReceiptNo}</td>
+      <td>Today</td>
+      <td>Custom Applied Breakdown</td>
+      <td>${mode}</td>
+      <td class="right mono clr-amber">–₹${discount}</td>
+      <td class="right mono clr-red">+₹${fine}</td>
+      <td class="right mono">₹${currentPaymentNet.toLocaleString('en-IN')}</td>
+      <td class="center"><span class="timeline-badge paid">Paid</span></td>
+    `;
+    tbody.insertBefore(tr, tbody.firstChild);
 
-</div>
+    // Dynamic processing mock upgrade for state parameters
+    activeStudent.paidFee += currentPaymentNet;
+    activeStudent.balanceFee = Math.max(0, activeStudent.balanceFee - payNowSum);
+    
+    document.querySelectorAll('.fee-pay-input').forEach((input, i) => {
+      let paidVal = parseFloat(input.value) || 0;
+      activeStudent.dues[i] = Math.max(0, activeStudent.dues[i] - paidVal);
+    });
 
-</div>
+    searchStudent(); // Refresh structured presentation interface layout
+    openModal('receiptModal');
+    showToast('Payment processing sequence compiled successfully.','success');
+  }
 
+  function executeUpdateFee() {
+    if (!activeStudent) {
+      showToast('No student contextual trace selected.', 'error');
+      return;
+    }
+    calculateOutputs();
+    showToast('Fee parameters updated and calculated.', 'success');
+  }
+
+  function executeResetForm() {
+    document.querySelectorAll('.fee-pay-input').forEach(input => input.value = 0);
+    document.getElementById('discountInput').value = 0;
+    document.getElementById('fineInput').value = 0;
+    document.getElementById('paymentModeSelect').selectedIndex = 0;
+    document.getElementById('transactionIdInput').value = '';
+    document.getElementById('remarkInput').value = '';
+    calculateOutputs();
+  }
+
+  /* ─ Modals Core Controls ─ */
+  function openModal(id){ document.getElementById(id).classList.add('open'); }
+  function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+  document.querySelectorAll('.modal-overlay').forEach(m=>{
+    m.addEventListener('click',e=>{ if(e.target===m) m.classList.remove('open'); });
+  });
+
+  /* ─ Toast Feedback ─ */
+  function showToast(msg, type='info'){
+    const area = document.getElementById('toastArea');
+    const icons = {success:'✅',error:'❌',info:'ℹ️'};
+    const t = document.createElement('div');
+    t.className = `toast ${type}`;
+    t.innerHTML = `<span>${icons[type]||'ℹ️'}</span> ${msg}`;
+    area.appendChild(t);
+    setTimeout(()=>t.remove(), 3500);
+  }
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='F2') document.getElementById('admInput').focus();
+    if(e.key==='Escape') document.querySelectorAll('.modal-overlay.open').forEach(m=>m.classList.remove('open'));
+  });
+</script>
 </body>
 </html>

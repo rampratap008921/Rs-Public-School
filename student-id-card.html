@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student ID Card | R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- SYSTEM DESIGN SCHEME & RESET --- */
+        :root {
+            --primary: #0b1f5b;        /* Navy Blue */
+            --secondary: #d4a017;      /* Gold */
+            --bg-body: #f8fafc;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+            --radius: 8px;
+            --transition: all 0.2s ease-in-out;
+            
+            /* CRITICAL: Standard CR-80 physical dimensions approximation */
+            --id-width: 450px;
+            --id-height: 270px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-size: 13px;
+            line-height: 1.4;
+            padding: 30px 15px;
+        }
+
+        /* --- CONTROL DASHBOARD ACTION COCKPIT --- */
+        .control-cockpit {
+            max-width: var(--id-width);
+            margin: 0 auto 24px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-panel {
+            height: 36px;
+            padding: 0 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .btn-panel:hover {
+            background-color: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .btn-panel.btn-primary-action {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .btn-panel.btn-primary-action:hover {
+            background-color: #07143a;
+            border-color: #07143a;
+        }
+
+        /* --- THE CORE ID CARD FRAME --- */
+        .id-badge-wrapper {
+            width: var(--id-width);
+            height: var(--id-height);
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 2px solid var(--primary);
+            border-top: 4px solid var(--primary);
+            border-bottom: 4px solid var(--primary);
+            border-radius: 10px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            background-image: radial-gradient(rgba(11, 31, 91, 0.015) 1px, transparent 0);
+            background-size: 10px 10px;
+        }
+
+        /* CARD ACCENT LAYER LINES */
+        .id-badge-wrapper::after {
+            content: '';
+            position: absolute;
+            top: 58px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--secondary);
+        }
+
+        /* --- TOP HEADER SECTION --- */
+        .card-header-block {
+            height: 60px;
+            padding: 6px 12px;
+            display: grid;
+            grid-template-columns: 45px 1fr 45px;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffffff;
+        }
+
+        .school-logo-frame, .student-passport-frame {
+            width: 44px;
+            height: 48px;
+            object-fit: contain;
+        }
+
+        .student-passport-frame {
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: #f1f5f9;
+        }
+
+        .school-meta-center {
+            text-align: center;
+        }
+
+        .school-meta-center h1 {
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            margin-bottom: 1px;
+        }
+
+        .school-meta-center p {
+            font-size: 9px;
+            font-weight: 500;
+            color: var(--text-muted);
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        /* --- MIDDLE BIOGRAPHICAL SECTION --- */
+        .card-middle-block {
+            padding: 14px 16px 6px 16px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .bio-row {
+            display: flex;
+            align-items: flex-start;
+            font-size: 11px;
+        }
+
+        .bio-label {
+            width: 90px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.3px;
+            flex-shrink: 0;
+        }
+
+        .bio-val {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .bio-row.student-name-row .bio-val {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* --- BOTTOM ACADEMIC INFRASTRUCTURE MATRIX --- */
+        .card-bottom-block {
+            background-color: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 6px 16px;
+            display: grid;
+            grid-template-columns: 1.3fr repeat(3, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .matrix-cell {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px dashed #cbd5e1;
+            padding: 2px 0;
+        }
+
+        .matrix-cell:last-child {
+            border-right: none;
+        }
+
+        .matrix-label {
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .matrix-val {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* --- FOOTER AUTHENTICATION SECURE LINE --- */
+        .card-footer-block {
+            height: 46px;
+            padding: 4px 20px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            background-color: #ffffff;
+        }
+
+        .auth-sign-area, .auth-seal-area {
+            text-align: center;
+            width: 110px;
+        }
+
+        .auth-label {
+            font-size: 8px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            border-top: 1px solid #94a3b8;
+            padding-top: 2px;
+            letter-spacing: 0.3px;
+        }
+
+        .mock-sign-img {
+            height: 18px;
+            object-fit: contain;
+            margin-bottom: 2px;
+            opacity: 0.85;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* --- PRINT MEDIA RULES IMPLEMENTATION --- */
+        @media print {
+            body {
+                background-color: #ffffff !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .control-cockpit {
+                display: none !important; /* Hide dashboard control bar during print operations */
+            }
+
+            .id-badge-wrapper {
+                box-shadow: none !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                page-break-inside: avoid;
+                -webkit-print-color-adjust: exact; /* Force accurate rendering of structural palette variables */
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="control-cockpit">
+        <a href="student-profile.html" class="btn-panel"><i class="fa-solid fa-arrow-left"></i> Profile View</a>
+        <button type="button" class="btn-panel" id="btnDownloadTrigger"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+        <button type="button" class="btn-panel btn-primary-action" onclick="window.print()"><i class="fa-solid fa-print"></i> Print ID Card</button>
+    </div>
+
+    <main class="id-badge-wrapper" id="idBadgeCard">
+        
+        <header class="card-header-block">
+            <img src="rslogo.png" alt="R.S. Logo" class="school-logo-frame" onerror="this.style.background='#0b1f5b';this.style.borderRadius='50%'">
+            <div class="school-meta-center">
+                <h1>R.S. PUBLIC SCHOOL</h1>
+                <p id="sch-address">Loading Address...</p>
+                <p id="sch-contacts">Loading Contacts...</p>
+            </div>
+            <img src="" alt="Student Profile" class="student-passport-frame" id="stu-photo">
+        </header>
+
+        <section class="card-middle-block">
+            <div class="bio-row student-name-row">
+                <div class="bio-label">Name</div>
+                <div class="bio-val" id="lbl-name">---</div>
+            </div>
+            <div class="bio-row">
+                <div class="bio-label">Father's Name</div>
+                <div class="bio-val" id="lbl-father">---</div>
+            </div>
+            <div class="bio-row">
+                <div class="bio-label">Mobile No</div>
+                <div class="bio-val" id="lbl-mobile">---</div>
+            </div>
+            <div class="bio-row">
+                <div class="bio-label">Address</div>
+                <div class="bio-val" id="lbl-address">---</div>
+            </div>
+        </section>
+
+        <section class="card-bottom-block">
+            <div class="matrix-cell">
+                <span class="matrix-label">Adm No</span>
+                <span class="matrix-val" id="lbl-admNo">---</span>
+            </div>
+            <div class="matrix-cell">
+                <span class="matrix-label">Class</span>
+                <span class="matrix-val" id="lbl-class">---</span>
+            </div>
+            <div class="matrix-cell">
+                <span class="matrix-label">Section</span>
+                <span class="matrix-val" id="lbl-section">---</span>
+            </div>
+            <div class="matrix-cell">
+                <span class="matrix-label">Roll No</span>
+                <span class="matrix-val" id="lbl-rollNo">---</span>
+            </div>
+        </section>
+
+        <footer class="card-footer-block">
+            <div class="auth-seal-area">
+                <div class="auth-label">School Seal</div>
+            </div>
+            <div class="auth-sign-area">
+                <svg class="mock-sign-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30" width="80" height="20">
+                    <path d="M10,25 Q25,5 40,20 T70,10 T90,15" fill="none" stroke="#0b1f5b" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                <div class="auth-label">Principal</div>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- 1. SEED DICTIONARIES INSTITUTIONAL MAPS ---
+            const institutionMetadata = {
+                address: "Sector 4, Phase II, Corporate Hub, New Delhi",
+                email: "info@rspublicschool.edu.in",
+                phone: "+91 11 2645 8900"
+            };
+
+            // Student profile object mapping
+            const primaryStudentRecord = {
+                admissionNo: "RS2026-042",
+                name: "Aarav K. Sharma",
+                fatherName: "Rajesh Kumar Sharma",
+                mobileNo: "9871234560",
+                addressDetails: "Flat 405, Sector-15, Royal Palm Heights, Noida, U.P. 201301",
+                classStandard: "12",
+                sectionLane: "B",
+                rollSequence: "18",
+                genderIdentity: "Male"
+            };
+
+            // Bind values to DOM structures
+            hydrateIdentityCard(institutionMetadata, primaryStudentRecord);
+
+            function hydrateIdentityCard(school, student) {
+                // Render header metadata blocks
+                document.getElementById('sch-address').innerText = school.address;
+                document.getElementById('sch-contacts').innerText = `Email: ${school.email} | Ph: ${school.phone}`;
+
+                // Set appropriate programmatic baseline avatars matching gender vectors
+                const fallbackAvatarVector = student.genderIdentity === "Male"
+                    ? "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>"
+                    : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>";
+                
+                document.getElementById('stu-photo').setAttribute('src', fallbackAvatarVector);
+
+                // Render bio rows parameters
+                document.getElementById('lbl-name').innerText = student.name;
+                document.getElementById('lbl-father').innerText = student.fatherName;
+                document.getElementById('lbl-mobile').innerText = student.mobileNo;
+                document.getElementById('lbl-address').innerText = student.addressDetails;
+
+                // Render bottom tabular grid matrix
+                document.getElementById('lbl-admNo').innerText = student.admissionNo;
+                document.getElementById('lbl-class').innerText = student.classStandard;
+                document.getElementById('lbl-section').innerText = student.sectionLane;
+                document.getElementById('lbl-rollNo').innerText = student.rollSequence;
+            }
+
+            // --- 2. DOWNLOAD SIMULATOR TRIGGER HOOK ---
+            document.getElementById('btnDownloadTrigger').addEventListener('click', () => {
+                alert('Initializing Client PDF Render Engine Process...\n\nYour print-ready assets are fully A4 matched. For best physical fidelity, click "Print ID Card" and configure destination output to "Save as PDF".');
+            });
+        });
+    </script>
+</body>
+</html>

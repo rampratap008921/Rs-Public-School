@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students Management | R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CSS VARIABLES & THEME SETUP --- */
+        :root {
+            --primary-color: #0b1f5b;      /* Navy Blue */
+            --secondary-color: #d4a017;    /* Gold */
+            --primary-dark: #07143a;
+            --secondary-light: #f7f3e6;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --bg-light: #f8fafc;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            --hover-shadow: 0 20px 25px -5px rgba(11, 31, 91, 0.1), 0 10px 10px -5px rgba(11, 31, 91, 0.04);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* --- LAYOUT CONTAINER --- */
+        .erp-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* --- HEADER SECTION --- */
+        .erp-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-bottom: 4px solid var(--secondary-color);
+            padding: 20px 30px;
+            border-radius: var(--radius);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+            color: #ffffff;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .school-logo {
+            height: 60px;
+            width: 60px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            padding: 5px;
+            border: 2px solid var(--secondary-color);
+            object-fit: contain;
+        }
+
+        .header-title h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .header-title p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .btn-back {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: #ffffff;
+            color: var(--primary-color);
+            border-color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        /* --- NAVIGATION & UTILITIES --- */
+        .utility-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text-light);
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 16px 12px 45px;
+            border-radius: 8px;
+            border: 1.5px solid #e2e8f0;
+            background-color: #ffffff;
+            font-size: 0.9rem;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: var(--transition);
+        }
+
+        .search-bar:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(11, 31, 91, 0.15);
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        /* --- STATS CARDS GRID --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--card-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .stat-card:nth-child(2) { border-left-color: #3b82f6; }
+        .stat-card:nth-child(3) { border-left-color: #ec4899; }
+        .stat-card:nth-child(4) { border-left-color: #10b981; }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.015);
+            border-radius: 50%;
+        }
+
+        .stat-info p {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-light);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .stat-counter {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .stat-icon {
+            font-size: 2.2rem;
+            color: var(--primary-color);
+            opacity: 0.85;
+        }
+        .stat-card:nth-child(2) .stat-icon { color: #3b82f6; }
+        .stat-card:nth-child(3) .stat-icon { color: #ec4899; }
+        .stat-card:nth-child(4) .stat-icon { color: #10b981; }
+
+        /* --- MANAGEMENT SECTIONS GRID --- */
+        .section-title-bar {
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .section-title-bar h2 {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .management-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .action-card {
+            background: #ffffff;
+            border-radius: var(--radius);
+            padding: 30px 24px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--hover-shadow);
+            border-color: rgba(212, 160, 23, 0.3);
+        }
+
+        .action-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .action-card:hover::after {
+            opacity: 1;
+        }
+
+        .action-icon-box {
+            width: 65px;
+            height: 65px;
+            background-color: #f1f5f9;
+            color: var(--primary-color);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .action-card:hover .action-icon-box {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            transform: scale(1.05);
+        }
+
+        /* Gold variation for critical items */
+        .action-card.destructive:hover .action-icon-box {
+            background-color: #ef4444;
+        }
+
+        .action-card h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .action-card p {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 22px;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+
+        .btn-open {
+            width: 100%;
+            padding: 10px 16px;
+            background-color: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            color: var(--primary-color);
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .action-card:hover .btn-open {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border-color: var(--secondary-color);
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(214, 160, 23, 0.2);
+        }
+
+        /* No search results feedback layout */
+        .no-results {
+            grid-column: 1 / -1;
+            background: #ffffff;
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+            color: var(--text-light);
+            box-shadow: var(--card-shadow);
+            display: none;
+        }
+        .no-results i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+
+        /* --- FOOTER --- */
+        .erp-footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 25px 0;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-top: 20px;
+            font-weight: 500;
+        }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 1200px) {
+            .management-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .management-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .erp-header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 20px;
+            }
+            .header-brand {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .utility-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .search-wrapper {
+                max-width: 100%;
+            }
+            .stats-grid, .management-grid {
+                grid-template-columns: 1fr;
+            }
+            .action-card {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="erp-container">
+        
+        <header class="erp-header">
+            <div class="header-brand">
+                <img src="rslogo.png" alt="R.S. Logo" class="school-logo" onerror="this.style.display='none';">
+                <div class="header-title">
+                    <h1>R.S. Public School</h1>
+                    <p>Enterprise Resource Planning System</p>
+                </div>
+            </div>
+            <a href="dashboard.html" class="btn-back">
+                <i class="fa-solid fa-arrow-left-long"></i> Dashboard Menu
+            </a>
+        </header>
+
+        <div class="utility-row">
+            <nav class="breadcrumb">
+                <a href="dashboard.html">Dashboard</a> 
+                <span><i class="fa-solid fa-angle-right" style="font-size: 0.75rem;"></i></span>
+                <span>Students Management</span>
+            </nav>
+            
+            <div class="search-wrapper">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="moduleSearch" class="search-bar" placeholder="Search operational features...">
+            </div>
+        </div>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <p>Total Students</p>
+                    <div class="stat-counter" data-target="1245">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-info">
+                    <p>Boys</p>
+                    <div class="stat-counter" data-target="680">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <p>Girls</p>
+                    <div class="stat-counter" data-target="565">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-user-graduate-female" class="fa-solid fa-children"></i><i class="fa-solid fa-child-dress"></i></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-info">
+                    <p>New Admissions</p>
+                    <div class="stat-counter" data-target="112">0</div>
+                </div>
+                <div class="stat-icon"><i class="fa-solid fa-sparkles"><i class="fa-solid fa-user-plus"></i></i></div>
+            </div>
+        </section>
+
+        <div class="section-title-bar">
+            <h2>Students Management Workspace</h2>
+        </div>
+
+        <main class="management-grid" id="managementGrid">
+            
+            <div class="action-card" data-title="add student profile registration">
+                <div class="action-icon-box"><i class="fa-solid fa-user-plus"></i></div>
+                <h3>Add Student</h3>
+                <p>Register new scholar profiles into the ERP core database system seamlessly.</p>
+                <a href="add-student.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student list master database directories">
+                <div class="action-icon-box"><i class="fa-solid fa-address-book"></i></div>
+                <h3>Student List</h3>
+                <p>View, filter, and track comprehensive global directories of active scholars.</p>
+                <a href="student-list.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student profile overview portfolios">
+                <div class="action-icon-box"><i class="fa-solid fa-id-card-clip"></i></div>
+                <h3>Student Profile</h3>
+                <p>Analyze individual educational profiles, history logs, and background metrics.</p>
+                <a href="student-profile.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="edit student modern records updater">
+                <div class="action-icon-box"><i class="fa-solid fa-user-pen"></i></div>
+                <h3>Edit Student</h3>
+                <p>Modify biographical data, class allocations, or custom structural updates.</p>
+                <a href="edit-student.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student id card designer generator badges">
+                <div class="action-icon-box"><i class="fa-solid fa-id-badge"></i></div>
+                <h3>Student ID Card</h3>
+                <p>Generate, configure configurations, and mass batch-print formal smart identities.</p>
+                <a href="student-id-card.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student documents certificates files attachments">
+                <div class="action-icon-box"><i class="fa-solid fa-folder-open"></i></div>
+                <h3>Student Documents</h3>
+                <p>Track academic transcripts, KYC identities, and verified file attachments.</p>
+                <a href="student-documents.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="promote student upgrading terminal examinations batch processing">
+                <div class="action-icon-box"><i class="fa-solid fa-angles-up"></i></div>
+                <h3>Promote Student</h3>
+                <p>Batch upgrade verified cohorts to next sequential standard term sessions.</p>
+                <a href="promote-student.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card destructive" data-title="delete student remove archival logs">
+                <div class="action-icon-box"><i class="fa-solid fa-user-minus" style="color: #ef4444;"></i></div>
+                <h3>Delete Student</h3>
+                <p>Archive obsolete or termination items from standard operating viewports.</p>
+                <a href="delete-student.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student attendance logs roll call absence verification">
+                <div class="action-icon-box"><i class="fa-solid fa-calendar-check"></i></div>
+                <h3>Student Attendance</h3>
+                <p>Monitor class tracking registers, system logs, and metric abstractions.</p>
+                <a href="attendance.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student results report cards evaluation transcripts">
+                <div class="action-icon-box"><i class="fa-solid fa-poll"></i></div>
+                <h3>Student Results</h3>
+                <p>Process analytical reports, generate customized report card print engines.</p>
+                <a href="results.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="student fees ledgers invoice transactional payment status">
+                <div class="action-icon-box"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <h3>Student Fees</h3>
+                <p>Audit system ledger invoicing statements, transaction pipelines, and pending accounts.</p>
+                <a href="fees.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="action-card" data-title="export data excel csv system migrations backups tables">
+                <div class="action-icon-box"><i class="fa-solid fa-file-export"></i></div>
+                <h3>Export Data</h3>
+                <p>Generate clean structured raw CSV or spreadsheets format output data maps.</p>
+                <a href="export-student-data.html" class="btn-open">Configure Access <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="no-results" id="noResultsBlock">
+                <i class="fa-solid fa-database"></i>
+                <h3>No Matching Modules Found</h3>
+                <p>Refine your lookup criteria to navigate specific ERP sub-processes.</p>
+            </div>
+        </main>
+
+        <footer class="erp-footer">
+            &copy; 2026 R.S. Public School ERP System &bull; Core Management Framework. All rights reserved.
+        </footer>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. SMOOTH ANIMATED STATS RUNNER ---
+            const counterElements = document.querySelectorAll('.stat-counter');
+            
+            counterElements.forEach(counter => {
+                const updateCounter = () => {
+                    const targetValue = parseInt(counter.getAttribute('data-target'), 10);
+                    const currentValue = parseInt(counter.innerText, 10);
+                    
+                    // Controls smooth increment sizing rhythm
+                    const speedModifier = targetValue / 40; 
+                    
+                    if (currentValue < targetValue) {
+                        counter.innerText = Math.ceil(currentValue + speedModifier);
+                        setTimeout(updateCounter, 20);
+                    } else {
+                        counter.innerText = targetValue.toLocaleString();
+                    }
+                };
+                updateCounter();
+            });
+
+            // --- 2. LIVE INTERACTIVE FEATURE ENGINE SEARCH ---
+            const searchField = document.getElementById('moduleSearch');
+            const actionCards = document.querySelectorAll('.action-card');
+            const zeroStateMsg = document.getElementById('noResultsBlock');
+
+            searchField.addEventListener('input', (e) => {
+                const searchString = e.target.value.toLowerCase().trim();
+                let matchedItemsCount = 0;
+
+                actionCards.forEach(card => {
+                    const trackingData = card.getAttribute('data-title').toLowerCase();
+                    const visibleHeader = card.querySelector('h3').innerText.toLowerCase();
+                    
+                    if (trackingData.includes(searchString) || visibleHeader.includes(searchString)) {
+                        card.style.display = 'flex';
+                        matchedItemsCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Toggles clear blank interface messages when zero options matches
+                if(matchedItemsCount === 0) {
+                    zeroStateMsg.style.display = 'block';
+                } else {
+                    zeroStateMsg.style.display = 'none';
+                }
+            });
+
+            // --- 3. ACCESSIBILITY ENHANCEMENT FOR ACTION CARDS ---
+            actionCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    // Prevent navigating duplicate redirects if directly selecting the native anchor anchor string
+                    if (e.target.tagName !== 'A' && e.target.parentElement.tagName !== 'A') {
+                        const directUrl = card.querySelector('.btn-open').getAttribute('href');
+                        window.location.href = directUrl;
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

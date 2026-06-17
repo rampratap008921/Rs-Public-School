@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student | R.S. Public School ERP</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- THEME SETUP VARIABLES --- */
+        :root {
+            --primary: #0b1f5b;        /* Navy Blue */
+            --secondary: #d4a017;      /* Gold */
+            --primary-dark: #07143a;
+            --secondary-light: #fdfaf2;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --border-color: #cbd5e1;
+            --focus-shadow: 0 0 0 3px rgba(11, 31, 91, 0.15);
+            --transition: all 0.2s ease-in-out;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --radius-sm: 4px;
+            --danger: #ef4444;
+            --success: #10b981;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* --- STICKY TOP HEADER --- */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-bottom: 4px solid var(--secondary);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #ffffff;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .school-logo {
+            height: 42px;
+            width: 42px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            padding: 3px;
+            border: 1.5px solid var(--secondary);
+            object-fit: contain;
+        }
+
+        .header-title h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .header-title p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .btn-back {
+            background-color: transparent;
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: #ffffff;
+            color: var(--primary);
+            border-color: #ffffff;
+        }
+
+        /* --- DESKTOP DUAL-COLUMN WORKSPACE --- */
+        .workspace-layout {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 24px;
+        }
+
+        /* --- BREADCRUMBS --- */
+        .breadcrumb {
+            grid-column: 1 / -1;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: -4px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i {
+            font-size: 0.7rem;
+            color: #94a3b8;
+        }
+
+        /* --- SIDEBAR PANEL QUICK ACTIONS --- */
+        .sidebar-panel {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+            height: fit-content;
+        }
+
+        .sidebar-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+
+        .sidebar-link:hover {
+            background-color: #f1f5f9;
+            color: var(--primary);
+        }
+
+        .sidebar-link.active {
+            background-color: var(--secondary-light);
+            color: var(--primary);
+            border-left: 3px solid var(--secondary);
+            font-weight: 600;
+        }
+
+        /* --- CENTRAL FORM CARD ARCHITECTURE --- */
+        .form-master-card {
+            background: #ffffff;
+            border-radius: var(--radius-md);
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid #e2e8f0;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 18px;
+            border-bottom: 1.5px solid #e2e8f0;
+            padding-bottom: 6px;
+            color: var(--primary);
+        }
+
+        .section-header i {
+            font-size: 1rem;
+            color: var(--secondary);
+        }
+
+        .section-header h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        /* Structured Inputs Responsive Grids */
+        .inputs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .inputs-grid.quad {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .inputs-grid.split-photo {
+            grid-template-columns: 1fr 140px;
+            align-items: center;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        label .required {
+            color: var(--danger);
+            margin-left: 2px;
+        }
+
+        /* Input Elements Standard Style mappings */
+        .form-control {
+            width: 100%;
+            height: 34px;
+            padding: 0 12px;
+            font-size: 0.85rem;
+            border: 1.5px solid #cbd5e1;
+            border-radius: var(--radius-sm);
+            color: var(--text-dark);
+            background-color: #ffffff;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: var(--focus-shadow);
+        }
+
+        .form-control:disabled, .form-control[readonly] {
+            background-color: #f1f5f9;
+            color: var(--text-muted);
+            cursor: not-allowed;
+            border-color: #e2e8f0;
+        }
+
+        .form-control.error-field {
+            border-color: var(--danger) !important;
+            background-color: #fef2f2;
+        }
+
+        /* Synchronized Photo Management Field */
+        .photo-edit-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            background-color: var(--bg-body);
+        }
+
+        .photo-preview-box {
+            width: 100px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            border: 1px solid #cbd5e1;
+            background-color: #ffffff;
+        }
+
+        .upload-action-btn {
+            position: relative;
+            width: 100%;
+            height: 26px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-action-btn:hover {
+            border-color: var(--primary);
+            background-color: #f8fafc;
+        }
+
+        .file-hidden-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Document Vault Layout Grid Components */
+        .doc-management-row {
+            background-color: var(--bg-body);
+            border: 1px solid #e2e8f0;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .doc-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-meta i {
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .doc-title-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .doc-status-badge {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--success);
+            margin-left: 6px;
+        }
+
+        .file-chosen-indicator {
+            font-size: 0.75rem;
+            color: var(--success);
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right;
+        }
+
+        /* --- SYSTEM CONTROL COCKPIT ACTIONS BUTTON MATRIX --- */
+        .form-actions-cockpit {
+            border-top: 2px solid #e2e8f0;
+            padding-top: 20px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-panel {
+            height: 36px;
+            padding: 0 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            transition: var(--transition);
+        }
+
+        .btn-update {
+            background-color: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-update:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-print-form {
+            background-color: #cbd5e1;
+            color: var(--text-dark);
+        }
+
+        .btn-print-form:hover {
+            background-color: #94a3b8;
+        }
+
+        .btn-reset-changes {
+            background-color: transparent;
+            border: 1.5px solid #cbd5e1;
+            color: var(--text-muted);
+        }
+
+        .btn-reset-changes:hover {
+            background-color: #f1f5f9;
+            color: var(--text-dark);
+        }
+
+        .btn-cancel-link {
+            background-color: transparent;
+            color: var(--danger);
+            text-decoration: none;
+            padding: 0 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .btn-cancel-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Field Error Handling Labels */
+        .error-message {
+            color: var(--danger);
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin-top: 2px;
+            display: none;
+        }
+
+        /* --- SCREEN OVERLAY MODAL / TIMEOUT HOOKS --- */
+        .modal-layover {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 31, 91, 0.6);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: #ffffff;
+            gap: 12px;
+        }
+
+        .spinner-wheel {
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(255, 255, 255, 0.25);
+            border-top-color: var(--secondary);
+            border-radius: 50%;
+            animation: bounceScroll 0.8s linear infinite;
+        }
+
+        @keyframes bounceScroll {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Global Toast Banner */
+        .toast-banner {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            background-color: #ffffff;
+            border-left: 5px solid var(--success);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            padding: 14px 20px;
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-banner.show {
+            display: flex;
+            transform: translateX(0);
+        }
+
+        .toast-banner i {
+            color: var(--success);
+            font-size: 1.5rem;
+        }
+
+        .toast-title {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .toast-desc {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        /* --- FOOTER REGISTRY --- */
+        .erp-footer {
+            border-top: 1px solid #e2e8f0;
+            padding: 16px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 30px;
+            grid-column: 1 / -1;
+        }
+
+        /* --- DEVICE MEDIA VIEWPORT ADAPTATIONS --- */
+        @media (max-width: 1100px) {
+            .inputs-grid { grid-template-columns: repeat(2, 1fr); }
+            .inputs-grid.quad { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        @media (max-width: 960px) {
+            .workspace-layout { grid-template-columns: 1fr; }
+            .sidebar-panel { display: none; } /* Drop actions sidebar on tablets/mobiles */
+        }
+
+        @media (max-width: 680px) {
+            .inputs-grid, .inputs-grid.quad, .inputs-grid.split-photo { grid-template-columns: 1fr; }
+            .form-master-card { padding: 20px; }
+            .sticky-header { padding: 10px 16px; }
+            .header-title h1 { font-size: 1.1rem; }
+            .form-actions-cockpit { flex-direction: column; align-items: stretch; }
+            .btn-panel { justify-content: center; }
+            .btn-cancel-link { text-align: center; order: 5; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY TOP NAVIGATION HEADER -->
+    <header class="sticky-header">
+        <div class="header-brand">
+            <img src="rslogo.png" alt="R.S. Public School" class="school-logo" onerror="this.style.display='none';">
+            <div class="header-title">
+                <h1>R.S. Public School</h1>
+                <p>ERP Command Core Registry</p>
+            </div>
+        </div>
+        <a href="student-profile.html" class="btn-back">
+            <i class="fa-solid fa-chevron-left"></i> Cancel Viewport
+        </a>
+    </header>
+
+    <!-- SYSTEM CONTENT SPACE -->
+    <div class="workspace-layout">
+
+        <!-- SYSTEM BREADCRUMB -->
+        <nav class="breadcrumb">
+            <a href="dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="students-management.html">Students Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="student-profile.html">Student Profile</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Edit Student</span>
+        </nav>
+
+        <!-- OPERATIONS PANELS SIDEBAR -->
+        <aside class="sidebar-panel">
+            <h3 class="sidebar-title">Student Operations</h3>
+            <ul class="sidebar-menu">
+                <li><a href="student-profile.html" class="sidebar-link"><i class="fa-solid fa-id-card-clip"></i> Student Profile</a></li>
+                <li><a href="student-list.html" class="sidebar-link"><i class="fa-solid fa-address-book"></i> Student List</a></li>
+                <li><a href="student-id-card.html" class="sidebar-link"><i class="fa-solid fa-id-badge"></i> Student ID Card</a></li>
+                <li><a href="attendance.html" class="sidebar-link"><i class="fa-solid fa-calendar-check"></i> Attendance</a></li>
+                <li><a href="results.html" class="sidebar-link"><i class="fa-solid fa-poll"></i> View Results</a></li>
+                <li><a href="fees.html" class="sidebar-link"><i class="fa-solid fa-file-invoice-dollar"></i> View Fees</a></li>
+            </ul>
+        </aside>
+
+        <!-- MAIN DATA CAPTURE BLOCK CONTENT -->
+        <main class="form-container">
+            <form id="editStudentForm" class="form-master-card" novalidate>
+                
+                <!-- SECTION 1: BASIC REGISTRATION DETAILS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-user-gear"></i>
+                        <h2>Section 1: Basic Operational Data</h2>
+                    </div>
+                    <div class="inputs-grid">
+                        <div class="form-group">
+                            <label for="admissionNumber">Admission Number</label>
+                            <input type="text" id="admissionNumber" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="admissionDate">Admission Date <span class="required">*</span></label>
+                            <input type="date" id="admissionDate" class="form-control" required>
+                            <span class="error-message" id="err-admissionDate">Select a entry intake date.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentName">Student Full Name <span class="required">*</span></label>
+                            <input type="text" id="studentName" class="form-control" required>
+                            <span class="error-message" id="err-studentName">Field cannot remain blank.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender <span class="required">*</span></label>
+                            <select id="gender" class="form-control" required>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="dob">Date of Birth <span class="required">*</span></label>
+                            <input type="date" id="dob" class="form-control" required>
+                            <span class="error-message" id="err-dob">Select valid biographical date.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="bloodGroup">Blood Group</label>
+                            <select id="bloodGroup" class="form-control">
+                                <option value="">Unknown</option>
+                                <option value="A+">A+</option>
+                                <option value="A-">A-</option>
+                                <option value="B+">B+</option>
+                                <option value="B-">B-</option>
+                                <option value="O+">O+</option>
+                                <option value="O-">O-</option>
+                                <option value="AB+">AB+</option>
+                                <option value="AB-">AB-</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="aadhaarNo">Aadhaar Number <span class="required">*</span></label>
+                            <input type="text" id="aadhaarNo" class="form-control" maxlength="12" required>
+                            <span class="error-message" id="err-aadhaarNo">Enter a valid 12-digit identity number.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 2: ACADEMIC MAPS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h2>Section 2: Academic Program Allocations</h2>
+                    </div>
+                    <div class="inputs-grid quad">
+                        <div class="form-group">
+                            <label for="studentClass">Class Standard <span class="required">*</span></label>
+                            <select id="studentClass" class="form-control" required>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentSection">Section Lane <span class="required">*</span></label>
+                            <select id="studentSection" class="form-control" required>
+                                <option value="A">Section A</option>
+                                <option value="B">Section B</option>
+                                <option value="C">Section C</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rollNo">Roll Number <span class="required">*</span></label>
+                            <input type="number" id="rollNo" class="form-control" min="1" required>
+                            <span class="error-message" id="err-rollNo">Provide standard index order value.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="sessionYear">Active Term Session</label>
+                            <input type="text" id="sessionYear" class="form-control" readonly>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="prevSchool">Previous Attended Institution History</label>
+                            <input type="text" id="prevSchool" class="form-control">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 3: PARENTAL SYSTEM RECORDS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-users"></i>
+                        <h2>Section 3: Parent & Legal Guardian Matrices</h2>
+                    </div>
+                    <div class="inputs-grid">
+                        <div class="form-group">
+                            <label for="fatherName">Father Legal Name <span class="required">*</span></label>
+                            <input type="text" id="fatherName" class="form-control" required>
+                            <span class="error-message" id="err-fatherName">This configuration parameter is required.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherMobile">Father Mobile Line <span class="required">*</span></label>
+                            <input type="tel" id="fatherMobile" class="form-control" maxlength="10" required>
+                            <span class="error-message" id="err-fatherMobile">Enter valid 10-digit primary line.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherOcc">Father Professional Field</label>
+                            <input type="text" id="fatherOcc" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="motherName">Mother Legal Name <span class="required">*</span></label>
+                            <input type="text" id="motherName" class="form-control" required>
+                            <span class="error-message" id="err-motherName">This configuration parameter is required.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="motherMobile">Mother Mobile Line <span class="required">*</span></label>
+                            <input type="tel" id="motherMobile" class="form-control" maxlength="10" required>
+                            <span class="error-message" id="err-motherMobile">Enter valid 10-digit primary line.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="motherOcc">Mother Professional Field</label>
+                            <input type="text" id="motherOcc" class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="guardianName">Alternative Guardian Contact</label>
+                            <input type="text" id="guardianName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="guardianContact">Guardian Contact Relationship</label>
+                            <input type="tel" id="guardianContact" class="form-control" maxlength="10">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 4: CONTACT & NETWORKS MAPPINGS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <h2>Section 4: Address Maps & Direct Communications</h2>
+                    </div>
+                    <div class="inputs-grid quad">
+                        <div class="form-group full-width">
+                            <label for="address">Correspondence Residential Location <span class="required">*</span></label>
+                            <input type="text" id="address" class="form-control" required>
+                            <span class="error-message" id="err-address">Provide structural route layout information.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="city">City <span class="required">*</span></label>
+                            <input type="text" id="city" class="form-control" required>
+                            <span class="error-message" id="err-city">Field required.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="state">State / Region <span class="required">*</span></label>
+                            <input type="text" id="state" class="form-control" required>
+                            <span class="error-message" id="err-state">Field required.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="pinCode">PIN Postal Code <span class="required">*</span></label>
+                            <input type="text" id="pinCode" class="form-control" maxlength="6" required>
+                            <span class="error-message" id="err-pinCode">Enter valid 6-digit number mapping.</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Primary Corporate Email <span class="required">*</span></label>
+                            <input type="email" id="email" class="form-control" required>
+                            <span class="error-message" id="err-email">Provide valid operational email format.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 5: IDENTITY PHOTO REVISIONS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-camera"></i>
+                        <h2>Section 5: Biometric Asset Portfolio Revisions</h2>
+                    </div>
+                    <div class="inputs-grid split-photo">
+                        <div>
+                            <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom: 8px;">
+                                Modify the registered system avatar layout file. Cloud storage nodes accept fresh payloads matching <strong>JPG, JPEG, or PNG</strong> configurations up to 2MB.
+                            </p>
+                            <span class="error-message" id="err-studentPhoto" style="display:block; margin-bottom:4px;"></span>
+                        </div>
+                        <div class="photo-edit-wrapper">
+                            <!-- Preloaded sample inline vector placeholder avatar mapping -->
+                            <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" alt="Current Photo" class="photo-preview-box" id="avatarPreview">
+                            <div class="upload-action-btn">
+                                <span>Change Photo</span>
+                                <input type="file" id="studentPhoto" class="file-hidden-input" accept="image/jpeg, image/jpg, image/png">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SECTION 6: DOCUMENT ENCLOSURES VAULT REPLACEMENTS -->
+                <section class="form-section">
+                    <div class="section-header">
+                        <i class="fa-solid fa-file-shield"></i>
+                        <h2>Section 6: Document Enclosures Vault Updates</h2>
+                    </div>
+                    <div class="inputs-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        
+                        <div class="doc-management-row">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-cake-candles"></i>
+                                <span class="doc-title-label">Birth Certificate</span>
+                                <span class="doc-status-badge"><i class="fa-solid fa-circle-check"></i> Vaulted</span>
+                            </div>
+                            <div style="position:relative">
+                                <label class="upload-action-btn" style="padding:0 10px;" for="replaceBirth">Replace File</label>
+                                <input type="file" id="replaceBirth" class="file-hidden-input doc-vault-input" style="display:none">
+                                <div class="file-chosen-indicator"></div>
+                            </div>
+                        </div>
+
+                        <div class="doc-management-row">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-fingerprint"></i>
+                                <span class="doc-title-label">Aadhaar Card Copy</span>
+                                <span class="doc-status-badge"><i class="fa-solid fa-circle-check"></i> Vaulted</span>
+                            </div>
+                            <div style="position:relative">
+                                <label class="upload-action-btn" style="padding:0 10px;" for="replaceAadhaar">Replace File</label>
+                                <input type="file" id="replaceAadhaar" class="file-hidden-input doc-vault-input" style="display:none">
+                                <div class="file-chosen-indicator"></div>
+                            </div>
+                        </div>
+
+                        <div class="doc-management-row">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-passport"></i>
+                                <span class="doc-title-label">Transfer Certificate</span>
+                                <span class="doc-status-badge" style="color:var(--text-muted)"><i class="fa-solid fa-circle-minus"></i> Missing</span>
+                            </div>
+                            <div style="position:relative">
+                                <label class="upload-action-btn" style="padding:0 10px;" for="replaceTC">Upload File</label>
+                                <input type="file" id="replaceTC" class="file-hidden-input doc-vault-input" style="display:none">
+                                <div class="file-chosen-indicator"></div>
+                            </div>
+                        </div>
+
+                        <div class="doc-management-row">
+                            <div class="doc-meta">
+                                <i class="fa-solid fa-folder-plus"></i>
+                                <span class="doc-title-label">Other Enclosures</span>
+                                <span class="doc-status-badge"><i class="fa-solid fa-circle-check"></i> Vaulted</span>
+                            </div>
+                            <div style="position:relative">
+                                <label class="upload-action-btn" style="padding:0 10px;" for="replaceOther">Replace File</label>
+                                <input type="file" id="replaceOther" class="file-hidden-input doc-vault-input" style="display:none">
+                                <div class="file-chosen-indicator"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- CONSOLE CONTROL COCKPIT ACTIONS BUTTON MATRIX -->
+                <div class="form-actions-cockpit">
+                    <a href="student-profile.html" class="btn-cancel-link">Cancel Operation</a>
+                    <button type="button" class="btn-panel btn-reset-changes" id="btnTriggerReset"><i class="fa-solid fa-clock-rotate-left"></i> Reset Changes</button>
+                    <button type="button" class="btn-panel btn-print-form" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Profile</button>
+                    <button type="submit" class="btn-panel btn-update"><i class="fa-solid fa-square-check"></i> Update Student Data</button>
+                </div>
+
+            </form>
+        </main>
+
+        <!-- FOOTER BLOCK -->
+        <footer class="erp-footer">
+            &copy; 2026 R.S. Public School ERP System &bull; Enterprise Core Records Hub. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- OVERLAY SPINNER TRANSACTION MODULE -->
+    <div class="modal-layover" id="overlayPanel">
+        <div class="spinner-wheel"></div>
+        <p style="font-weight:500; letter-spacing:0.3px;">Re-building Encrypted Partition Clusters...</p>
+    </div>
+
+    <!-- REAL-TIME SYSTEM NOTIFICATION BANNER -->
+    <div class="toast-banner" id="toastSystem">
+        <i class="fa-solid fa-circle-check"></i>
+        <div>
+            <div class="toast-title">Transaction Authorized</div>
+            <div class="toast-desc">Master data block maps rewritten and synched to cluster cloud servers.</div>
+        </div>
+    </div>
+
+    <!-- CLIENT OPERATIONAL ENGINE LOGIC SCRIPT MODULE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('editStudentForm');
+            const avatarInput = document.getElementById('studentPhoto');
+            const avatarPreview = document.getElementById('avatarPreview');
+            const resetBtn = document.getElementById('btnTriggerReset');
+            const transitOverlay = document.getElementById('overlayPanel');
+            const alertToast = document.getElementById('toastSystem');
+
+            // --- 1. SEED DICTIONARY OBJECT FOR PRE-LOADING PROFILE DATA ---
+            const mockActiveProfileDatabase = {
+                admissionNo: "RS2026-042",
+                admissionDate: "2024-04-05",
+                fullName: "Aarav K. Sharma",
+                gender: "Male",
+                dob: "2009-08-12",
+                bloodGroup: "B+",
+                aadhaarNo: "452489651254",
+                class: "12",
+                section: "B",
+                rollNo: "18",
+                sessionYear: "2026-2027",
+                prevSchool: "Delhi Public School, R.K. Puram Core Sector",
+                fatherName: "Rajesh Kumar Sharma",
+                fatherMobile: "9871234560",
+                fatherOcc: "Senior Software Architect",
+                motherName: "Sunita Sharma",
+                motherMobile: "9871234561",
+                motherOcc: "Academic Educator",
+                guardianName: "",
+                guardianContact: "",
+                address: "Flat 405, Sector-15, Royal Palm Heights Cluster A",
+                city: "Noida",
+                state: "Uttar Pradesh",
+                pinCode: "201301",
+                email: "aarav.sharma@domain-erp.in"
+            };
+
+            // Inject record dictionary values into form fields
+            hydrateFormFields(mockActiveProfileDatabase);
+
+            function hydrateFormFields(record) {
+                document.getElementById('admissionNumber').value = record.admissionNo;
+                document.getElementById('admissionDate').value = record.admissionDate;
+                document.getElementById('studentName').value = record.fullName;
+                document.getElementById('gender').value = record.gender;
+                document.getElementById('dob').value = record.dob;
+                document.getElementById('bloodGroup').value = record.bloodGroup;
+                document.getElementById('aadhaarNo').value = record.aadhaarNo;
+                document.getElementById('studentClass').value = record.class;
+                document.getElementById('studentSection').value = record.section;
+                document.getElementById('rollNo').value = record.rollNo;
+                document.getElementById('sessionYear').value = record.sessionYear;
+                document.getElementById('prevSchool').value = record.prevSchool;
+                document.getElementById('fatherName').value = record.fatherName;
+                document.getElementById('fatherMobile').value = record.fatherMobile;
+                document.getElementById('fatherOcc').value = record.fatherOcc;
+                document.getElementById('motherName').value = record.motherName;
+                document.getElementById('motherMobile').value = record.motherMobile;
+                document.getElementById('motherOcc').value = record.motherOcc;
+                document.getElementById('guardianName').value = record.guardianName;
+                document.getElementById('guardianContact').value = record.guardianContact;
+                document.getElementById('address').value = record.address;
+                document.getElementById('city').value = record.city;
+                document.getElementById('state').value = record.state;
+                document.getElementById('pinCode').value = record.pinCode;
+                document.getElementById('email').value = record.email;
+            }
+
+            // --- 2. LIVE PROFILE PASSPORT RE-SAMPLING CONTROLLER ---
+            avatarInput.addEventListener('change', function() {
+                const file = this.files[0];
+                const errBox = document.getElementById('err-studentPhoto');
+                errBox.innerText = '';
+
+                if (file) {
+                    const structuralExtensions = ['image/jpeg', 'image/jpg', 'image/png'];
+                    if (!structuralExtensions.includes(file.type)) {
+                        errBox.innerText = 'Format Denied: Use JPG, JPEG, or PNG extensions.';
+                        this.value = '';
+                        return;
+                    }
+                    if (file.size > 2 * 1024 * 1024) { // Size validation limit (2MB)
+                        errBox.innerText = 'Payload Oversized: Width exceeds 2MB buffer constraints.';
+                        this.value = '';
+                        return;
+                    }
+
+                    const dataReader = new FileReader();
+                    dataReader.addEventListener('load', () => {
+                        avatarPreview.setAttribute('src', dataReader.result);
+                    });
+                    dataReader.readAsDataURL(file);
+                }
+            });
+
+            // --- 3. DOCUMENT ENCLOSURE SELECTION INDICATORS FEEDBACKS ---
+            const vaultInputsList = document.querySelectorAll('.doc-vault-input');
+            vaultInputsList.forEach(input => {
+                input.addEventListener('change', function() {
+                    const indicatorLabel = this.nextElementSibling;
+                    if (this.files.length > 0) {
+                        indicatorLabel.innerText = this.files[0].name;
+                        indicatorLabel.style.display = 'block';
+                    } else {
+                        indicatorLabel.style.display = 'none';
+                    }
+                });
+            });
+
+            // --- 4. DATA RESTORATION PROCESSOR ENGINE ---
+            resetBtn.addEventListener('click', () => {
+                if (confirm('Revert all adjustments back to original database parameters?')) {
+                    hydrateFormFields(mockActiveProfileDatabase);
+                    avatarPreview.setAttribute('src', "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>");
+                    vaultInputsList.forEach(input => input.nextElementSibling.style.display = 'none');
+                    document.querySelectorAll('.error-field').forEach(field => field.classList.remove('error-field'));
+                    document.querySelectorAll('.error-message').forEach(msg => msg.style.display = 'none');
+                }
+            });
+
+            // --- 5. DATA TRANSMISSION PIPELINE VALIDATIONS ENGINE ---
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                let datasetStateIsValid = true;
+
+                // Validation Regular Expression Patterns
+                const emailRule = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const telephoneRule = /^[6-9]\d{9}$/;
+                const aadhaarRule = /^\d{12}$/;
+                const postalRule = /^\d{6}$/;
+
+                const mandatoryFields = form.querySelectorAll('[required]');
+
+                mandatoryFields.forEach(input => {
+                    let fieldValid = true;
+                    const cleanValue = input.value.trim();
+
+                    if (!cleanValue) {
+                        fieldValid = false;
+                    } else if (input.id === 'email' && !emailRule.test(cleanValue)) {
+                        fieldValid = false;
+                    } else if ((input.id === 'fatherMobile' || input.id === 'motherMobile') && !telephoneRule.test(cleanValue)) {
+                        fieldValid = false;
+                    } else if (input.id === 'aadhaarNo' && !aadhaarRule.test(cleanValue)) {
+                        fieldValid = false;
+                    } else if (input.id === 'pinCode' && !postalRule.test(cleanValue)) {
+                        fieldValid = false;
+                    }
+
+                    if (!fieldValid) {
+                        applyInputErrorVisuals(input);
+                        datasetStateIsValid = false;
+                    } else {
+                        dismissInputErrorVisuals(input);
+                    }
+                });
+
+                // Submit pipeline handling sequence based on confirmation check checks
+                if (datasetStateIsValid) {
+                    if (confirm('Commit modified data layers to database registries?')) {
+                        transitOverlay.style.display = 'flex';
+
+                        // Simulate Cloud Synchronization Latency
+                        setTimeout(() => {
+                            transitOverlay.style.display = 'none';
+                            
+                            // Initialize Success Notification Popup System Banner
+                            alertToast.style.display = 'flex';
+                            setTimeout(() => alertToast.classList.add('show'), 40);
+
+                            // Auto-dismiss feedback system panel after brief display sequence
+                            setTimeout(() => {
+                                alertToast.classList.remove('show');
+                                setTimeout(() => alertToast.style.display = 'none', 300);
+                            }, 4000);
+
+                        }, 2000);
+                    }
+                } else {
+                    // Smoothly auto scroll back up to the first invalid field layer block structure
+                    const targetErrNode = document.querySelector('.error-field');
+                    if (targetErrNode) {
+                        targetErrNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        targetErrNode.focus();
+                    }
+                }
+            });
+
+            function applyInputErrorVisuals(node) {
+                node.classList.add('error-field');
+                const labelElement = document.getElementById(`err-${node.id}`);
+                if (labelElement) labelElement.style.display = 'block';
+            }
+
+            function dismissInputErrorVisuals(node) {
+                node.classList.remove('error-field');
+                const labelElement = document.getElementById(`err-${node.id}`);
+                if (labelElement) labelElement.style.display = 'none';
+            }
+
+            // Inline error clearance listeners
+            form.querySelectorAll('.form-control').forEach(control => {
+                control.addEventListener('input', () => {
+                    if (control.value.trim() !== '') dismissInputErrorVisuals(control);
+                });
+                control.addEventListener('change', () => {
+                    if (control.value !== '') dismissInputErrorVisuals(control);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

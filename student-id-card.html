@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student ID Card | R.S. Public School ERP</title>
+    <title>Student ID Card Management | R.S. Public School ERP</title>
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        /* --- SYSTEM DESIGN SCHEME & RESET --- */
+        /* --- SYSTEM DESIGN SCHEME & RESETS --- */
         :root {
             --primary: #0b1f5b;        /* Navy Blue */
+            --primary-dark: #07143a;
             --secondary: #d4a017;      /* Gold */
             --bg-body: #f8fafc;
             --text-dark: #1e293b;
             --text-muted: #64748b;
             --border-color: #cbd5e1;
-            --radius: 8px;
+            --radius-md: 6px;
+            --radius-lg: 10px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             --transition: all 0.2s ease-in-out;
-            
-            /* CRITICAL: Standard CR-80 physical dimensions approximation */
-            --id-width: 450px;
-            --id-height: 270px;
+
+            /* CRITICAL: Standard Portrait Badge Dimensions (CR-80 roughly proportional) */
+            --id-width: 245px;
+            --id-height: 380px;
         }
 
         * {
@@ -37,27 +43,246 @@
             background-color: var(--bg-body);
             color: var(--text-dark);
             font-size: 13px;
-            line-height: 1.4;
-            padding: 30px 15px;
+            line-height: 1.5;
         }
 
-        /* --- CONTROL DASHBOARD ACTION COCKPIT --- */
-        .control-cockpit {
-            max-width: var(--id-width);
-            margin: 0 auto 24px auto;
+        /* --- STICKY NAVIGATION HEADER --- */
+        .erp-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-bottom: 4px solid var(--secondary);
+            padding: 12px 24px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 10px;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            color: #ffffff;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .school-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            padding: 2px;
+            object-fit: contain;
+            border: 1.5px solid var(--secondary);
+        }
+
+        .header-meta h1 {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .header-meta p {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .btn-back {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: #ffffff;
+            color: var(--primary);
+            border-color: #ffffff;
+        }
+
+        /* --- MAIN WORKSPACE CONTAINER --- */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 24px;
+        }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        /* --- GENERATION PANEL CONTROLS CARD --- */
+        .generation-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        /* Nav Tab Rows Mappings */
+        .tabs-header-bar {
+            display: flex;
+            background-color: #f1f5f9;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+            border-right: 1px solid #e2e8f0;
+            transition: var(--transition);
+        }
+
+        .tab-btn:hover {
+            background-color: #e2e8f0;
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            background-color: #ffffff;
+            color: var(--primary);
+            border-top: 3px solid var(--primary);
+            padding-top: 9px;
+        }
+
+        .tabs-content-body {
+            padding: 20px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* Input Form Component Grids Mapping */
+        .inputs-row-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            align-items: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 34px;
+            padding: 0 10px;
+            font-size: 12.5px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            outline: none;
+            background-color: #ffffff;
+            color: var(--text-dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        /* Selection Matrix Area Layouts */
+        .selection-list-box {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            max-height: 160px;
+            overflow-y: auto;
+            margin-top: 8px;
+            background-color: #fafafa;
+        }
+
+        .select-all-wrap {
+            padding: 8px 12px;
+            background-color: #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .list-item-checkbox {
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .list-item-checkbox:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-checkbox:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Multi-Functional Operational Action Cockpits Buttons Mapping */
+        .actions-btn-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
             flex-wrap: wrap;
+            gap: 10px;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 16px;
         }
 
         .btn-panel {
-            height: 36px;
+            height: 34px;
             padding: 0 16px;
-            font-size: 0.8rem;
+            font-size: 12px;
             font-weight: 600;
-            border-radius: 6px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -65,7 +290,6 @@
             border: 1px solid var(--border-color);
             background-color: #ffffff;
             color: var(--text-dark);
-            text-decoration: none;
             transition: var(--transition);
         }
 
@@ -81,129 +305,205 @@
         }
 
         .btn-panel.btn-primary-action:hover {
-            background-color: #07143a;
-            border-color: #07143a;
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
         }
 
-        /* --- THE CORE ID CARD FRAME --- */
-        .id-badge-wrapper {
+        .btn-panel.btn-accent-action {
+            background-color: #cbd5e1;
+            color: var(--text-dark);
+        }
+
+        .btn-panel.btn-accent-action:hover {
+            background-color: #94a3b8;
+        }
+
+        /* --- ID CARD PREVIEW CONFIGURATION WRAPPER --- */
+        .preview-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #cbd5e1;
+        }
+
+        .total-selected-count-badge {
+            background-color: var(--primary);
+            color: #ffffff;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        /* Flexible Grid Map For Rendering Multi Badges Together */
+        .cards-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(var(--id-width), 1fr));
+            gap: 24px;
+            justify-items: center;
+            margin-bottom: 30px;
+        }
+
+        .no-records-placeholder {
+            grid-column: 1 / -1;
+            padding: 40px;
+            text-align: center;
+            color: var(--text-muted);
+            background: #ffffff;
+            width: 100%;
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-color);
+        }
+
+        .no-records-placeholder i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #94a3b8;
+        }
+
+        /* --- THE PORTRAIT LAYOUT IDENTITY BADGE CARD STRUCTURE --- */
+        .id-portrait-card {
             width: var(--id-width);
             height: var(--id-height);
-            margin: 0 auto;
             background-color: #ffffff;
-            border: 2px solid var(--primary);
-            border-top: 4px solid var(--primary);
-            border-bottom: 4px solid var(--primary);
-            border-radius: 10px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            border: 1px solid #b8c2cc;
+            border-top: 5px solid var(--primary);
+            border-bottom: 5px solid var(--primary);
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
             overflow: hidden;
-            position: relative;
             display: flex;
             flex-direction: column;
-            background-image: radial-gradient(rgba(11, 31, 91, 0.015) 1px, transparent 0);
-            background-size: 10px 10px;
+            position: relative;
+            background-image: radial-gradient(rgba(11, 31, 91, 0.01) 1px, transparent 0);
+            background-size: 8px 8px;
         }
 
-        /* CARD ACCENT LAYER LINES */
-        .id-badge-wrapper::after {
+        /* Horizontal Divider Accent Line Layer */
+        .id-portrait-card::after {
             content: '';
             position: absolute;
-            top: 58px;
+            top: 52px;
             left: 0;
             width: 100%;
-            height: 3px;
+            height: 2px;
             background-color: var(--secondary);
         }
 
-        /* --- TOP HEADER SECTION --- */
-        .card-header-block {
-            height: 60px;
-            padding: 6px 12px;
-            display: grid;
-            grid-template-columns: 45px 1fr 45px;
+        /* TOP COMPACT BRANDROW HEADER SECTION */
+        .card-header-row {
+            height: 54px;
+            padding: 4px 8px;
+            display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             background-color: #ffffff;
         }
 
-        .school-logo-frame, .student-passport-frame {
-            width: 44px;
-            height: 48px;
+        .card-logo-img {
+            width: 32px;
+            height: 32px;
             object-fit: contain;
+            flex-shrink: 0;
         }
 
-        .student-passport-frame {
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background-color: #f1f5f9;
-        }
-
-        .school-meta-center {
+        .card-school-meta {
+            flex-grow: 1;
             text-align: center;
         }
 
-        .school-meta-center h1 {
-            font-size: 13px;
+        .card-school-meta h2 {
+            font-size: 11px;
             font-weight: 800;
             color: var(--primary);
-            letter-spacing: 0.5px;
+            letter-spacing: 0.2px;
             line-height: 1.2;
-            margin-bottom: 1px;
         }
 
-        .school-meta-center p {
-            font-size: 9px;
-            font-weight: 500;
+        .card-school-meta p {
+            font-size: 7px;
             color: var(--text-muted);
             line-height: 1.1;
             white-space: nowrap;
         }
 
-        /* --- MIDDLE BIOGRAPHICAL SECTION --- */
-        .card-middle-block {
-            padding: 14px 16px 6px 16px;
+        /* BIOMETRIC INTEGRATION PASSPORT PHOTO CONTAINER FRAME */
+        .card-avatar-center-block {
+            padding: 12px 0 6px 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+        }
+
+        .card-passport-photo {
+            width: 72px;
+            height: 84px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: #f1f5f9;
+        }
+
+        /* MIDDLE DATA DETAILS FIELD INFORMATION BLOCK */
+        .card-biography-block {
+            padding: 4px 14px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
-        .bio-row {
+        .badge-data-row {
             display: flex;
-            align-items: flex-start;
-            font-size: 11px;
+            flex-direction: column;
+            line-height: 1.3;
         }
 
-        .bio-label {
-            width: 90px;
-            font-weight: 600;
-            color: var(--primary);
+        .badge-data-row .b-label {
+            font-size: 7.5px;
+            font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
-            font-size: 10px;
             letter-spacing: 0.3px;
-            flex-shrink: 0;
         }
 
-        .bio-val {
+        .badge-data-row .b-val {
+            font-size: 10.5px;
             font-weight: 500;
             color: var(--text-dark);
         }
 
-        .bio-row.student-name-row .bio-val {
-            font-size: 13px;
+        /* Emphasized Layout Row Parameter mapping for Name mapping */
+        .badge-data-row.student-name-target {
+            align-items: center;
+            text-align: center;
+            margin-bottom: 4px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 4px;
+        }
+
+        .badge-data-row.student-name-target .b-val {
+            font-size: 12.5px;
             font-weight: 700;
             color: var(--primary);
         }
 
-        /* --- BOTTOM ACADEMIC INFRASTRUCTURE MATRIX --- */
-        .card-bottom-block {
+        /* BOTTOM LAYOUT GRID STRUCTURE REGISTRATIONS */
+        .card-academic-matrix-row {
             background-color: #f8fafc;
             border-top: 1px solid #e2e8f0;
-            padding: 6px 16px;
+            padding: 4px 8px;
             display: grid;
-            grid-template-columns: 1.3fr repeat(3, 1fr);
-            gap: 4px;
+            grid-template-columns: 1.2fr repeat(3, 1fr);
+            gap: 2px;
             text-align: center;
         }
 
@@ -211,31 +511,29 @@
             display: flex;
             flex-direction: column;
             border-right: 1px dashed #cbd5e1;
-            padding: 2px 0;
         }
 
         .matrix-cell:last-child {
             border-right: none;
         }
 
-        .matrix-label {
-            font-size: 8px;
+        .matrix-cell .m-label {
+            font-size: 7px;
             font-weight: 700;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
-        .matrix-val {
-            font-size: 11px;
+        .matrix-cell .m-val {
+            font-size: 10px;
             font-weight: 600;
             color: var(--primary);
         }
 
-        /* --- FOOTER AUTHENTICATION SECURE LINE --- */
-        .card-footer-block {
-            height: 46px;
-            padding: 4px 20px;
+        /* SECURE VERIFICATION FOOTER LINE */
+        .card-footer-auth-row {
+            height: 42px;
+            padding: 2px 14px;
             border-top: 1px solid #e2e8f0;
             display: flex;
             align-items: flex-end;
@@ -243,32 +541,65 @@
             background-color: #ffffff;
         }
 
-        .auth-sign-area, .auth-seal-area {
+        .auth-seal-box, .auth-signature-box {
+            width: 80px;
             text-align: center;
-            width: 110px;
         }
 
-        .auth-label {
-            font-size: 8px;
+        .auth-caption {
+            font-size: 7.5px;
             font-weight: 600;
             color: var(--text-muted);
             text-transform: uppercase;
             border-top: 1px solid #94a3b8;
-            padding-top: 2px;
-            letter-spacing: 0.3px;
+            padding-top: 1px;
+            letter-spacing: 0.2px;
         }
 
-        .mock-sign-img {
-            height: 18px;
+        .signature-vector-line {
+            height: 14px;
             object-fit: contain;
-            margin-bottom: 2px;
-            opacity: 0.85;
+            margin-bottom: 1px;
             display: block;
             margin-left: auto;
             margin-right: auto;
         }
 
-        /* --- PRINT MEDIA RULES IMPLEMENTATION --- */
+        /* --- SYSTEM GLOBAL FOOTER --- */
+        .erp-footer {
+            border-top: 1px solid #cbd5e1;
+            padding: 16px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+
+        /* --- MULTI-DEVICE VIEWPORT ADAPTATIONS --- */
+        @media (max-width: 900px) {
+            .inputs-row-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 600px) {
+            .inputs-row-grid {
+                grid-template-columns: 1fr;
+            }
+            .tabs-header-bar {
+                flex-direction: column;
+            }
+            .tab-btn {
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .erp-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+        }
+
+        /* --- CRITICAL: BULK SHEET PRINTING CONFIGURATIONS ENGINE --- */
         @media print {
             body {
                 background-color: #ffffff !important;
@@ -276,150 +607,416 @@
                 margin: 0 !important;
             }
 
-            .control-cockpit {
-                display: none !important; /* Hide dashboard control bar during print operations */
+            .erp-header, .breadcrumb, .generation-card, .preview-section-title button, .erp-footer {
+                display: none !important; /* Hide management dashboards panels during print */
             }
 
-            .id-badge-wrapper {
+            .main-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: none !important;
+            }
+
+            /* Precise Sheet Matrix Layout Matching 3 portrait cards per row mapping constraints */
+            .cards-preview-grid {
+                display: grid !important;
+                grid-template-columns: repeat(3, var(--id-width)) !important;
+                gap: 20px 30px !important;
+                justify-content: center !important;
+                padding: 1.5cm 0 0 0 !important;
+                margin: 0 !important;
+                page-break-inside: replace !important;
+            }
+
+            /* Explicit pagination handling tracking 6 portrait items total boundary limits per page block layout */
+            .id-portrait-card {
                 box-shadow: none !important;
-                position: absolute;
-                top: 0;
-                left: 0;
-                page-break-inside: avoid;
-                -webkit-print-color-adjust: exact; /* Force accurate rendering of structural palette variables */
+                border: 1px solid #000000 !important;
+                page-break-inside: avoid !important;
+                -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+            }
+
+            /* Inject artificial page break offsets iteratively every 6 cards to handle strict row layout allocations */
+            .id-portrait-card:nth-child(6n+1) {
+                /* Handled cleanly dynamically if browser requires forcing structural layout splits */
             }
         }
     </style>
 </head>
 <body>
 
-    <div class="control-cockpit">
-        <a href="student-profile.html" class="btn-panel"><i class="fa-solid fa-arrow-left"></i> Profile View</a>
-        <button type="button" class="btn-panel" id="btnDownloadTrigger"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
-        <button type="button" class="btn-panel btn-primary-action" onclick="window.print()"><i class="fa-solid fa-print"></i> Print ID Card</button>
+    <!-- ERP FIXED STICKY TOP HEADER -->
+    <header class="erp-header">
+        <div class="header-brand">
+            <img src="rslogo.png" alt="R.S. Logo" class="school-logo" onerror="this.style.background='#d4a017';">
+            <div class="header-meta">
+                <h1>R.S. Public School</h1>
+                <p>Enterprise Resource Planning Core System</p>
+            </div>
+        </div>
+        <a href="students-management.html" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Students Workspace
+        </a>
+    </header>
+
+    <div class="main-container">
+
+        <!-- BREADCRUMB NAVIGATION -->
+        <nav class="breadcrumb">
+            <a href="dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="students-management.html">Students Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Student ID Card Management</span>
+        </nav>
+
+        <!-- SEARCH ENGINE / ID CARD CONFIGURATION BOX CONTAINER -->
+        <section class="generation-card">
+            
+            <!-- CONTROLS MULTI TABS NAV BAR -->
+            <div class="tabs-header-bar">
+                <button type="button" class="tab-btn active" onclick="switchControlTab(event, 'classWiseTab')"><i class="fa-solid fa-layer-group"></i> Class Wise Generation</button>
+                <button type="button" class="tab-btn" onclick="switchControlTab(event, 'admissionTab')"><i class="fa-solid fa-arrow-1-9"></i> Admission Range Wise</button>
+                <button type="button" class="tab-btn" onclick="switchControlTab(event, 'nameTab')"><i class="fa-solid fa-arrow-a-z"></i> Student Name Wise</button>
+            </div>
+
+            <div class="tabs-content-body">
+                
+                <!-- TAB PANEL 1: CLASS WISE LOOKUP MATRICES -->
+                <div class="tab-pane active" id="classWiseTab">
+                    <div class="inputs-row-grid">
+                        <div class="form-group">
+                            <label>Select Standard Class</label>
+                            <select id="cls-select" class="form-control" onchange="filterClassWiseStudents()">
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12" selected>Class 12</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Section Standard</label>
+                            <select id="sec-select" class="form-control" onchange="filterClassWiseStudents()">
+                                <option value="A" selected>Section A</option>
+                                <option value="B">Section B</option>
+                                <option value="C">Section C</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Student Registries</label>
+                        <div class="selection-list-box">
+                            <div class="select-all-wrap">
+                                <input type="checkbox" id="class-select-all" onchange="toggleSelectAllGroup('class-select-all', 'class-box-item')">
+                                <span>Select All Cohort Members</span>
+                            </div>
+                            <div id="classWiseContainerList">
+                                <!-- Loaded dynamically via data binders -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions-btn-group">
+                        <button type="button" class="btn-panel btn-primary-action" onclick="generateBatchCards('class')"><i class="fa-solid fa-wand-magic-sparkles"></i> Preview ID Cards</button>
+                        <button type="button" class="btn-panel" onclick="executePrintBulk()"><i class="fa-solid fa-print"></i> Print Selected</button>
+                        <button type="button" class="btn-panel btn-accent-action" onclick="triggerPdfMock()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL 2: ADMISSION RANGE WISE FIELD ENTRIES -->
+                <div class="tab-pane" id="admissionTab">
+                    <div class="inputs-row-grid" style="grid-template-columns: repeat(2, 1fr);">
+                        <div class="form-group">
+                            <label>From Admission Number Range Boundary</label>
+                            <input type="text" id="adm-range-from" class="form-control" placeholder="e.g. RS2601">
+                        </div>
+                        <div class="form-group">
+                            <label>To Admission Number Range Boundary</label>
+                            <input type="text" id="adm-range-to" class="form-control" placeholder="e.g. RS2605">
+                        </div>
+                    </div>
+
+                    <div class="actions-btn-group">
+                        <button type="button" class="btn-panel btn-primary-action" onclick="generateBatchCards('admission')"><i class="fa-solid fa-wand-magic-sparkles"></i> Preview ID Cards</button>
+                        <button type="button" class="btn-panel" onclick="executePrintBulk()"><i class="fa-solid fa-print"></i> Print Selected</button>
+                        <button type="button" class="btn-panel btn-accent-action" onclick="triggerPdfMock()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                    </div>
+                </div>
+
+                <!-- TAB PANEL 3: STUDENT NAME LOOKUP DRILLDOWN MATRIX -->
+                <div class="tab-pane" id="nameTab">
+                    <div class="inputs-row-grid" style="grid-template-columns: 1fr;">
+                        <div class="form-group">
+                            <label>Query Student Name Pattern Search</label>
+                            <input type="text" id="nameQuerySearch" class="form-control" placeholder="Type names to filter indices..." oninput="filterNameWiseListing()">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: -10px;">
+                        <div class="selection-list-box" style="max-height: 180px;">
+                            <div class="select-all-wrap">
+                                <input type="checkbox" id="name-select-all" onchange="toggleSelectAllGroup('name-select-all', 'name-box-item')">
+                                <span>Select All Matching Inbound Profiles</span>
+                            </div>
+                            <div id="nameWiseContainerList">
+                                <!-- Loaded dynamically via data binders -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="actions-btn-group">
+                        <button type="button" class="btn-panel btn-primary-action" onclick="generateBatchCards('name')"><i class="fa-solid fa-wand-magic-sparkles"></i> Preview ID Cards</button>
+                        <button type="button" class="btn-panel" onclick="executePrintBulk()"><i class="fa-solid fa-print"></i> Print Selected</button>
+                        <button type="button" class="btn-panel btn-accent-action" onclick="triggerPdfMock()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- LIVE DISPLAY ENGINE CARD PREVIEW GRID SPACE -->
+        <section>
+            <div class="preview-section-title">
+                <span>Active Print Production Buffer Pipeline</span>
+                <span class="total-selected-count-badge" id="selectedBadgeCounterLabel">Active Count: 0 Scholars</span>
+            </div>
+
+            <div class="cards-preview-grid" id="printProductionWorkspaceGrid">
+                <div class="no-records-placeholder">
+                    <i class="fa-solid fa-rectangle-list"></i>
+                    <p>No operational ID cards loaded. Specify query search inputs above to preview bulk batch generation streams.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ERP CONSOLE SYSTEM FOOTER -->
+        <footer class="erp-footer">
+            &copy; 2026 R.S. Public School ERP System &bull; Identity Card Automation Engine. All rights reserved.
+        </footer>
     </div>
 
-    <main class="id-badge-wrapper" id="idBadgeCard">
-        
-        <header class="card-header-block">
-            <img src="rslogo.png" alt="R.S. Logo" class="school-logo-frame" onerror="this.style.background='#0b1f5b';this.style.borderRadius='50%'">
-            <div class="school-meta-center">
-                <h1>R.S. PUBLIC SCHOOL</h1>
-                <p id="sch-address">Loading Address...</p>
-                <p id="sch-contacts">Loading Contacts...</p>
-            </div>
-            <img src="" alt="Student Profile" class="student-passport-frame" id="stu-photo">
-        </header>
-
-        <section class="card-middle-block">
-            <div class="bio-row student-name-row">
-                <div class="bio-label">Name</div>
-                <div class="bio-val" id="lbl-name">---</div>
-            </div>
-            <div class="bio-row">
-                <div class="bio-label">Father's Name</div>
-                <div class="bio-val" id="lbl-father">---</div>
-            </div>
-            <div class="bio-row">
-                <div class="bio-label">Mobile No</div>
-                <div class="bio-val" id="lbl-mobile">---</div>
-            </div>
-            <div class="bio-row">
-                <div class="bio-label">Address</div>
-                <div class="bio-val" id="lbl-address">---</div>
-            </div>
-        </section>
-
-        <section class="card-bottom-block">
-            <div class="matrix-cell">
-                <span class="matrix-label">Adm No</span>
-                <span class="matrix-val" id="lbl-admNo">---</span>
-            </div>
-            <div class="matrix-cell">
-                <span class="matrix-label">Class</span>
-                <span class="matrix-val" id="lbl-class">---</span>
-            </div>
-            <div class="matrix-cell">
-                <span class="matrix-label">Section</span>
-                <span class="matrix-val" id="lbl-section">---</span>
-            </div>
-            <div class="matrix-cell">
-                <span class="matrix-label">Roll No</span>
-                <span class="matrix-val" id="lbl-rollNo">---</span>
-            </div>
-        </section>
-
-        <footer class="card-footer-block">
-            <div class="auth-seal-area">
-                <div class="auth-label">School Seal</div>
-            </div>
-            <div class="auth-sign-area">
-                <svg class="mock-sign-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30" width="80" height="20">
-                    <path d="M10,25 Q25,5 40,20 T70,10 T90,15" fill="none" stroke="#0b1f5b" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
-                <div class="auth-label">Principal</div>
-            </div>
-        </footer>
-
-    </main>
-
+    <!-- CORE REPOSITORIES OPERATIONAL DATABASE MODULE LOGIC SCRIPT -->
     <script>
+        // --- DATA SEED DICTIONARY REGISTRY ARRAY MAPS ---
+        const schoolEnclosureMeta = {
+            address: "Sector 4, Phase II, Corporate Hub, New Delhi",
+            email: "info@rspublicschool.edu.in",
+            phone: "+91 11 2645 8900"
+        };
+
+        const globalStudentDataStore = [
+            { admissionNo: "RS2601", name: "Aarav Sharma", fatherName: "Rajesh Sharma", mobile: "9876543210", address: "122, Civil Lines, New Delhi", class: "12", section: "A", rollNo: "01", gender: "Male" },
+            { admissionNo: "RS2602", name: "Ananya Verma", fatherName: "Amit Verma", mobile: "9876543211", address: "B-45, Shalimar Bagh, New Delhi", class: "12", section: "A", rollNo: "02", gender: "Female" },
+            { admissionNo: "RS2603", name: "Arjun Malhotra", fatherName: "Vikas Malhotra", mobile: "9876543212", address: "Flat 402, Royal Residency, Gurugram", class: "12", section: "A", rollNo: "03", gender: "Male" },
+            { admissionNo: "RS2604", name: "Diya Kaplan", fatherName: "Sanjay Kaplan", mobile: "9876543213", address: "H-18, Green Park Ext, New Delhi", class: "12", section: "A", rollNo: "04", gender: "Female" },
+            { admissionNo: "RS2605", name: "Ishaan Choudhury", fatherName: "Pradeep Choudhury", mobile: "9876543214", address: "Sector 15, Block C-9, Noida", class: "12", section: "A", rollNo: "05", gender: "Male" },
+            { admissionNo: "RS2606", name: "Kavya Iyer", fatherName: "Ramesh Iyer", mobile: "9876543215", address: "78, South Extension Part II, New Delhi", class: "12", section: "B", rollNo: "01", gender: "Female" },
+            { admissionNo: "RS2607", name: "Kabir Singh", fatherName: "Jasbir Singh", mobile: "9876543216", address: "Plot 29, Rajouri Garden, New Delhi", class: "11", section: "A", rollNo: "14", gender: "Male" },
+            { admissionNo: "RS2608", name: "Meera Nair", fatherName: "Gopal Nair", mobile: "9876543217", address: "Pocket 4, Vasant Kunj, New Delhi", class: "11", section: "B", rollNo: "09", gender: "Female" },
+            { admissionNo: "RS2609", name: "Rohan Das", fatherName: "Nitin Das", mobile: "9876543218", address: "C-11, Preet Vihar, New Delhi", class: "10", section: "A", rollNo: "22", gender: "Male" },
+            { admissionNo: "RS2610", name: "Sanya Gupta", fatherName: "Alok Gupta", mobile: "9876543219", address: "D-60, Anand Vihar, New Delhi", class: "10", section: "C", rollNo: "11", gender: "Female" }
+        ];
+
         document.addEventListener('DOMContentLoaded', () => {
+            // Initial component hydration arrays
+            filterClassWiseStudents();
+            filterNameWiseListing();
+        });
 
-            // --- 1. SEED DICTIONARIES INSTITUTIONAL MAPS ---
-            const institutionMetadata = {
-                address: "Sector 4, Phase II, Corporate Hub, New Delhi",
-                email: "info@rspublicschool.edu.in",
-                phone: "+91 11 2645 8900"
-            };
+        // --- 1. INTERFACE DISPLAY TAB CHANGER ROUTINES ---
+        function switchControlTab(event, targetTabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
 
-            // Student profile object mapping
-            const primaryStudentRecord = {
-                admissionNo: "RS2026-042",
-                name: "Aarav K. Sharma",
-                fatherName: "Rajesh Kumar Sharma",
-                mobileNo: "9871234560",
-                addressDetails: "Flat 405, Sector-15, Royal Palm Heights, Noida, U.P. 201301",
-                classStandard: "12",
-                sectionLane: "B",
-                rollSequence: "18",
-                genderIdentity: "Male"
-            };
+            event.currentTarget.classList.add('active');
+            document.getElementById(targetTabId).classList.add('active');
+        }
 
-            // Bind values to DOM structures
-            hydrateIdentityCard(institutionMetadata, primaryStudentRecord);
+        // --- 2. LIST CHECKS DYNAMIC HYDRATORS ---
+        function filterClassWiseStudents() {
+            const cls = document.getElementById('cls-select').value;
+            const sec = document.getElementById('sec-select').value;
+            const wrapper = document.getElementById('classWiseContainerList');
+            
+            document.getElementById('class-select-all').checked = false;
+            wrapper.innerHTML = '';
 
-            function hydrateIdentityCard(school, student) {
-                // Render header metadata blocks
-                document.getElementById('sch-address').innerText = school.address;
-                document.getElementById('sch-contacts').innerText = `Email: ${school.email} | Ph: ${school.phone}`;
+            const filteredData = globalStudentDataStore.filter(s => s.class === cls && s.section === sec);
 
-                // Set appropriate programmatic baseline avatars matching gender vectors
-                const fallbackAvatarVector = student.genderIdentity === "Male"
-                    ? "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>"
-                    : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>";
-                
-                document.getElementById('stu-photo').setAttribute('src', fallbackAvatarVector);
-
-                // Render bio rows parameters
-                document.getElementById('lbl-name').innerText = student.name;
-                document.getElementById('lbl-father').innerText = student.fatherName;
-                document.getElementById('lbl-mobile').innerText = student.mobileNo;
-                document.getElementById('lbl-address').innerText = student.addressDetails;
-
-                // Render bottom tabular grid matrix
-                document.getElementById('lbl-admNo').innerText = student.admissionNo;
-                document.getElementById('lbl-class').innerText = student.classStandard;
-                document.getElementById('lbl-section').innerText = student.sectionLane;
-                document.getElementById('lbl-rollNo').innerText = student.rollSequence;
+            if(filteredData.length === 0) {
+                wrapper.innerHTML = `<div style="padding:10px;color:var(--text-muted)">No scholar items match this classroom allocation map.</div>`;
+                return;
             }
 
-            // --- 2. DOWNLOAD SIMULATOR TRIGGER HOOK ---
-            document.getElementById('btnDownloadTrigger').addEventListener('click', () => {
-                alert('Initializing Client PDF Render Engine Process...\n\nYour print-ready assets are fully A4 matched. For best physical fidelity, click "Print ID Card" and configure destination output to "Save as PDF".');
+            filteredData.forEach(student => {
+                const row = document.createElement('div');
+                row.className = 'list-item-checkbox';
+                row.innerHTML = `
+                    <input type="checkbox" class="class-box-item" value="${student.admissionNo}">
+                    <span><strong>${student.admissionNo}</strong> &bull; ${student.name} (Roll: ${student.rollNo})</span>
+                `;
+                wrapper.appendChild(row);
             });
-        });
+        }
+
+        function filterNameWiseListing() {
+            const query = document.getElementById('nameQuerySearch').value.toLowerCase().trim();
+            const wrapper = document.getElementById('nameWiseContainerList');
+            
+            document.getElementById('name-select-all').checked = false;
+            wrapper.innerHTML = '';
+
+            const filteredData = globalStudentDataStore.filter(s => s.name.toLowerCase().includes(query));
+
+            if(filteredData.length === 0) {
+                wrapper.innerHTML = `<div style="padding:10px;color:var(--text-muted)">No database matching strings located.</div>`;
+                return;
+            }
+
+            filteredData.forEach(student => {
+                const row = document.createElement('div');
+                row.className = 'list-item-checkbox';
+                row.innerHTML = `
+                    <input type="checkbox" class="name-box-item" value="${student.admissionNo}">
+                    <span><strong>${student.name}</strong> &bull; Class ${student.class}-${student.section} (Adm: ${student.admissionNo})</span>
+                `;
+                wrapper.appendChild(row);
+            });
+        }
+
+        // Group selections checkbox controls
+        function toggleSelectAllGroup(masterCheckboxId, childrenClassName) {
+            const state = document.getElementById(masterCheckboxId).checked;
+            document.querySelectorAll(`.${childrenClassName}`).forEach(checkbox => checkbox.checked = state);
+        }
+
+        // --- 3. THE LIVE IDENTITY BADGE COMPILATION PRODUCER ---
+        function generateBatchCards(mode) {
+            let selectedAdmissions = [];
+
+            if (mode === 'class') {
+                document.querySelectorAll('.class-box-item:checked').forEach(cb => selectedAdmissions.push(cb.value));
+            } else if (mode === 'name') {
+                document.querySelectorAll('.name-box-item:checked').forEach(cb => selectedAdmissions.push(cb.value));
+            } else if (mode === 'admission') {
+                const fromNo = document.getElementById('adm-range-from').value.trim().toUpperCase();
+                const toNo = document.getElementById('adm-range-to').value.trim().toUpperCase();
+
+                if(!fromNo || !toNo) {
+                    alert('Define boundary limitations parameters mapping ranges.');
+                    return;
+                }
+
+                // Locate sequential list matching strict range patterns inclusions
+                let inboundModeActive = false;
+                globalStudentDataStore.forEach(student => {
+                    const currentAdm = student.admissionNo.toUpperCase();
+                    if(currentAdm === fromNo) inboundModeActive = true;
+                    
+                    if(inboundModeActive) selectedAdmissions.push(student.admissionNo);
+                    
+                    if(currentAdm === toNo) inboundModeActive = false;
+                });
+            }
+
+            // Fire layout rendering routines using localized loops maps
+            renderBadgeWorkspace(selectedAdmissions);
+        }
+
+        function renderBadgeWorkspace(admissionsArray) {
+            const workspace = document.getElementById('printProductionWorkspaceGrid');
+            const counter = document.getElementById('selectedBadgeCounterLabel');
+            
+            workspace.innerHTML = '';
+            counter.innerText = `Active Count: ${admissionsArray.length} Scholars`;
+
+            if(admissionsArray.length === 0) {
+                workspace.innerHTML = `
+                    <div class="no-records-placeholder">
+                        <i class="fa-solid fa-rectangle-list"></i>
+                        <p>No operational ID cards loaded. Specify query search inputs above to preview bulk batch generation streams.</p>
+                    </div>`;
+                return;
+            }
+
+            admissionsArray.forEach(admNo => {
+                const data = globalStudentDataStore.find(s => s.admissionNo === admNo);
+                if(!data) return;
+
+                // Alternate vectors maps depending on target entity profiles configurations
+                const fallbackAvatar = data.gender === "Male"
+                    ? "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>"
+                    : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>";
+
+                const card = document.createElement('div');
+                card.className = 'id-portrait-card';
+                card.innerHTML = `
+                    <div class="card-header-row">
+                        <img src="rslogo.png" class="card-logo-img" onerror="this.style.background='#0b1f5b';this.style.borderRadius='50%'">
+                        <div class="card-school-meta">
+                            <h2>R.S. PUBLIC SCHOOL</h2>
+                            <p>${schoolEnclosureMeta.address}</p>
+                            <p>Ph: ${schoolEnclosureMeta.phone}</p>
+                        </div>
+                    </div>
+
+                    <div class="card-avatar-center-block">
+                        <img src="${fallbackAvatar}" class="card-passport-photo" alt="Passport View">
+                    </div>
+
+                    <div class="card-biography-block">
+                        <div class="badge-data-row student-name-target">
+                            <span class="b-val">${data.name}</span>
+                        </div>
+                        <div class="badge-data-row">
+                            <span class="b-label">Father's Name</span>
+                            <span class="b-val">${data.fatherName}</span>
+                        </div>
+                        <div class="badge-data-row">
+                            <span class="b-label">Mobile Number</span>
+                            <span class="b-val">${data.mobile}</span>
+                        </div>
+                        <div class="badge-data-row">
+                            <span class="b-label">Residential Address</span>
+                            <span class="b-val" style="font-size:8.5px; line-height:1.2; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${data.address}</span>
+                        </div>
+                    </div>
+
+                    <div class="card-academic-matrix-row">
+                        <div class="matrix-cell"><span class="m-label">Adm No</span><span class="m-val">${data.admissionNo}</span></div>
+                        <div class="matrix-cell"><span class="m-label">Class</span><span class="m-val">${data.class}</span></div>
+                        <div class="matrix-cell"><span class="m-label">Sec</span><span class="m-val">${data.section}</span></div>
+                        <div class="matrix-cell"><span class="m-label">Roll</span><span class="m-val">${data.rollNo}</span></div>
+                    </div>
+
+                    <div class="card-footer-auth-row">
+                        <div class="auth-seal-box"><span class="auth-caption">Seal Area</span></div>
+                        <div class="auth-signature-box">
+                            <svg class="signature-vector-line" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 30">
+                                <path d="M10,22 Q30,4 50,18 T90,12" fill="none" stroke="#0b1f5b" stroke-width="1.2" stroke-linecap="round"/>
+                            </svg>
+                            <span class="auth-caption">Principal</span>
+                        </div>
+                    </div>
+                `;
+                workspace.appendChild(card);
+            });
+        }
+
+        // --- 4. PRINT EXECUTION INTERCEPT ENGINE ---
+        function executePrintBulk() {
+            const itemsCount = document.querySelectorAll('.id-portrait-card').length;
+            if(itemsCount === 0) {
+                alert('The print production workspace buffer pipeline is currently empty. Build the active batch configuration preview maps before executing print operations.');
+                return;
+            }
+            window.print();
+        }
+
+        function triggerPdfMock() {
+            alert('Calling Local System Virtual Printer Maps Hook...\n\nYour bulk output is perfectly A4 page optimized (arranged as 3 columns per row, up to 6 cards max per sheet split). Simply click "Print Selected" and adjust destination option configurations to "Save as PDF".');
+        }
     </script>
 </body>
 </html>

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Assignment | R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0b1f5b;
+            --primary-light: #162e78;
+            --accent: #d4a017;
+            --accent-hover: #b88911;
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border: #e2e8f0;
+            --success: #2e7d32;
+            --danger: #c62828;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-container img {
+            height: 45px;
+            width: auto;
+            display: block;
+        }
+
+        .title-area h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 4px;
+        }
+
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            color: var(--accent);
+        }
+
+        .btn-back {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 14px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: white;
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 25px;
+            display: grid;
+            grid-template-columns: 4fr 1fr;
+            gap: 25px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* --- COMPACT SUMMARY CARDS --- */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .card-summary {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card-summary:nth-child(2) { border-left-color: var(--success); }
+        .card-summary:nth-child(3) { border-left-color: var(--danger); }
+        .card-summary:nth-child(4) { border-left-color: var(--accent); }
+
+        .summary-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-info h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 5px;
+        }
+
+        .summary-icon {
+            font-size: 22px;
+            color: var(--text-muted);
+            opacity: 0.4;
+        }
+
+        /* --- STANDARD ERP MODULE CARDS --- */
+        .erp-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .erp-card-header {
+            background-color: #ffffff;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .erp-card-header h2 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .erp-card-body {
+            padding: 20px;
+        }
+
+        /* --- FORM STRUCTURES --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 3;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--primary);
+        }
+
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            background-color: #fafafa;
+            font-size: 13px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: var(--primary);
+            background-color: #fff;
+        }
+
+        input[readonly] {
+            background-color: #f1f3f7;
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-weight: 400;
+        }
+
+        /* --- BUTTONS --- */
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary { background-color: var(--primary); color: white; }
+        .btn-primary:hover { background-color: var(--primary-light); }
+        .btn-accent { background-color: var(--accent); color: white; }
+        .btn-accent:hover { background-color: var(--accent-hover); }
+        .btn-secondary { background-color: #e2e8f0; color: var(--text-main); }
+        .btn-secondary:hover { background-color: #cbd5e1; }
+
+        /* --- MULTIPLE ASSIGNMENT MATRIX --- */
+        .matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .matrix-item {
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .matrix-checkbox-side {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .matrix-checkbox-side input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .matrix-item select {
+            width: 55%;
+            padding: 6px 8px;
+        }
+
+        /* --- FILTER BAR --- */
+        .filter-bar {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 2fr repeat(3, 1fr);
+            gap: 15px;
+            align-items: end;
+        }
+
+        /* --- TABLES --- */
+        .table-responsive {
+            overflow-x: auto;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            color: #444;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .badge-class { background-color: #e0f2fe; color: #0369a1; }
+        .badge-subject { background-color: #fef3c7; color: #b45309; }
+        .badge-status { background-color: #dcfce7; color: #15803d; }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.2s;
+        }
+
+        .btn-view { background-color: #e0f2fe; color: #0369a1; }
+        .btn-view:hover { background-color: #bae6fd; }
+        .btn-edit { background-color: #fef3c7; color: #b45309; }
+        .btn-edit:hover { background-color: #fde68a; }
+        .btn-remove { background-color: #fee2e2; color: #b91c1c; }
+        .btn-remove:hover { background-color: #fca5a5; }
+
+        /* --- SIDEBAR WORKLOAD PANEL --- */
+        .workload-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .workload-stat:last-child {
+            border-bottom: none;
+        }
+        .workload-stat span:first-child {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .workload-stat span:last-child {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* --- QUICK ACTIONS NAVIGATION --- */
+        .quick-actions-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quick-actions-list a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background-color: #fafafa;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .quick-actions-list a:hover, .quick-actions-list a.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .quick-actions-list a i {
+            width: 16px;
+            text-align: center;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--primary);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 15px;
+            font-size: 12px;
+            margin-top: 40px;
+            border-top: 3px solid var(--accent);
+        }
+
+        /* --- MODAL WINDOWS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        .modal-close:hover { opacity: 1; }
+        .modal-body { padding: 20px; }
+        
+        .modal-confirm-text {
+            font-size: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        /* --- RESPONSIVE BREAKPOINTS --- */
+        @media (max-width: 1200px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-grid, .matrix-grid, .filter-bar {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 15px;
+            }
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <div class="logo-container">
+                <img src="rslogo.png" alt="R.S. Public School" onerror="this.src='https://via.placeholder.com/150x45/0b1f5b/ffffff?text=RS+School+Logo'">
+            </div>
+            <div class="title-area">
+                <h1>Teacher Assignment</h1>
+                <div class="breadcrumb">
+                    <a href="#">Dashboard</a> &gt; <a href="teacher-management.html">Teacher Management</a> &gt; <span>Teacher Assignment</span>
+                </div>
+            </div>
+        </div>
+        <a href="teacher-management.html" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Back to Management
+        </a>
+    </header>
+
+    <div class="container">
+        
+        <div class="main-content">
+            
+            <div class="summary-grid">
+                <div class="card-summary">
+                    <div class="summary-info">
+                        <p>Total Teachers</p>
+                        <h3>42</h3>
+                    </div>
+                    <div class="summary-icon"><i class="fa-solid fa-chalkboard-user"></i></div>
+                </div>
+                <div class="card-summary">
+                    <div class="summary-info">
+                        <p>Assigned Teachers</p>
+                        <h3>38</h3>
+                    </div>
+                    <div class="summary-icon"><i class="fa-solid fa-user-check"></i></div>
+                </div>
+                <div class="card-summary">
+                    <div class="summary-info">
+                        <p>Unassigned Teachers</p>
+                        <h3>4</h3>
+                    </div>
+                    <div class="summary-icon"><i class="fa-solid fa-user-clock"></i></div>
+                </div>
+                <div class="card-summary">
+                    <div class="summary-info">
+                        <p>Total Subjects Assigned</p>
+                        <h3>118</h3>
+                    </div>
+                    <div class="summary-icon"><i class="fa-solid fa-book-open"></i></div>
+                </div>
+            </div>
+
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <h2><i class="fa-solid fa-user-plus"></i> Assign Single Class & Subject</h2>
+                </div>
+                <div class="erp-card-body">
+                    <form id="singleAssignForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="selectTeacherSingle">Select Teacher *</label>
+                                <select id="selectTeacherSingle" onchange="syncTeacherFields(this.value, 'single')" required>
+                                    <option value="">-- Select Teacher --</option>
+                                    <option value="T101">Ram Kumar (T101)</option>
+                                    <option value="T102">Sita Sharma (T102)</option>
+                                    <option value="T103">Vikram Malhotra (T103)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Employee ID</label>
+                                <input type="text" id="empIdSingle" readonly placeholder="Auto-filled">
+                            </div>
+                            <div class="form-group">
+                                <label>Teacher Name</label>
+                                <input type="text" id="teacherNameSingle" readonly placeholder="Auto-filled">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="selectClassSingle">Select Class *</label>
+                                <select id="selectClassSingle" required>
+                                    <option value="">-- Select Class --</option>
+                                    <option value="Class 6">Class 6</option>
+                                    <option value="Class 7">Class 7</option>
+                                    <option value="Class 8">Class 8</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="selectSectionSingle">Select Section *</label>
+                                <select id="selectSectionSingle" required>
+                                    <option value="">-- Select Section --</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="selectSubjectSingle">Select Subject *</label>
+                                <select id="selectSubjectSingle" required>
+                                    <option value="">-- Select Subject --</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                    <option value="English Literature">English Literature</option>
+                                    <option value="Social Studies">Social Studies</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label>Assignment Type *</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="assignTypeSingle" value="Subject Teacher" checked> Subject Teacher
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="assignTypeSingle" value="Class Teacher"> Class Teacher (Mentor)
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm('singleAssignForm')"><i class="fa-solid fa-rotate-left"></i> Reset</button>
+                            <button type="submit" class="btn btn-accent"><i class="fa-solid fa-plus"></i> Assign</button>
+                            <button type="button" class="btn btn-primary" onclick="alert('All temporary entries updated successfully.')"><i class="fa-solid fa-floppy-disk"></i> Save Assignment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <h2><i class="fa-solid fa-layer-group"></i> Bulk Multiple Assignment</h2>
+                </div>
+                <div class="erp-card-body">
+                    <form id="bulkAssignForm">
+                        <div class="form-grid" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label for="selectTeacherBulk">Select Target Teacher *</label>
+                                <select id="selectTeacherBulk" onchange="syncTeacherFields(this.value, 'bulk')" required>
+                                    <option value="">-- Select Teacher --</option>
+                                    <option value="T101">Ram Kumar (T101)</option>
+                                    <option value="T102">Sita Sharma (T102)</option>
+                                    <option value="T103">Vikram Malhotra (T103)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Employee ID</label>
+                                <input type="text" id="empIdBulk" readonly placeholder="Auto-filled">
+                            </div>
+                            <div class="form-group">
+                                <label>Teacher Name</label>
+                                <input type="text" id="teacherNameBulk" readonly placeholder="Auto-filled">
+                            </div>
+                        </div>
+
+                        <div style="font-size: 13px; font-weight:600; margin-bottom:10px; color: var(--primary);">Map Classes & Subjects:</div>
+                        <div class="matrix-grid">
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 6A" id="c6a">
+                                    <label style="font-weight:normal;" for="c6a">Class 6A</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                    <option value="English Literature">English Literature</option>
+                                </select>
+                            </div>
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 6B" id="c6b">
+                                    <label style="font-weight:normal;" for="c6b">Class 6B</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                    <option value="English Literature">English Literature</option>
+                                </select>
+                            </div>
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 7A" id="c7a">
+                                    <label style="font-weight:normal;" for="c7a">Class 7A</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                    <option value="English Literature">English Literature</option>
+                                </select>
+                            </div>
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 7B" id="c7b">
+                                    <label style="font-weight:normal;" for="c7b">Class 7B</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="General Science">General Science</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="English Literature">English Literature</option>
+                                </select>
+                            </div>
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 8A" id="c8a">
+                                    <label style="font-weight:normal;" for="c8a">Class 8A</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="English Literature">English Literature</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                </select>
+                            </div>
+                            <div class="matrix-item">
+                                <div class="matrix-checkbox-side">
+                                    <input type="checkbox" name="bulkClassCheck" value="Class 8B" id="c8b">
+                                    <label style="font-weight:normal;" for="c8b">Class 8B</label>
+                                </div>
+                                <select name="bulkSubject">
+                                    <option value="Social Studies">Social Studies</option>
+                                    <option value="Mathematics">Mathematics</option>
+                                    <option value="General Science">General Science</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="btn-group" style="border:none; padding:0; margin:0;">
+                            <button type="button" class="btn btn-primary" onclick="submitBulkAssignment()"><i class="fa-solid fa-list-check"></i> Save All Assignments</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="filter-bar">
+                <div class="form-group">
+                    <label for="searchTeacher"><i class="fa-solid fa-magnifying-glass"></i> Search Teacher</label>
+                    <input type="text" id="searchTeacher" placeholder="Type name or Emp ID..." onkeyup="filterAssignmentsTable()">
+                </div>
+                <div class="form-group">
+                    <label for="filterClass">Filter by Class</label>
+                    <select id="filterClass" onchange="filterAssignmentsTable()">
+                        <option value="">All Classes</option>
+                        <option value="Class 6">Class 6</option>
+                        <option value="Class 7">Class 7</option>
+                        <option value="Class 8">Class 8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterSubject">Filter by Subject</label>
+                    <select id="filterSubject" onchange="filterAssignmentsTable()">
+                        <option value="">All Subjects</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="General Science">General Science</option>
+                        <option value="English Literature">English Literature</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filterType">Assignment Type</label>
+                    <select id="filterType" onchange="filterAssignmentsTable()">
+                        <option value="">All Roles</option>
+                        <option value="Class Teacher">Class Teacher</option>
+                        <option value="Subject Teacher">Subject Teacher</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <h2><i class="fa-solid fa-table-list"></i> Current Academic Assignments</h2>
+                </div>
+                <div class="table-responsive">
+                    <table id="assignmentsTable">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Teacher Name</th>
+                                <th>Class</th>
+                                <th>Section</th>
+                                <th>Subject</th>
+                                <th>Assignment Type</th>
+                                <th>Status</th>
+                                <th style="text-align: center; width: 110px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>T101</td>
+                                <td class="t-name">Ram Kumar</td>
+                                <td class="t-class">Class 6</td>
+                                <td>A</td>
+                                <td class="t-subject">Mathematics</td>
+                                <td class="t-type"><span class="badge badge-class">Class Teacher</span></td>
+                                <td><span class="badge badge-status">Active</span></td>
+                                <td class="actions-cell">
+                                    <button class="btn-action btn-view" onclick="openDetailsModal('T101')" title="View details"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')" title="Edit assignment"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn-action btn-remove" onclick="openDeleteModal(this)" title="Remove assignment"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>T101</td>
+                                <td class="t-name">Ram Kumar</td>
+                                <td class="t-class">Class 6</td>
+                                <td>B</td>
+                                <td class="t-subject">Mathematics</td>
+                                <td class="t-type"><span class="badge badge-subject">Subject Teacher</span></td>
+                                <td><span class="badge badge-status">Active</span></td>
+                                <td class="actions-cell">
+                                    <button class="btn-action btn-view" onclick="openDetailsModal('T101')" title="View details"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')" title="Edit assignment"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn-action btn-remove" onclick="openDeleteModal(this)" title="Remove assignment"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>T102</td>
+                                <td class="t-name">Sita Sharma</td>
+                                <td class="t-class">Class 7</td>
+                                <td>A</td>
+                                <td class="t-subject">General Science</td>
+                                <td class="t-type"><span class="badge badge-class">Class Teacher</span></td>
+                                <td><span class="badge badge-status">Active</span></td>
+                                <td class="actions-cell">
+                                    <button class="btn-action btn-view" onclick="openDetailsModal('T102')" title="View details"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')" title="Edit assignment"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn-action btn-remove" onclick="openDeleteModal(this)" title="Remove assignment"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>T103</td>
+                                <td class="t-name">Vikram Malhotra</td>
+                                <td class="t-class">Class 8</td>
+                                <td>A</td>
+                                <td class="t-subject">English Literature</td>
+                                <td class="t-type"><span class="badge badge-subject">Subject Teacher</span></td>
+                                <td><span class="badge badge-status">Active</span></td>
+                                <td class="actions-cell">
+                                    <button class="btn-action btn-view" onclick="openDetailsModal('T103')" title="View details"><i class="fa-solid fa-eye"></i></button>
+                                    <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')" title="Edit assignment"><i class="fa-solid fa-pen"></i></button>
+                                    <button class="btn-action btn-remove" onclick="openDeleteModal(this)" title="Remove assignment"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="sidebar">
+            
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <h2><i class="fa-solid fa-chart-pie"></i> Selected Workload</h2>
+                </div>
+                <div class="erp-card-body" id="workloadPanel">
+                    <p style="color: var(--text-muted); text-align: center; font-style: italic; padding: 10px 0;">
+                        Select a teacher to analyze dynamic workload distribution metric calculations.
+                    </p>
+                </div>
+            </div>
+
+            <div class="erp-card">
+                <div class="erp-card-header">
+                    <h2><i class="fa-solid fa-link"></i> Quick Navigation</h2>
+                </div>
+                <div class="erp-card-body" style="padding: 15px;">
+                    <ul class="quick-actions-list">
+                        <li><a href="add-teacher.html"><i class="fa-solid fa-user-plus"></i> Add Teacher</a></li>
+                        <li><a href="teacher-list.html"><i class="fa-solid fa-users-viewfinder"></i> Teacher List</a></li>
+                        <li><a href="teacher-profile.html"><i class="fa-solid fa-id-card"></i> Teacher Profile</a></li>
+                        <li><a href="teacher-assignment.html" class="active"><i class="fa-solid fa-file-signature"></i> Teacher Assignment</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; 2026 R.S. Public School ERP System | Academic Administration Control Engine
+    </footer>
+
+    <div class="modal-overlay" id="detailsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modalTeacherTitle">Teacher Resource Profile</h3>
+                <button class="modal-close" onclick="closeModal('detailsModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="workload-stat"><span>Employee Code:</span><span id="mdCode">-</span></div>
+                <div class="workload-stat"><span>Full Name:</span><span id="mdName">-</span></div>
+                <div class="workload-stat"><span>Assigned Classes:</span><span id="mdClasses">-</span></div>
+                <div class="workload-stat"><span>Assigned Subjects:</span><span id="mdSubjects">-</span></div>
+                <div class="workload-stat"><span>Class Teacher Status:</span><span id="mdStatus">-</span></div>
+                <div class="workload-stat" style="border-top:1px solid var(--border); margin-top:10px; padding-top:14px;">
+                    <span>Total Calculated Weekly Load:</span><span style="color:var(--accent); font-size:16px;" id="mdHours">0 Periods</span>
+                </div>
+                <div class="btn-group" style="margin-top:20px;">
+                    <button class="btn btn-secondary" onclick="closeModal('detailsModal')">Close Analysis</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModal">
+        <div class="modal-card" style="max-width: 400px;">
+            <div class="modal-header" style="background-color: var(--danger)">
+                <h3>Confirm Deletion</h3>
+                <button class="modal-close" onclick="closeModal('deleteModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-confirm-text">
+                    Are you sure you want to remove this assignment?
+                </div>
+                <div class="btn-group" style="justify-content: center; border: none; padding: 0;">
+                    <button class="btn btn-secondary" onclick="closeModal('deleteModal')">Cancel</button>
+                    <button class="btn btn-primary" style="background-color: var(--danger);" id="confirmDeleteBtn">Confirm Remove</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Internal Global Dataset State representing current assignments and database mapping references
+        const teacherDatabase = {
+            "T101": { name: "Ram Kumar", classes: ["Class 6A", "Class 6B"], subjects: ["Mathematics"], isClassTeacher: "Yes (6A)", workload: "24 Periods", students: 84 },
+            "T102": { name: "Sita Sharma", classes: ["Class 7A"], subjects: ["General Science"], isClassTeacher: "Yes (7A)", workload: "12 Periods", students: 42 },
+            "T103": { name: "Vikram Malhotra", classes: ["Class 8A"], subjects: ["English Literature"], isClassTeacher: "No", workload: "14 Periods", students: 39 }
+        };
+
+        let activeRowForDeletion = null;
+
+        // Auto-fill configuration workflow engine
+        function syncTeacherFields(empId, section) {
+            const empField = section === 'single' ? document.getElementById('empIdSingle') : document.getElementById('empIdBulk');
+            const nameField = section === 'single' ? document.getElementById('teacherNameSingle') : document.getElementById('teacherNameBulk');
+            
+            if (!empId) {
+                empField.value = '';
+                nameField.value = '';
+                if(section === 'single') resetWorkloadPanel();
+                return;
+            }
+
+            const data = teacherDatabase[empId];
+            if (data) {
+                empField.value = empId;
+                nameField.value = data.name;
+                if(section === 'single') {
+                    updateWorkloadPanel(data);
+                }
+            }
+        }
+
+        function updateWorkloadPanel(data) {
+            const panel = document.getElementById('workloadPanel');
+            panel.innerHTML = `
+                <div style="font-weight:600; color:var(--primary); margin-bottom:12px; border-bottom:1px solid var(--border); padding-bottom:6px;">${data.name}</div>
+                <div class="workload-stat"><span>Assigned Classes</span><span>${data.classes.join(', ')}</span></div>
+                <div class="workload-stat"><span>Assigned Subjects</span><span>${data.subjects.join(', ')}</span></div>
+                <div class="workload-stat"><span>Total Students Contact</span><span>${data.students}</span></div>
+                <div class="workload-stat"><span>Weekly Workload</span><span style="color:var(--accent)">${data.workload}</span></div>
+            `;
+        }
+
+        function resetWorkloadPanel() {
+            document.getElementById('workloadPanel').innerHTML = `
+                <p style="color: var(--text-muted); text-align: center; font-style: italic; padding: 10px 0;">
+                    Select a teacher to analyze dynamic workload distribution metric calculations.
+                </p>`;
+        }
+
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            if(formId === 'singleAssignForm') {
+                document.getElementById('empIdSingle').value = '';
+                document.getElementById('teacherNameSingle').value = '';
+                resetWorkloadPanel();
+            }
+        }
+
+        // Single Entry Assignment Execution Logic Handler Engine
+        document.getElementById('singleAssignForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const empId = document.getElementById('empIdSingle').value;
+            const name = document.getElementById('teacherNameSingle').value;
+            const cls = document.getElementById('selectClassSingle').value;
+            const sec = document.getElementById('selectSectionSingle').value;
+            const sub = document.getElementById('selectSubjectSingle').value;
+            const type = document.querySelector('input[name="assignTypeSingle"]:checked').value;
+
+            const tbody = document.querySelector('#assignmentsTable tbody');
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td>${empId}</td>
+                <td class="t-name">${name}</td>
+                <td class="t-class">${cls}</td>
+                <td>${sec}</td>
+                <td class="t-subject">${sub}</td>
+                <td class="t-type"><span class="badge ${type === 'Class Teacher' ? 'badge-class' : 'badge-subject'}">${type}</span></td>
+                <td><span class="badge badge-status">Active</span></td>
+                <td class="actions-cell">
+                    <button class="btn-action btn-view" onclick="openDetailsModal('${empId}')"><i class="fa-solid fa-eye"></i></button>
+                    <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')"><i class="fa-solid fa-pen"></i></button>
+                    <button class="btn-action btn-remove" onclick="openDeleteModal(this)"><i class="fa-solid fa-trash"></i></button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            resetForm('singleAssignForm');
+            alert('Assignment structural rule appended to execution table view successfully.');
+        });
+
+        // Bulk Multiple Array Assignment Processor Execution Logic
+        function submitBulkAssignment() {
+            const empId = document.getElementById('selectTeacherBulk').value;
+            if(!empId) {
+                alert('Please select a valid teacher configuration baseline target entry.');
+                return;
+            }
+            const name = document.getElementById('teacherNameBulk').value;
+            const checkboxes = document.querySelectorAll('input[name="bulkClassCheck"]:checked');
+            
+            if(checkboxes.length === 0) {
+                alert('Please check at least one target class matrix block configuration element.');
+                return;
+            }
+
+            const tbody = document.querySelector('#assignmentsTable tbody');
+            
+            checkboxes.forEach(cb => {
+                const matrixItem = cb.closest('.matrix-item');
+                const subject = matrixItem.querySelector('select[name="bulkSubject"]').value;
+                const parsedClassString = cb.value; // e.g., "Class 6A"
+                const classVal = parsedClassString.substring(0, 7);
+                const secVal = parsedClassString.substring(7);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${empId}</td>
+                    <td class="t-name">${name}</td>
+                    <td class="t-class">${classVal}</td>
+                    <td>${secVal}</td>
+                    <td class="t-subject">${subject}</td>
+                    <td class="t-type"><span class="badge badge-subject">Subject Teacher</span></td>
+                    <td><span class="badge badge-status">Active</span></td>
+                    <td class="actions-cell">
+                        <button class="btn-action btn-view" onclick="openDetailsModal('${empId}')"><i class="fa-solid fa-eye"></i></button>
+                        <button class="btn-action btn-edit" onclick="alert('Edit Action Triggered')"><i class="fa-solid fa-pen"></i></button>
+                        <button class="btn-action btn-remove" onclick="openDeleteModal(this)"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Reset Matrix Panel state elements
+            checkboxes.forEach(cb => cb.checked = false);
+            document.getElementById('bulkAssignForm').reset();
+            document.getElementById('empIdBulk').value = '';
+            document.getElementById('teacherNameBulk').value = '';
+            alert('Bulk mapped tracking assignments injected into local tracking view database index table.');
+        }
+
+        // Live Real-Time Multi-Parameter Sorting & Filtering Grid Engine
+        function filterAssignmentsTable() {
+            const searchVal = document.getElementById('searchTeacher').value.toLowerCase();
+            const classFilter = document.getElementById('filterClass').value;
+            const subFilter = document.getElementById('filterSubject').value;
+            const typeFilter = document.getElementById('filterType').value;
+
+            const rows = document.querySelectorAll('#assignmentsTable tbody tr');
+
+            rows.forEach(row => {
+                const id = row.cells[0].textContent.toLowerCase();
+                const name = row.querySelector('.t-name').textContent.toLowerCase();
+                const cls = row.querySelector('.t-class').textContent;
+                const sub = row.querySelector('.t-subject').textContent;
+                const type = row.querySelector('.t-type').textContent;
+
+                const matchSearch = id.includes(searchVal) || name.includes(searchVal);
+                const matchClass = classFilter === "" || cls.includes(classFilter);
+                const matchSub = subFilter === "" || sub.includes(subFilter);
+                const matchType = typeFilter === "" || type.includes(typeFilter);
+
+                if(matchSearch && matchClass && matchSub && matchType) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Modal Frame Engine Controls Layer
+        function openDetailsModal(empId) {
+            const data = teacherDatabase[empId];
+            if(data) {
+                document.getElementById('mdCode').textContent = empId;
+                document.getElementById('mdName').textContent = data.name;
+                document.getElementById('mdClasses').textContent = data.classes.join(', ');
+                document.getElementById('mdSubjects').textContent = data.subjects.join(', ');
+                document.getElementById('mdStatus').textContent = data.isClassTeacher;
+                document.getElementById('mdHours').textContent = data.workload;
+                document.getElementById('detailsModal').classList.add('active');
+            }
+        }
+
+        function openDeleteModal(buttonElement) {
+            activeRowForDeletion = buttonElement.closest('tr');
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+            if(modalId === 'deleteModal') activeRowForDeletion = null;
+        }
+
+        // Handle structural operational confirmations
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if(activeRowForDeletion) {
+                activeRowForDeletion.remove();
+                closeModal('deleteModal');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,215 +1,797 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0b1f5b;
+            --primary-light: #153084;
+            --accent: #d4a017;
+            --accent-hover: #b88911;
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e0e4ec;
+            --success: #28a745;
+            --info: #17a2b8;
+            --radius: 6px;
+            --transition: all 0.2s ease;
+        }
 
-<title>Teacher Dashboard</title>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-size: 14px;
+            line-height: 1.5;
+        }
 
-<style>
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+        /* Header Styles */
+        .erp-header {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 10px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-body{
-background:#f4f7fc;
-}
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-.header{
-background:#0B1F4B;
-color:white;
-padding:20px 30px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
+        .school-logo {
+            height: 38px;
+            width: 38px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 12px;
+            border: 2px solid var(--accent);
+        }
 
-.header h1{
-color:#d4a017;
-}
+        .brand-title h1 {
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
 
-.logout-btn{
-background:#d4a017;
-color:#0B1F4B;
-border:none;
-padding:10px 18px;
-border-radius:8px;
-font-weight:700;
-cursor:pointer;
-}
+        .brand-title p {
+            font-size: 11px;
+            color: var(--accent);
+            font-weight: 500;
+        }
 
-.container{
-padding:30px;
-}
+        .header-profile-area {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:30px;
-}
+        .teacher-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 15px;
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
 
-.card{
-background:white;
-padding:25px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-}
+        .teacher-info {
+            text-align: right;
+        }
 
-.card h3{
-color:#0B1F4B;
-margin-bottom:10px;
-}
+        .teacher-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            display: block;
+        }
 
-.card p{
-font-size:28px;
-font-weight:700;
-color:#d4a017;
-}
+        .teacher-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.7);
+            display: block;
+        }
 
-.section{
-background:white;
-padding:25px;
-border-radius:15px;
-box-shadow:0 5px 15px rgba(0,0,0,.08);
-margin-bottom:20px;
-}
+        .teacher-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            background-color: #e2e8f0;
+        }
 
-.section h2{
-color:#0B1F4B;
-margin-bottom:15px;
-}
+        .btn-logout {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+            font-size: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
 
-.action-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:15px;
-}
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+        }
 
-.action-btn{
-background:#0B1F4B;
-color:white;
-padding:15px;
-border:none;
-border-radius:10px;
-font-size:15px;
-font-weight:600;
-cursor:pointer;
-}
+        /* Layout Main Grid */
+        .dashboard-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
 
-.action-btn:hover{
-background:#d4a017;
-color:#0B1F4B;
-}
+        /* Quick Actions Ribbon Bar */
+        .quick-actions-bar {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
 
-.notice{
-background:#f4f7fc;
-padding:12px;
-border-radius:8px;
-margin-bottom:10px;
-}
+        .action-bar-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-</style>
+        .action-buttons-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-quick {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: var(--radius);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            transition: var(--transition);
+        }
+
+        .btn-quick:hover {
+            background-color: #f8fafc;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-quick.primary-highlight {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .btn-quick.primary-highlight:hover {
+            background-color: var(--primary-light);
+            border-color: var(--primary-light);
+            color: #ffffff;
+        }
+
+        /* Stats Section Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .stat-details .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary);
+            line-height: 1.2;
+        }
+
+        .stat-details .stat-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .stat-icon-box {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            background-color: #f0f4fa;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        /* Primary Workspace Layout (Modules vs Split Side widgets) */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* Base Card Container Pattern */
+        .erp-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #fafbfc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h2 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 16px;
+            flex-grow: 1;
+        }
+
+        /* Quick Modules Matrix Grid */
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .module-item-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: #ffffff;
+            padding: 16px 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: var(--transition);
+            cursor: pointer;
+            aspect-ratio: 1.15 / 1;
+        }
+
+        .module-item-card i {
+            font-size: 18px;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .module-item-card span {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-main);
+            line-height: 1.3;
+        }
+
+        .module-item-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 10px rgba(11, 31, 91, 0.05);
+            background-color: #fbfcfe;
+        }
+
+        .module-item-card:hover i {
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Core Modules Highlighting Extensions */
+        .module-item-card.highlight-core {
+            border-left: 3px solid var(--accent);
+            background-color: #f7f9fc;
+        }
+        
+        .module-item-card.highlight-core i {
+            color: var(--primary-light);
+        }
+
+        .module-item-card.highlight-core span {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Split Columns Execution Panel Stack */
+        .split-widgets-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Today's Schedule Data Matrix Table */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .erp-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .erp-table th {
+            background-color: #f8fafc;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 10px 14px;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .erp-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .erp-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .erp-table tbody tr:hover {
+            background-color: #fafbfc;
+        }
+
+        .badge-period {
+            background-color: #e2e8f0;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+        }
+
+        /* Compact Recent Notice Segment Cards */
+        .notices-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .notice-item-compact {
+            padding: 10px 12px;
+            border-left: 3px solid var(--border-color);
+            background-color: #f8fafc;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            transition: var(--transition);
+        }
+
+        .notice-item-compact:hover {
+            background-color: #f1f5f9;
+        }
+
+        .notice-item-compact.priority-high {
+            border-left-color: var(--accent);
+        }
+
+        .notice-meta-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .notice-tag {
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .notice-date {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .notice-title {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        /* Fixed System Footer */
+        .erp-footer {
+            margin-top: auto;
+            background-color: var(--primary);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 12px;
+            font-size: 11px;
+            border-top: 3px solid var(--accent);
+        }
+
+        /* System Wide Layout Responsiveness Breakpoints */
+        @media (max-width: 1200px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .modules-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .erp-header {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+                text-align: center;
+            }
+            .header-profile-area {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .teacher-meta {
+                text-align: left;
+            }
+            .modules-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .quick-actions-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .action-buttons-group {
+                width: 100%;
+            }
+            .btn-quick {
+                flex-grow: 1;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
-
 <body>
 
-<div class="header">
+    <header class="erp-header">
+        <div class="header-brand">
+            <div class="school-logo">RS</div>
+            <div class="brand-title">
+                <h1>R.S. Public School ERP System</h1>
+                <p>Teacher Administration Portal</p>
+            </div>
+        </div>
+        <div class="header-profile-area">
+            <div class="teacher-meta">
+                <div class="teacher-info">
+                    <span class="teacher-name">Devendra Kumar</span>
+                    <span class="teacher-role">Senior PGT - Mathematics</span>
+                </div>
+                <svg class="teacher-avatar" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50" fill="#cbd5e1"/>
+                    <circle cx="50" cy="42" r="18" fill="#475569"/>
+                    <path d="M15 88 Q50 52 85 88 Z" fill="#475569"/>
+                </svg>
+            </div>
+            <button class="btn-logout" onclick="handleLogout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </header>
 
-<h1>Teacher Dashboard</h1>
+    <main class="dashboard-container">
 
-<button class="logout-btn"
-onclick="window.location.href='teacher-login.html'">
-Logout
-</button>
+        <section class="quick-actions-bar">
+            <div class="action-bar-label">
+                <i class="fas fa-bolt" style="color: var(--accent);"></i>
+                <span>Quick Actions Ledger :</span>
+            </div>
+            <div class="action-buttons-group">
+                <a href="attendance-management.html" class="btn-quick primary-highlight"><i class="fas fa-calendar-check"></i> Mark Attendance</a>
+                <a href="marks-entry.html" class="btn-quick primary-highlight"><i class="fas fa-file-invoice"></i> Enter Marks</a>
+                <a href="teacher-students.html" class="btn-quick"><i class="fas fa-user-graduate"></i> View Students</a>
+                <a href="teacher-notices.html" class="btn-quick"><i class="fas fa-bullhorn"></i> View Notices</a>
+            </div>
+        </section>
 
-</div>
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-details">
+                    <div class="stat-value">164</div>
+                    <div class="stat-label">Total Students</div>
+                </div>
+                <div class="stat-icon-box"><i class="fas fa-user-graduate"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-details">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Classes Assigned</div>
+                </div>
+                <div class="stat-icon-box"><i class="fas fa-chalkboard"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-details">
+                    <div class="stat-value">2</div>
+                    <div class="stat-label">Subjects Assigned</div>
+                </div>
+                <div class="stat-icon-box"><i class="fas fa-book-open"></i></div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-details">
+                    <div class="stat-value">94.2%</div>
+                    <div class="stat-label">Attendance Today</div>
+                </div>
+                <div class="stat-icon-box" style="color: var(--success); background-color: rgba(40, 167, 69, 0.1);"><i class="fas fa-check-double"></i></div>
+            </div>
+        </section>
 
-<div class="container">
+        <div class="workspace-grid">
 
-<div class="cards">
+            <section class="erp-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-th-large"></i> ERP Administration Modules</h2>
+                </div>
+                <div class="card-body">
+                    <div class="modules-grid">
+                        
+                        <a href="teacher-profile.html" class="module-item-card">
+                            <i class="fas fa-id-card-alt"></i>
+                            <span>My Profile</span>
+                        </a>
+                        <a href="attendance-management.html" class="module-item-card highlight-core">
+                            <i class="fas fa-user-check"></i>
+                            <span>Attendance Management</span>
+                        </a>
+                        <a href="marks-entry.html" class="module-item-card highlight-core">
+                            <i class="fas fa-pen-to-square"></i>
+                            <span>Marks Entry</span>
+                        </a>
+                        <a href="teacher-students.html" class="module-item-card">
+                            <i class="fas fa-users"></i>
+                            <span>View Students</span>
+                        </a>
 
-<div class="card">
-<h3>Total Students</h3>
-<p>320</p>
-</div>
+                        <a href="teacher-subjects.html" class="module-item-card">
+                            <i class="fas fa-book"></i>
+                            <span>Subject Management</span>
+                        </a>
+                        <a href="teacher-timetable.html" class="module-item-card">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Class Timetable</span>
+                        </a>
+                        <a href="teacher-notices.html" class="module-item-card">
+                            <i class="fas fa-bullhorn"></i>
+                            <span>Notices</span>
+                        </a>
+                        <a href="teacher-performance.html" class="module-item-card">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Performance Reports</span>
+                        </a>
 
-<div class="card">
-<h3>Classes Assigned</h3>
-<p>5</p>
-</div>
+                        <a href="teacher-leave.html" class="module-item-card">
+                            <i class="fas fa-envelope-open-text"></i>
+                            <span>Leave Application</span>
+                        </a>
+                        <a href="teacher-materials.html" class="module-item-card">
+                            <i class="fas fa-folder-open"></i>
+                            <span>Study Materials</span>
+                        </a>
+                        <a href="teacher-assignments.html" class="module-item-card">
+                            <i class="fas fa-tasks"></i>
+                            <span>Assignments</span>
+                        </a>
+                        <a href="teacher-change-password.html" class="module-item-card">
+                            <i class="fas fa-key"></i>
+                            <span>Change Password</span>
+                        </a>
 
-<div class="card">
-<h3>Subjects</h3>
-<p>3</p>
-</div>
+                    </div>
+                </div>
+            </section>
 
-<div class="card">
-<h3>Attendance Today</h3>
-<p>95%</p>
-</div>
+            <div class="split-widgets-stack">
 
-</div>
+                <section class="erp-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clock"></i> Today's Class Schedule</h2>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="erp-table">
+                            <thead>
+                                <tr>
+                                    <th>Period</th>
+                                    <th>Subject</th>
+                                    <th>Class</th>
+                                    <th>Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="badge-period">P1</span></td>
+                                    <td style="font-weight: 500;">Mathematics</td>
+                                    <td>Class X - B</td>
+                                    <td class="text-muted">08:30 AM - 09:15 AM</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-period">P2</span></td>
+                                    <td style="font-weight: 500;">Mathematics</td>
+                                    <td>Class IX - A</td>
+                                    <td class="text-muted">09:15 AM - 10:00 AM</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-period">P4</span></td>
+                                    <td style="font-weight: 500;">Statistics</td>
+                                    <td>Class XII - C</td>
+                                    <td class="text-muted">11:00 AM - 11:45 AM</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="badge-period">P6</span></td>
+                                    <td style="font-weight: 500;">Mathematics</td>
+                                    <td>Class X - B</td>
+                                    <td class="text-muted">01:00 PM - 01:45 PM</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
 
-<div class="section">
+                <section class="erp-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-bell"></i> Latest Notices Bulletin</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="notices-list">
+                            
+                            <div class="notice-item-compact priority-high">
+                                <div class="notice-meta-line">
+                                    <span class="notice-tag" style="color: var(--accent);">Administration</span>
+                                    <span class="notice-date">Today</span>
+                                </div>
+                                <h3 class="notice-title">Staff Meeting Notice: Curriculum Alignment</h3>
+                            </div>
 
-<h2>Quick Actions</h2>
+                            <div class="notice-item-compact priority-high">
+                                <div class="notice-meta-line">
+                                    <span class="notice-tag" style="color: var(--info);">Examinations</span>
+                                    <span class="notice-date">15-Jun-2026</span>
+                                </div>
+                                <h3 class="notice-title">First Term Examination Schedule Released</h3>
+                            </div>
 
-<div class="action-grid">
+                            <div class="notice-item-compact">
+                                <div class="notice-meta-line">
+                                    <span class="notice-tag">Academic</span>
+                                    <span class="notice-date">12-Jun-2026</span>
+                                </div>
+                                <h3 class="notice-title">Result Submission Deadline: Class X Mock Exams</h3>
+                            </div>
 
-<button class="action-btn">
-📅 Mark Attendance
-</button>
+                            <div class="notice-item-compact">
+                                <div class="notice-meta-line">
+                                    <span class="notice-tag">General</span>
+                                    <span class="notice-date">10-Jun-2026</span>
+                                </div>
+                                <h3 class="notice-title">Summer Holiday Notice & Institutional Operations</h3>
+                            </div>
 
-<button class="action-btn">
-📝 Upload Results
-</button>
+                        </div>
+                    </div>
+                </section>
 
-<button class="action-btn">
-👨‍🎓 View Students
-</button>
+            </div>
 
-<button class="action-btn">
-📢 View Notices
-</button>
+        </div>
 
-<button class="action-btn">
-📚 Subject Management
-</button>
+    </main>
 
-<button class="action-btn">
-📊 Performance Report
-</button>
+    <footer class="erp-footer">
+        &copy; 2026 R.S. Public School ERP System
+    </footer>
 
-</div>
+    <script>
+        // Core System Administration Handlers
+        function handleLogout() {
+            if(confirm("Are you sure you want to exit the R.S. Public School ERP System?")) {
+                alert("Session terminated securely.");
+                window.location.href = "#";
+            }
+        }
 
-</div>
-
-<div class="section">
-
-<h2>Latest Notices</h2>
-
-<div class="notice">
-📢 Staff Meeting on Monday
-</div>
-
-<div class="notice">
-📢 Half Yearly Exam Schedule Published
-</div>
-
-<div class="notice">
-📢 Result Submission Deadline: 25 June
-</div>
-
-</div>
-
-</div>
-
+        // Module Navigation Router Hook Mockups
+        document.addEventListener('DOMContentLoaded', () => {
+            const systemModuleCards = document.querySelectorAll('.module-item-card');
+            systemModuleCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // Visual click state simulation feedback loop framework
+                    this.style.transform = "scale(0.98)";
+                    setTimeout(() => { this.style.transform = "none"; }, 100);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

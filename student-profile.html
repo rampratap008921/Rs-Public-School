@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile | R.S. Public School ERP</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- CORE CONFIGURATION & SCHEME --- */
+        :root {
+            --primary: #0b1f5b;        /* Navy Blue */
+            --secondary: #d4a017;      /* Gold */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --bg-body: #f8fafc;
+            --border-color: #cbd5e1;
+            --radius-sm: 4px;
+            --radius-md: 6px;
+            --radius-lg: 12px;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.2s ease-in-out;
+            
+            --success-bg: #dcfce7;
+            --success-txt: #166534;
+            --danger-bg: #fee2e2;
+            --danger-txt: #991b1b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* --- STICKY ERP HEADER --- */
+        .erp-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .school-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            padding: 2px;
+            object-fit: contain;
+            border: 1.5px solid var(--secondary);
+        }
+
+        .header-meta h1 {
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .header-meta p {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .btn-back {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 6px 14px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: #ffffff;
+            color: var(--primary);
+            border-color: #ffffff;
+        }
+
+        /* --- CONTAINER WORKSPACE --- */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+        }
+
+        /* --- BREADCRUMB --- */
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i {
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        /* --- PROFILE TOP BADGE SUMMARY CARD --- */
+        .profile-summary-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 24px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .summary-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .student-photo-frame {
+            width: 100px;
+            height: 110px;
+            border-radius: var(--radius-md);
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background-color: #f1f5f9;
+        }
+
+        .summary-details h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .summary-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(3, auto);
+            gap: 8px 24px;
+            font-size: 13px;
+        }
+
+        .meta-item strong {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .badge-active {
+            background-color: var(--success-bg);
+            color: var(--success-txt);
+        }
+
+        .badge-inactive {
+            background-color: var(--danger-bg);
+            color: var(--danger-txt);
+        }
+
+        /* COMPACT QUICK ACTION BUTTON MATRIX */
+        .summary-right-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            width: auto;
+        }
+
+        .btn-action-panel {
+            height: 32px;
+            padding: 0 14px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .btn-action-panel:hover {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        .btn-action-panel.btn-edit {
+            background-color: var(--secondary);
+            border-color: var(--secondary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .btn-action-panel.btn-edit:hover {
+            background-color: #b88a12;
+            color: #ffffff;
+            border-color: #b88a12;
+        }
+
+        /* --- CORE PROFILE DATA WORKSPACE LAYOUT --- */
+        .profile-data-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+        }
+
+        .profile-main-column {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .info-card {
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card-header-bar {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+        }
+
+        .card-header-bar i {
+            font-size: 14px;
+            color: var(--secondary);
+        }
+
+        .card-header-bar h3 {
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .card-body-content {
+            padding: 16px;
+        }
+
+        /* Pure Key-Value Grid Formatting */
+        .data-pairs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px 24px;
+        }
+
+        .data-item-row {
+            display: flex;
+            border-bottom: 1px dashed #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        .data-item-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .data-label {
+            width: 140px;
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .data-value {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Document Upload Matrix List Checks */
+        .document-status-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .doc-status-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+        }
+
+        .doc-name {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .doc-name i {
+            color: var(--text-muted);
+        }
+
+        .status-pill {
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-pill.uploaded {
+            color: var(--success-txt);
+        }
+
+        .status-pill.missing {
+            color: var(--danger-txt);
+        }
+
+        /* --- FOOTER --- */
+        .erp-footer {
+            margin-top: 32px;
+            border-top: 1px solid #cbd5e1;
+            padding: 16px 0;
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- RESPONSIVE SYSTEMS BREAKPOINTS --- */
+        @media (max-width: 1200px) {
+            .profile-data-layout {
+                grid-template-columns: 1fr;
+            }
+            .summary-right-actions {
+                grid-template-columns: repeat(6, 1fr);
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .summary-right-actions {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .summary-left {
+                flex-direction: column;
+                text-align: center;
+            }
+            .summary-meta-grid {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .data-pairs-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .erp-header {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            .summary-right-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SYSTEM STICKY HEADER -->
+    <header class="erp-header">
+        <div class="header-brand">
+            <img src="rslogo.png" alt="R.S. Logo" class="school-logo" onerror="this.style.background='#d4a017';">
+            <div class="header-meta">
+                <h1>R.S. Public School</h1>
+                <p>Enterprise Resource Planning Engine</p>
+            </div>
+        </div>
+        <a href="student-list.html" class="btn-back">
+            <i class="fa-solid fa-arrow-left"></i> Student Master List
+        </a>
+    </header>
+
+    <div class="main-container">
+
+        <!-- BREADCRUMB -->
+        <nav class="breadcrumb">
+            <a href="dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="students-management.html">Students Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Student Profile</span>
+        </nav>
+
+        <!-- TOP SUMMARY BLOCK PROFILE CARD -->
+        <section class="profile-summary-card" id="profileSummaryBlock">
+            <div class="summary-left">
+                <!-- Fallback transparent background vector logic included -->
+                <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>" alt="Student Profile" class="student-photo-frame" id="sp-photo">
+                <div class="summary-details">
+                    <h2 id="sp-name">---</h2>
+                    <div class="summary-meta-grid">
+                        <div class="meta-item"><strong>Adm No:</strong> <span id="sp-admNo">---</span></div>
+                        <div class="meta-item"><strong>Roll No:</strong> <span id="sp-rollNo">---</span></div>
+                        <div class="meta-item"><strong>Class-Sec:</strong> <span id="sp-classSec">---</span></div>
+                        <div class="meta-item"><strong>Session:</strong> <span id="sp-session">---</span></div>
+                        <div class="meta-item"><strong>Status:</strong> <span id="sp-status">---</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="summary-right-actions">
+                <a href="edit-student.html" class="btn-action-panel btn-edit" title="Modify Record"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
+                <a href="student-id-card.html" class="btn-action-panel" title="ID Badge Generate"><i class="fa-solid fa-address-card"></i> Print ID Card</a>
+                <a href="student-documents.html" class="btn-action-panel" title="Attachments File Portal"><i class="fa-solid fa-folder-open"></i> Documents</a>
+                <a href="attendance.html" class="btn-action-panel" title="Roll Call History"><i class="fa-solid fa-calendar-days"></i> Attendance</a>
+                <a href="results.html" class="btn-action-panel" title="Report Matrix Engine"><i class="fa-solid fa-square-poll-vertical"></i> View Results</a>
+                <a href="fees.html" class="btn-action-panel" title="Payment Statement Logs"><i class="fa-solid fa-receipt"></i> View Fees</a>
+            </div>
+        </section>
+
+        <!-- CORE DATA CONTENT WORKSPACE LAYOUT -->
+        <main class="profile-data-layout">
+            
+            <!-- COLUMN 1: STUDENT DATA FIELDS -->
+            <div class="profile-main-column">
+                
+                <!-- SECTION 1: STUDENT BASIC INFORMATION -->
+                <div class="info-card">
+                    <div class="card-header-bar">
+                        <i class="fa-solid fa-address-book"></i>
+                        <h3>Section 1: General Profile Details</h3>
+                    </div>
+                    <div class="card-body-content">
+                        <div class="data-pairs-grid">
+                            <div class="data-item-row"><div class="data-label">Admission Date</div><div class="data-value" id="field-admDate">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Date of Birth</div><div class="data-value" id="field-dob">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Gender</div><div class="data-value" id="field-gender">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Blood Group</div><div class="data-value" id="field-bloodGroup">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Aadhaar UIDAI No.</div><div class="data-value" id="field-aadhaar">---</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 2: ACADEMIC HISTORY RECORD -->
+                <div class="info-card">
+                    <div class="card-header-bar">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                        <h3>Section 2: Academic Core Metrics</h3>
+                    </div>
+                    <div class="card-body-content">
+                        <div class="data-pairs-grid">
+                            <div class="data-item-row"><div class="data-label">Current Standard</div><div class="data-value" id="field-class">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Allocated Section</div><div class="data-value" id="field-section">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Class Roll Sequence</div><div class="data-value" id="field-roll">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Academic Session</div><div class="data-value" id="field-session">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Previous School</div><div class="data-value" id="field-prevSchool">---</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 3: PARENTAL MATRIX REGISTRIES -->
+                <div class="info-card">
+                    <div class="card-header-bar">
+                        <i class="fa-solid fa-users"></i>
+                        <h3>Section 3: Parent & Guardian Affiliations</h3>
+                    </div>
+                    <div class="card-body-content">
+                        <div class="data-pairs-grid">
+                            <div class="data-item-row"><div class="data-label">Father Name</div><div class="data-value" id="field-fatherName">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Father Phone Line</div><div class="data-value" id="field-fatherMobile">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Father Occupation</div><div class="data-value" id="field-fatherOcc">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Mother Name</div><div class="data-value" id="field-motherName">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Mother Phone Line</div><div class="data-value" id="field-motherMobile">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Mother Occupation</div><div class="data-value" id="field-motherOcc">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Legal Guardian Name</div><div class="data-value" id="field-guardName">---</div></div>
+                            <div class="data-item-row"><div class="data-label">Guardian Emergency No.</div><div class="data-value" id="field-guardContact">---</div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SECTION 4: CONTACT & CORRESPONDENCE DETAILS -->
+                <div class="info-card">
+                    <div class="card-header-bar">
+                        <i class="fa-solid fa-map-location-dot"></i>
+                        <h3>Section 4: Correspondence & Communication Channels</h3>
+                    </div>
+                    <div class="card-body-content">
+                        <div class="data-pairs-grid">
+                            <div class="data-item-row" style="grid-column: 1 / -1;"><div class="data-label">Full Address Mapping</div><div class="data-value" id="field-address">---</div></div>
+                            <div class="data-item-row"><div class="data-label">City</div><div class="data-value" id="field-city">---</div></div>
+                            <div class="data-item-row"><div class="data-label">State</div><div class="data-value" id="field-state">---</div></div>
+                            <div class="data-item-row"><div class="data-label">PIN Code</div><div class="data-value" id="field-pin">---</div></div>
+                            <div class="data-item-row" style="grid-column: 1 / -1;"><div class="data-label">Primary Email Account</div><div class="data-value" id="field-email">---</div></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- COLUMN 2: SIDE DOCUMENT MATRIX CHANNELS -->
+            <aside class="profile-side-column">
+                
+                <!-- SECTION 5: DOCUMENTS ATTACHMENT REGISTRY CHECK -->
+                <div class="info-card">
+                    <div class="card-header-bar">
+                        <i class="fa-solid fa-file-shield"></i>
+                        <h3>Section 5: File Vault Audits</h3>
+                    </div>
+                    <div class="card-body-content">
+                        <ul class="document-status-list">
+                            <li class="doc-status-item">
+                                <div class="doc-name"><i class="fa-regular fa-file-pdf"></i> Birth Certificate</div>
+                                <div class="status-pill uploaded" id="doc-birth"><i class="fa-solid fa-circle-check"></i> Uploaded</div>
+                            </li>
+                            <li class="doc-status-item">
+                                <div class="doc-name"><i class="fa-regular fa-file-pdf"></i> Aadhaar Card Copy</div>
+                                <div class="status-pill uploaded" id="doc-aadhaar"><i class="fa-solid fa-circle-check"></i> Uploaded</div>
+                            </li>
+                            <li class="doc-status-item">
+                                <div class="doc-name"><i class="fa-regular fa-file-pdf"></i> Transfer Certificate</div>
+                                <div class="status-pill missing" id="doc-tc"><i class="fa-solid fa-circle-xmark"></i> Not Uploaded</div>
+                            </li>
+                            <li class="doc-status-item">
+                                <div class="doc-name"><i class="fa-regular fa-file-pdf"></i> Other Documents</div>
+                                <div class="status-pill uploaded" id="doc-other"><i class="fa-solid fa-circle-check"></i> Uploaded</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </aside>
+
+        </main>
+
+        <!-- SYSTEM FOOTER -->
+        <footer class="erp-footer">
+            &copy; 2026 R.S. Public School ERP System &bull; Core Data Infrastructure Module. All rights reserved.
+        </footer>
+    </div>
+
+    <!-- CORE BUSINESS LOGIC DATA BINDING REPOSITORIES MODULE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Mock Single Profile Record Extraction Object Map mimicking active fetch results
+            const activeProfileRecord = {
+                admissionNo: "RS2026-042",
+                admissionDate: "05-Apr-2024",
+                rollNo: "18",
+                class: "12",
+                section: "B",
+                sessionYear: "2026-2027",
+                statusState: "Active",
+                fullName: "Aarav K. Sharma",
+                dobDate: "12-Aug-2009",
+                genderIdentity: "Male",
+                bloodGroupMap: "B+",
+                aadhaarUID: "4524 8965 1254",
+                father: { name: "Rajesh Kumar Sharma", mobile: "9871234560", occupation: "Senior Software Architect" },
+                mother: { name: "Sunita Sharma", mobile: "9871234561", occupation: "Academic Educator" },
+                guardian: { name: "N/A - Direct Lineage", contact: "---" },
+                contact: {
+                    addressLine: "Flat 405, Sector-15, Royal Palm Heights Cluster A",
+                    cityName: "Noida",
+                    stateRegion: "Uttar Pradesh",
+                    pinCode: "201301",
+                    emailAddress: "aarav.sharma@domain-erp.in"
+                },
+                prevSchoolHistory: "Delhi Public School, R.K. Puram Core Sector",
+                documentsLoaded: {
+                    birthCert: true,
+                    aadhaarCopy: true,
+                    transferCert: false,
+                    otherEncl: true
+                }
+            };
+
+            // Process Data Loading Sequence Mapping Actions
+            bindDataToInterface(activeProfileRecord);
+
+            function bindDataToInterface(data) {
+                // Header Display Mappings
+                document.getElementById('sp-name').innerText = data.fullName;
+                document.getElementById('sp-admNo').innerText = data.admissionNo;
+                document.getElementById('sp-rollNo').innerText = data.rollNo;
+                document.getElementById('sp-classSec').innerText = `Class ${data.class}-${data.section}`;
+                document.getElementById('sp-session').innerText = data.sessionYear;
+                
+                const statusBlock = document.getElementById('sp-status');
+                statusBlock.innerText = data.statusState;
+                statusBlock.className = `badge ${data.statusState === 'Active' ? 'badge-active' : 'badge-inactive'}`;
+
+                // Section 1: Core Personal Metrics
+                document.getElementById('field-admDate').innerText = data.admissionDate;
+                document.getElementById('field-dob').innerText = data.dobDate;
+                document.getElementById('field-gender').innerText = data.genderIdentity;
+                document.getElementById('field-bloodGroup').innerText = data.bloodGroupMap || 'Not Specified';
+                document.getElementById('field-aadhaar').innerText = data.aadhaarUID;
+
+                // Section 2: Academic Framework
+                document.getElementById('field-class').innerText = `Class ${data.class}`;
+                document.getElementById('field-section').innerText = `Section ${data.section}`;
+                document.getElementById('field-roll').innerText = data.rollNo;
+                document.getElementById('field-session').innerText = data.sessionYear;
+                document.getElementById('field-prevSchool').innerText = data.prevSchoolHistory || 'No External Enclosure';
+
+                // Section 3: Parent/Guardian Records Configuration
+                document.getElementById('field-fatherName').innerText = data.father.name;
+                document.getElementById('field-fatherMobile').innerText = data.father.mobile;
+                document.getElementById('field-fatherOcc').innerText = data.father.occupation;
+                document.getElementById('field-motherName').innerText = data.mother.name;
+                document.getElementById('field-motherMobile').innerText = data.mother.mobile;
+                document.getElementById('field-motherOcc').innerText = data.mother.occupation;
+                document.getElementById('field-guardName').innerText = data.guardian.name || '---';
+                document.getElementById('field-guardContact').innerText = data.guardian.contact || '---';
+
+                // Section 4: Correspondence Layout Channels
+                document.getElementById('field-address').innerText = data.contact.addressLine;
+                document.getElementById('field-city').innerText = data.contact.cityName;
+                document.getElementById('field-state').innerText = data.contact.stateRegion;
+                document.getElementById('field-pin').innerText = data.contact.pinCode;
+                document.getElementById('field-email').innerText = data.contact.emailAddress;
+
+                // Section 5: Dynamic Document Checking Engine
+                evaluateDocumentState('doc-birth', data.documentsLoaded.birthCert);
+                evaluateDocumentState('doc-aadhaar', data.documentsLoaded.aadhaarCopy);
+                evaluateDocumentState('doc-tc', data.documentsLoaded.transferCert);
+                evaluateDocumentState('doc-other', data.documentsLoaded.otherEncl);
+            }
+
+            function evaluateDocumentState(elementId, isLoaded) {
+                const targetNode = document.getElementById(elementId);
+                if (isLoaded) {
+                    targetNode.className = "status-pill uploaded";
+                    targetNode.innerHTML = `<i class="fa-solid fa-circle-check"></i> Uploaded`;
+                } else {
+                    targetNode.className = "status-pill missing";
+                    targetNode.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> Not Uploaded`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

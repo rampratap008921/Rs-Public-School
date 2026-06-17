@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Documents - R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #0b1f5b;
+            --primary-light: #153084;
+            --accent: #d4a017;
+            --accent-hover: #b88911;
+            --bg-body: #f4f6f9;
+            --bg-card: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border-color: #e0e4ec;
+            --success: #28a745;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --radius: 6px;
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header Styles */
+        .erp-header {
+            background-color: var(--primary);
+            color: #ffffff;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .school-logo {
+            height: 40px;
+            width: 40px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 12px;
+            border: 2px solid var(--accent);
+        }
+
+        .page-title-area h1 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+        }
+
+        .btn-back {
+            background-color: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #ffffff;
+            padding: 6px 14px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-back:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #ffffff;
+        }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb-container {
+            background-color: #ffffff;
+            padding: 10px 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            list-style: none;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb li+li:before {
+            content: "\f105";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            padding: 0 8px;
+            color: #a0aec0;
+        }
+
+        .breadcrumb a {
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb li.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* Main Layout Grid */
+        .main-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 24px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 24px;
+        }
+
+        /* Sidebar Panel (Left) */
+        .sidebar-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Content Panel (Right) */
+        .content-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Base Card Styling */
+        .erp-card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: #fafbfc;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Top Student Details Card (Modified to sit gracefully above content) */
+        .student-details-card {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            gap: 24px;
+        }
+
+        .student-photo-wrapper {
+            position: relative;
+        }
+
+        .student-photo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            background-color: #f0f2f5;
+        }
+
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 16px 24px;
+            flex-grow: 1;
+        }
+
+        .info-meta {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-meta .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+
+        .info-meta .value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            width: fit-content;
+        }
+
+        .status-badge.active {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.inactive {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+
+        /* Quick Actions Panel Menu */
+        .quick-actions-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .quick-actions-list li a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .quick-actions-list li:last-child a {
+            border-bottom: none;
+        }
+
+        .quick-actions-list li a:hover {
+            background-color: #f8fafc;
+            color: var(--primary);
+            padding-left: 20px;
+        }
+
+        .quick-actions-list li a i {
+            width: 16px;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .quick-actions-list li a:hover i {
+            color: var(--accent);
+        }
+
+        /* Upload Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .form-control, .form-select {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 13px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            background-color: #ffffff;
+            color: var(--text-main);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(11, 31, 91, 0.1);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: block;
+        }
+
+        .file-hint {
+            display: block;
+            margin-top: 5px;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .btn-upload-submit {
+            width: 100%;
+            background-color: var(--primary);
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .btn-upload-submit:hover {
+            background-color: var(--primary-light);
+        }
+
+        /* Search & Filter Controls */
+        .search-filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 14px 20px;
+            background-color: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-box .form-control {
+            padding-left: 34px;
+        }
+
+        .filter-box {
+            width: 180px;
+        }
+
+        /* Responsive Table Design */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .erp-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .erp-table th {
+            background-color: #f8fafc;
+            color: var(--primary);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        .erp-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+            white-space: nowrap;
+        }
+
+        .erp-table tbody tr:hover {
+            background-color: #fdfdfe;
+        }
+
+        .doc-name-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 500;
+        }
+
+        .doc-icon {
+            font-size: 16px;
+        }
+        .doc-icon.pdf { color: #e74c3c; }
+        .doc-icon.image { color: #3498db; }
+        .doc-icon.missing { color: #95a5a6; }
+
+        /* Document Status Inline Badges */
+        .doc-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .doc-status.uploaded { color: var(--success); }
+        .doc-status.missing { color: var(--danger); }
+
+        /* Action Buttons Grouping */
+        .actions-cell {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-erp-action {
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-erp-action.view { color: var(--info); border-color: rgba(23, 162, 184, 0.3); }
+        .btn-erp-action.view:hover { background-color: var(--info); color: #ffffff; }
+
+        .btn-erp-action.download { color: var(--primary); border-color: rgba(11, 31, 91, 0.3); }
+        .btn-erp-action.download:hover { background-color: var(--primary); color: #ffffff; }
+
+        .btn-erp-action.replace { color: var(--accent); border-color: rgba(212, 160, 23, 0.3); }
+        .btn-erp-action.replace:hover { background-color: var(--accent); color: #ffffff; }
+
+        .btn-erp-action.delete { color: var(--danger); border-color: rgba(220, 53, 69, 0.3); }
+        .btn-erp-action.delete:hover { background-color: var(--danger); color: #ffffff; }
+
+        .btn-erp-action:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #f5f5f5 !important;
+            color: var(--text-muted) !important;
+            border-color: var(--border-color) !important;
+        }
+
+        /* Modal Overlay & Base System */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 31, 91, 0.6);
+            backdrop-filter: blur(2px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .erp-modal {
+            background-color: #ffffff;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform: translateY(-20px);
+            transition: transform 0.2s ease;
+        }
+
+        .modal-overlay.active .erp-modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            background-color: var(--primary);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .btn-modal-close {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .btn-modal-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        /* Preview Structural Targets */
+        .preview-container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: auto;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .preview-pdf {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .preview-placeholder {
+            text-align: center;
+            color: var(--text-muted);
+        }
+
+        .preview-placeholder i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            color: var(--border-color);
+        }
+
+        /* Delete Confirmation Dialog Modal Box Specifics */
+        .erp-modal.modal-sm {
+            max-width: 400px;
+        }
+
+        .confirm-dialog-content {
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .confirm-dialog-content i {
+            font-size: 42px;
+            color: var(--danger);
+            margin-bottom: 14px;
+        }
+
+        .confirm-dialog-content p {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .modal-footer {
+            padding: 12px 20px;
+            background-color: #fafbfc;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background-color: #ffffff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f3f4f6;
+        }
+
+        .btn-danger-confirm {
+            background-color: var(--danger);
+            border: none;
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: var(--radius);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-danger-confirm:hover {
+            background-color: #c82333;
+        }
+
+        /* System Footer */
+        .erp-footer {
+            margin-top: 40px;
+            background-color: var(--primary);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 14px;
+            font-size: 12px;
+            border-top: 3px solid var(--accent);
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-panel {
+                order: 2;
+            }
+            .content-panel {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .student-details-card {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+            .student-photo-wrapper {
+                align-self: center;
+            }
+            .student-info-grid {
+                width: 100%;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .search-filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-box {
+                width: 100%;
+            }
+            .erp-header {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+            }
+            .btn-back {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="erp-header">
+        <div class="header-brand">
+            <div class="school-logo">RS</div>
+            <div class="page-title-area">
+                <h1>R.S. Public School ERP System</h1>
+            </div>
+        </div>
+        <div class="header-title-center">
+            <h2 style="font-size: 16px; font-weight: 500; color: var(--accent);">Student Documents Management</h2>
+        </div>
+        <div class="header-actions">
+            <a href="student-profile.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i> Back to Profile
+            </a>
+        </div>
+    </header>
+
+    <nav class="breadcrumb-container">
+        <ul class="breadcrumb">
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Students Management</a></li>
+            <li><a href="student-profile.html">Student Profile</a></li>
+            <li class="active">Student Documents</li>
+        </ul>
+    </nav>
+
+    <main class="main-container">
+
+        <div class="student-details-card">
+            <div class="student-photo-wrapper">
+                <svg class="student-photo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="50" fill="#e2e8f0"/>
+                    <circle cx="50" cy="40" r="20" fill="#4a5568"/>
+                    <path d="M10 90 Q50 50 90 90 Z" fill="#4a5568"/>
+                </svg>
+            </div>
+            <div class="student-info-grid">
+                <div class="info-meta">
+                    <span class="label">Student Name</span>
+                    <span class="value">Aarav Sharma</span>
+                </div>
+                <div class="info-meta">
+                    <span class="label">Admission No</span>
+                    <span class="value">RS-2022-0459</span>
+                </div>
+                <div class="info-meta">
+                    <span class="label">Roll Number</span>
+                    <span class="value">24</span>
+                </div>
+                <div class="info-meta">
+                    <span class="label">Class / Section</span>
+                    <span class="value">Class X - B</span>
+                </div>
+                <div class="info-meta">
+                    <span class="label">Academic Session</span>
+                    <span class="value">2026 - 2027</span>
+                </div>
+                <div class="info-meta">
+                    <span class="label">ERP Status</span>
+                    <span class="value"><span class="status-badge active">Active</span></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-panel">
+            
+            <div class="erp-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-link"></i> Student Module Links</h2>
+                </div>
+                <div class="card-body" style="padding: 0;">
+                    <ul class="quick-actions-list">
+                        <li><a href="student-profile.html"><i class="fas fa-user"></i> Student Profile</a></li>
+                        <li><a href="edit-student.html"><i class="fas fa-user-edit"></i> Edit Student Details</a></li>
+                        <li><a href="student-id-card.html"><i class="fas fa-id-card"></i> Student ID Card</a></li>
+                        <li><a href="student-list.html"><i class="fas fa-users"></i> Return to Student List</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="erp-card">
+                <div class="card-header">
+                    <h2><i class="fas fa-cloud-upload-alt"></i> Upload Document</h2>
+                </div>
+                <div class="card-body">
+                    <form id="uploadForm" onsubmit="handleDocumentUpload(event)">
+                        <div class="form-group">
+                            <label class="form-label" for="uploadDocType">Document Type</label>
+                            <select class="form-select" id="uploadDocType" required>
+                                <option value="" disabled selected>Select Document Type</option>
+                                <option value="Birth Certificate">Birth Certificate</option>
+                                <option value="Aadhaar Card">Aadhaar Card</option>
+                                <option value="Transfer Certificate (TC)">Transfer Certificate (TC)</option>
+                                <option value="Passport Size Photo">Passport Size Photo</option>
+                                <option value="Previous School Marksheet">Previous School Marksheet</option>
+                                <option value="Character Certificate">Character Certificate</option>
+                                <option value="Migration Certificate">Migration Certificate</option>
+                                <option value="Other Documents">Other Documents</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="uploadFileSelect">Choose File</label>
+                            <input type="file" class="form-control" id="uploadFileSelect" accept=".pdf,.jpg,.jpeg,.png" required>
+                            <span class="file-hint">Supported formats: PDF, JPG, JPEG, PNG (Max 5 MB)</span>
+                        </div>
+                        <button type="submit" class="btn-upload-submit">
+                            <i class="fas fa-plus"></i> Upload Document
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="content-panel">
+            
+            <div class="erp-card">
+                <div class="search-filter-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" id="tableSearch" placeholder="Search document by name..." onkeyup="filterDocumentsTable()">
+                    </div>
+                    <div class="filter-box">
+                        <select class="form-select" id="filterType" onchange="filterDocumentsTable()">
+                            <option value="ALL">All Document Types</option>
+                            <option value="Birth Certificate">Birth Certificate</option>
+                            <option value="Aadhaar Card">Aadhaar Card</option>
+                            <option value="Transfer Certificate (TC)">Transfer Certificate</option>
+                            <option value="Passport Size Photo">Passport Photo</option>
+                            <option value="Previous School Marksheet">Marksheet</option>
+                            <option value="Character Certificate">Character Cert.</option>
+                            <option value="Migration Certificate">Migration Cert.</option>
+                            <option value="Other Documents">Other Docs</option>
+                        </select>
+                    </div>
+                    <div class="filter-box">
+                        <select class="form-select" id="filterStatus" onchange="filterDocumentsTable()">
+                            <option value="ALL">All Statuses</option>
+                            <option value="UPLOADED">✓ Uploaded</option>
+                            <option value="NOT_UPLOADED">✗ Not Uploaded</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="erp-table" id="documentsTable">
+                        <thead>
+                            <tr>
+                                <th>Document Name</th>
+                                <th>Upload Date</th>
+                                <th>File Type</th>
+                                <th>File Size</th>
+                                <th>Status</th>
+                                <th style="text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="documentsTableBody">
+                            <tr data-docname="Birth Certificate" data-status="UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-pdf doc-icon pdf"></i>
+                                        <span>Birth Certificate</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">12-Jul-2024</td>
+                                <td class="cell-type">PDF</td>
+                                <td class="cell-size">1.2 MB</td>
+                                <td><span class="doc-status uploaded"><i class="fas fa-check-circle"></i> Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" onclick="viewDocument('Birth Certificate', 'pdf')"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" onclick="downloadDocument('Birth Certificate')"><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Birth Certificate')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" onclick="triggerDeleteConfirmation('Birth Certificate')"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Aadhaar Card" data-status="UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-image doc-icon image"></i>
+                                        <span>Aadhaar Card</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">14-Jul-2024</td>
+                                <td class="cell-type">JPEG</td>
+                                <td class="cell-size">845 KB</td>
+                                <td><span class="doc-status uploaded"><i class="fas fa-check-circle"></i> Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" onclick="viewDocument('Aadhaar Card', 'image')"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" onclick="downloadDocument('Aadhaar Card')"><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Aadhaar Card')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" onclick="triggerDeleteConfirmation('Aadhaar Card')"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Transfer Certificate (TC)" data-status="NOT_UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-alt doc-icon missing"></i>
+                                        <span>Transfer Certificate (TC)</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">—</td>
+                                <td class="cell-type">—</td>
+                                <td class="cell-size">—</td>
+                                <td><span class="doc-status missing"><i class="fas fa-times-circle"></i> Not Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" disabled><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" disabled><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Transfer Certificate (TC)')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" disabled><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Passport Size Photo" data-status="UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-image doc-icon image"></i>
+                                        <span>Passport Size Photo</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">10-Jul-2024</td>
+                                <td class="cell-type">PNG</td>
+                                <td class="cell-size">420 KB</td>
+                                <td><span class="doc-status uploaded"><i class="fas fa-check-circle"></i> Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" onclick="viewDocument('Passport Size Photo', 'image')"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" onclick="downloadDocument('Passport Size Photo')"><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Passport Size Photo')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" onclick="triggerDeleteConfirmation('Passport Size Photo')"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Previous School Marksheet" data-status="UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-pdf doc-icon pdf"></i>
+                                        <span>Previous School Marksheet</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">18-Jul-2024</td>
+                                <td class="cell-type">PDF</td>
+                                <td class="cell-size">2.4 MB</td>
+                                <td><span class="doc-status uploaded"><i class="fas fa-check-circle"></i> Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" onclick="viewDocument('Previous School Marksheet', 'pdf')"><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" onclick="downloadDocument('Previous School Marksheet')"><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Previous School Marksheet')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" onclick="triggerDeleteConfirmation('Previous School Marksheet')"><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Character Certificate" data-status="NOT_UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-alt doc-icon missing"></i>
+                                        <span>Character Certificate</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">—</td>
+                                <td class="cell-type">—</td>
+                                <td class="cell-size">—</td>
+                                <td><span class="doc-status missing"><i class="fas fa-times-circle"></i> Not Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" disabled><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" disabled><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Character Certificate')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" disabled><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Migration Certificate" data-status="NOT_UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-alt doc-icon missing"></i>
+                                        <span>Migration Certificate</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">—</td>
+                                <td class="cell-type">—</td>
+                                <td class="cell-size">—</td>
+                                <td><span class="doc-status missing"><i class="fas fa-times-circle"></i> Not Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" disabled><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" disabled><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Migration Certificate')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" disabled><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr data-docname="Other Documents" data-status="NOT_UPLOADED">
+                                <td>
+                                    <div class="doc-name-wrapper">
+                                        <i class="fas fa-file-alt doc-icon missing"></i>
+                                        <span>Other Documents</span>
+                                    </div>
+                                </td>
+                                <td class="cell-date">—</td>
+                                <td class="cell-type">—</td>
+                                <td class="cell-size">—</td>
+                                <td><span class="doc-status missing"><i class="fas fa-times-circle"></i> Not Uploaded</span></td>
+                                <td style="text-align: center;">
+                                    <div class="actions-cell">
+                                        <button class="btn-erp-action view" disabled><i class="fas fa-eye"></i> View</button>
+                                        <button class="btn-erp-action download" disabled><i class="fas fa-download"></i> Download</button>
+                                        <button class="btn-erp-action replace" onclick="triggerReplace('Other Documents')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                        <button class="btn-erp-action delete" disabled><i class="fas fa-trash-alt"></i> Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="previewModalOverlay">
+        <div class="erp-modal">
+            <div class="modal-header">
+                <h3 id="previewModalTitle">Document Preview</h3>
+                <button class="btn-modal-close" onclick="closePreviewModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="preview-container" id="previewContentStage">
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closePreviewModal()">Close Preview</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deleteModalOverlay">
+        <div class="erp-modal modal-sm">
+            <div class="modal-header" style="background-color: var(--danger);">
+                <h3>Confirm Deletion</h3>
+                <button class="btn-modal-close" onclick="closeDeleteModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="min-height: auto; padding: 24px;">
+                <div class="confirm-dialog-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Are you sure you want to delete this document?</p>
+                    <strong id="targetDeleteDocName" style="display:block; margin-top: 8px; color: var(--primary);"></strong>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn-danger-confirm" id="btnConfirmDeleteExec">Confirm Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="erp-footer">
+        &copy; 2026 R.S. Public School ERP System
+    </footer>
+
+    <script>
+        // Track targeted document identity state configuration variables globally
+        let currentSelectedDocName = "";
+
+        // Core Multi-Parameter Table Ledger Search and Sorting Filter Architecture Module
+        function filterDocumentsTable() {
+            const searchVal = document.getElementById('tableSearch').value.toLowerCase().trim();
+            const filterType = document.getElementById('filterType').value;
+            const filterStatus = document.getElementById('filterStatus').value;
+            
+            const rows = document.querySelectorAll('#documentsTableBody tr');
+
+            rows.forEach(row => {
+                const docName = row.getAttribute('data-docname');
+                const docStatus = row.getAttribute('data-status');
+                
+                // Match criteria validations
+                const matchSearch = docName.toLowerCase().includes(searchVal);
+                const matchType = (filterType === 'ALL' || docName === filterType);
+                const matchStatus = (filterStatus === 'ALL' || docStatus === filterStatus);
+
+                if (matchSearch && matchType && matchStatus) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Direct Execution Interface Hook simulating Document Upload Processing Matrix
+        function handleDocumentUpload(event) {
+            event.preventDefault();
+            
+            const docTypeSelect = document.getElementById('uploadDocType');
+            const fileInput = document.getElementById('uploadFileSelect');
+            
+            if(!docTypeSelect.value || !fileInput.files[0]) {
+                alert("Please select a document type and file.");
+                return;
+            }
+
+            const targetFile = fileInput.files[0];
+            const maxFileSizeLimit = 5 * 1024 * 1024; // 5 Megabytes Validation Guardrail
+
+            if (targetFile.size > maxFileSizeLimit) {
+                alert("File validation failed: Maximum allowed limit size is 5 MB.");
+                return;
+            }
+
+            // Execute programmatic state insertion mockup across operational rows
+            updateDocumentRowState(docTypeSelect.value, targetFile.name);
+            
+            // Clean up interaction UI layout forms safely
+            fileInput.value = "";
+            docTypeSelect.value = "";
+            alert("Document uploaded successfully.");
+        }
+
+        // Action Trigger Routing Target Handler allowing direct simulation interface for Replace features
+        function triggerReplace(documentName) {
+            const dropdown = document.getElementById('uploadDocType');
+            dropdown.value = documentName;
+            document.getElementById('uploadFileSelect').focus();
+            
+            // Scroll viewpoint seamlessly down to the file upload UI interface segment
+            dropdown.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Modify Document Data Interface Rows dynamically to mock file additions or updates
+        function updateDocumentRowState(docName, filename) {
+            const rows = document.querySelectorAll('#documentsTableBody tr');
+            const currentDateStr = new Date().toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }).replace(/ /g, '-');
+
+            let fileExtension = filename.split('.').pop().toUpperCase();
+            let isPdf = fileExtension === 'PDF';
+            let iconClass = isPdf ? 'fa-file-pdf doc-icon pdf' : 'fa-file-image doc-icon image';
+            let typeString = isPdf ? 'PDF' : (['JPG','JPEG','PNG'].includes(fileExtension) ? fileExtension : 'IMG');
+
+            rows.forEach(row => {
+                if (row.getAttribute('data-docname') === docName) {
+                    row.setAttribute('data-status', 'UPLOADED');
+                    
+                    // Rewrite table cell contents sequentially 
+                    row.innerHTML = `
+                        <td>
+                            <div class="doc-name-wrapper">
+                                <i class="fas ${iconClass}"></i>
+                                <span>${docName}</span>
+                            </div>
+                        </td>
+                        <td class="cell-date">${currentDateStr}</td>
+                        <td class="cell-type">${typeString}</td>
+                        <td class="cell-size">1.1 MB</td>
+                        <td><span class="doc-status uploaded"><i class="fas fa-check-circle"></i> Uploaded</span></td>
+                        <td style="text-align: center;">
+                            <div class="actions-cell">
+                                <button class="btn-erp-action view" onclick="viewDocument('${docName}', '${isPdf ? 'pdf' : 'image'}')"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-erp-action download" onclick="downloadDocument('${docName}')"><i class="fas fa-download"></i> Download</button>
+                                <button class="btn-erp-action replace" onclick="triggerReplace('${docName}')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                <button class="btn-erp-action delete" onclick="triggerDeleteConfirmation('${docName}')"><i class="fas fa-trash-alt"></i> Delete</button>
+                            </div>
+                        </td>
+                    `;
+                }
+            });
+            filterDocumentsTable();
+        }
+
+        // Preview Portal Initialization Execution Frame Logic
+        function viewDocument(docName, fileType) {
+            const titleField = document.getElementById('previewModalTitle');
+            const contentStage = document.getElementById('previewContentStage');
+            
+            titleField.innerText = `Document Preview: ${docName}`;
+            contentStage.innerHTML = ""; // Clear current configuration contexts
+
+            if(fileType === 'pdf') {
+                // Mock rendering of standard system structure templates inside safe sandbox vectors
+                contentStage.innerHTML = `
+                    <div style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--primary);">
+                        <i class="fas fa-file-pdf" style="font-size:64px; margin-bottom:16px; color:#e74c3c;"></i>
+                        <p style="font-weight:600;">[ Encrypted PDF Secure Vector Stream Canvas Container ]</p>
+                        <p style="font-size:12px; color:var(--text-muted); margin-top:4px;">Simulating live system binary view for ${docName}.pdf</p>
+                    </div>
+                `;
+            } else {
+                // Image view framework simulation interface
+                contentStage.innerHTML = `
+                    <div style="padding:20px; text-align:center;">
+                        <i class="fas fa-image" style="font-size:48px; color:var(--info); margin-bottom:12px;"></i>
+                        <p style="font-weight:600; color:var(--text-main); font-size:13px; margin-bottom:10px;">[ Verified Encrypted JPG/PNG Stream Rendering ]</p>
+                        <div style="border: 2px dashed var(--border-color); padding: 40px; background: #fafbfc; border-radius: var(--radius); color: var(--text-muted);">
+                            <i class="fas fa-user-shield" style="font-size:24px; display:block; margin-bottom:8px;"></i>
+                            Secured Student Image Attachment: ${docName} Reference Data
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('previewModalOverlay').classList.add('active');
+        }
+
+        function closePreviewModal() {
+            document.getElementById('previewModalOverlay').classList.remove('active');
+        }
+
+        // Mock download notification logic routing
+        function downloadDocument(docName) {
+            alert(`Initializing secure server download routing process for document package:\n[ ${docName} ]`);
+        }
+
+        // Core Delete Interlock Action Engine Routing Framework
+        function triggerDeleteConfirmation(docName) {
+            currentSelectedDocName = docName;
+            document.getElementById('targetDeleteDocName').innerText = docName;
+            document.getElementById('deleteModalOverlay').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModalOverlay').classList.remove('active');
+            currentSelectedDocName = "";
+        }
+
+        // Confirm processing loop handling dynamic clearing of element state values back to default empty configurations
+        document.getElementById('btnConfirmDeleteExec').addEventListener('click', function() {
+            if(!currentSelectedDocName) return;
+
+            const rows = document.querySelectorAll('#documentsTableBody tr');
+            rows.forEach(row => {
+                if (row.getAttribute('data-docname') === currentSelectedDocName) {
+                    row.setAttribute('data-status', 'NOT_UPLOADED');
+                    
+                    // Reset row structure layout view natively back to base state configurations
+                    row.innerHTML = `
+                        <td>
+                            <div class="doc-name-wrapper">
+                                <i class="fas fa-file-alt doc-icon missing"></i>
+                                <span>${currentSelectedDocName}</span>
+                            </div>
+                        </td>
+                        <td class="cell-date">—</td>
+                        <td class="cell-type">—</td>
+                        <td class="cell-size">—</td>
+                        <td><span class="doc-status missing"><i class="fas fa-times-circle"></i> Not Uploaded</span></td>
+                        <td style="text-align: center;">
+                            <div class="actions-cell">
+                                <button class="btn-erp-action view" disabled><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-erp-action download" disabled><i class="fas fa-download"></i> Download</button>
+                                <button class="btn-erp-action replace" onclick="triggerReplace('${currentSelectedDocName}')"><i class="fas fa-exchange-alt"></i> Replace</button>
+                                <button class="btn-erp-action delete" disabled><i class="fas fa-trash-alt"></i> Delete</button>
+                            </div>
+                        </td>
+                    `;
+                }
+            });
+
+            closeDeleteModal();
+            filterDocumentsTable();
+            alert("Document deleted safely from storage node.");
+        });
+
+        // Global Modal key binding listeners for production ergonomic control requirements
+        window.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closePreviewModal();
+                closeDeleteModal();
+            }
+        });
+    </script>
+</body>
+</html>

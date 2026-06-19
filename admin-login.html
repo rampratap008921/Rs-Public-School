@@ -115,17 +115,15 @@ body{
 
     <div class="input-group">
     <label>Username</label>
-    <input type="text" placeholder="Enter Username">
+    <input type="text" id="username" placeholder="Enter Username">
 </div>
 
 <div class="input-group">
     <label>Password</label>
-    <input type="password" placeholder="Enter Password">
+    <input type="password" id="password" placeholder="Enter Password">
 </div>
 
-        <button type="button"
-        class="login-btn"
-        onclick="window.location.href='admin-dashboard.html'">
+        <button type="button" class="login-btn" onclick="loginAdmin()">
         Login Dashboard
         </button>
 
@@ -134,6 +132,50 @@ body{
     </div>
 
 </div>
+<script>
+async function loginAdmin() {
 
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if(!username || !password){
+        alert("Please enter username and password");
+        return;
+    }
+
+    try {
+
+        const response = await fetch("http://localhost:5000/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                password
+            })
+        });
+
+        const data = await response.json();
+
+        if(data.success){
+
+            if(data.role === "admin"){
+                alert("Login Successful");
+                window.location.href = "admin-dashboard.html";
+            }else{
+                alert("You are not Admin");
+            }
+
+        }else{
+            alert("Invalid Username or Password");
+        }
+
+    } catch(error){
+        console.error(error);
+        alert("Server Connection Error");
+    }
+}
+</script>
 </body>
 </html>

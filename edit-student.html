@@ -685,9 +685,19 @@
                         <div class="form-group">
                             <label for="studentClass">Class Standard <span class="required">*</span></label>
                             <select id="studentClass" class="form-control" required>
+                                <option value="Playway">Class Playway</option>
+                                <option value="LKG">Class LKG</option>
+                                <option value="UKG">Class UKG</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
                                 <option value="10">Class 10</option>
-                                <option value="11">Class 11</option>
-                                <option value="12">Class 12</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -918,7 +928,42 @@
 
     <!-- CLIENT OPERATIONAL ENGINE LOGIC SCRIPT MODULE -->
     <script>
+            const params = new URLSearchParams(window.location.search);
+            const studentId = params.get("id");
+            async function loadStudentData() {
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:5000/api/students/${studentId}`
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            const student = result.data;
+
+            document.getElementById("admissionNumber").value = student.admission_no || "";
+            document.getElementById("studentName").value = student.student_name || "";
+            document.getElementById("fatherName").value = student.father_name || "";
+            document.getElementById("studentClass").value = student.class_name || "";
+            document.getElementById("studentSection").value = student.section || "";
+            document.getElementById("address").value = student.address || "";
+            document.getElementById("gender").value = student.gender || "";
+
+            if(student.admission_date){
+                document.getElementById("admissionDate").value =
+                student.admission_date.split("T")[0];
+            }
+        }
+
+    } catch(error) {
+        console.error(error);
+    }
+}
         document.addEventListener('DOMContentLoaded', () => {
+            loadStudentData();
             const form = document.getElementById('editStudentForm');
             const avatarInput = document.getElementById('studentPhoto');
             const avatarPreview = document.getElementById('avatarPreview');
@@ -955,9 +1000,8 @@
                 email: "aarav.sharma@domain-erp.in"
             };
 
-            // Inject record dictionary values into form fields
-            hydrateFormFields(mockActiveProfileDatabase);
-
+            // Inject record dictionary values into form field
+            loadStudentData();
             function hydrateFormFields(record) {
                 document.getElementById('admissionNumber').value = record.admissionNo;
                 document.getElementById('admissionDate').value = record.admissionDate;
@@ -1078,26 +1122,70 @@
 
                 // Submit pipeline handling sequence based on confirmation check checks
                 if (datasetStateIsValid) {
-                    if (confirm('Commit modified data layers to database registries?')) {
-                        transitOverlay.style.display = 'flex';
 
-                        // Simulate Cloud Synchronization Latency
-                        setTimeout(() => {
-                            transitOverlay.style.display = 'none';
-                            
-                            // Initialize Success Notification Popup System Banner
-                            alertToast.style.display = 'flex';
-                            setTimeout(() => alertToast.classList.add('show'), 40);
+    if(confirm("Update Student Record?")){
 
-                            // Auto-dismiss feedback system panel after brief display sequence
-                            setTimeout(() => {
-                                alertToast.classList.remove('show');
-                                setTimeout(() => alertToast.style.display = 'none', 300);
-                            }, 4000);
+        transitOverlay.style.display = 'flex';
 
-                        }, 2000);
-                    }
-                } else {
+        const studentData = {
+
+            admission_no: document.getElementById("admissionNumber").value,
+            student_name: document.getElementById("studentName").value,
+            father_name: document.getElementById("fatherName").value,
+            class_name: document.getElementById("studentClass").value,
+            section: document.getElementById("studentSection").value,
+            mobile: document.getElementById("fatherMobile").value,
+            gender: document.getElementById("gender").value,
+            address: document.getElementById("address").value
+
+        };
+
+        fetch(`http://localhost:5000/api/students/${studentId}`, {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(studentData)
+
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            transitOverlay.style.display = 'none';
+
+            if(data.success){
+
+                alert("Student Updated Successfully");
+
+                window.location.href = "student-list.html";
+
+            }else{
+
+                alert("Update Failed");
+
+            }
+
+        })
+
+        .catch(error => {
+
+            transitOverlay.style.display = 'none';
+
+            console.error(error);
+
+            alert("Server Error");
+
+        });
+
+    }
+
+}
+                 else {
                     // Smoothly auto scroll back up to the first invalid field layer block structure
                     const targetErrNode = document.querySelector('.error-field');
                     if (targetErrNode) {

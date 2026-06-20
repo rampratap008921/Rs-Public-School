@@ -856,18 +856,7 @@
     <!-- BUSINESS INVENTORY LAYER SCRIPTS -->
     <script>
         // --- DATA SEED REGISTRATION MOCK DICTIONARIES ---
-        let studentDataStore = [
-            { id: 1, admissionNo: "RS202601", name: "Aarav Sharma", rollNo: 1, class: "12", section: "A", gender: "Male", fatherName: "Rajesh Sharma", mobile: "9876543210", status: "Active", address: "122, Civil Lines, Phase 1, New Delhi" },
-            { id: 2, admissionNo: "RS202602", name: "Ananya Verma", rollNo: 2, class: "12", section: "A", gender: "Female", fatherName: "Amit Verma", mobile: "9876543211", status: "Active", address: "B-45, Shalimar Bagh, Sector 3, New Delhi" },
-            { id: 3, admissionNo: "RS202603", name: "Arjun Malhotra", rollNo: 3, class: "12", section: "B", gender: "Male", fatherName: "Vikas Malhotra", mobile: "9876543212", status: "Active", address: "Flat 402, Royal Residency, Gurugram" },
-            { id: 4, admissionNo: "RS202604", name: "Diya Kaplan", rollNo: 1, class: "11", section: "A", gender: "Female", fatherName: "Sanjay Kaplan", mobile: "9876543213", status: "Active", address: "H-18, Green Park Extension, New Delhi" },
-            { id: 5, admissionNo: "RS202605", name: "Ishaan Choudhury", rollNo: 5, class: "11", section: "C", gender: "Male", fatherName: "Pradeep Choudhury", mobile: "9876543214", status: "Inactive", address: "Sector 15, Block C-9, Noida" },
-            { id: 6, admissionNo: "RS202606", name: "Kavya Iyer", rollNo: 2, class: "11", section: "B", gender: "Female", fatherName: "Ramesh Iyer", mobile: "9876543215", status: "Active", address: "78, South Extension Part II, New Delhi" },
-            { id: 7, admissionNo: "RS202607", name: "Kabir Singh", rollNo: 1, class: "10", section: "A", gender: "Male", fatherName: "Jasbir Singh", mobile: "9876543216", status: "Active", address: "Plot 29, Rajouri Garden, New Delhi" },
-            { id: 8, admissionNo: "RS202608", name: "Meera Nair", rollNo: 2, class: "10", section: "A", gender: "Female", fatherName: "Gopal Nair", mobile: "9876543217", status: "Active", address: "Pocket 4, Sector B, Vasant Kunj, New Delhi" },
-            { id: 9, admissionNo: "RS202609", name: "Rohan Das", rollNo: 3, class: "10", section: "B", gender: "Male", fatherName: "Nitin Das", mobile: "9876543218", status: "Active", address: "C-11, Preet Vihar, New Delhi" },
-            { id: 10, admissionNo: "RS202610", name: "Sanya Gupta", rollNo: 4, class: "10", section: "C", gender: "Female", fatherName: "Alok Gupta", mobile: "9876543219", status: "Active", address: "D-60, Anand Vihar, New Delhi" }
-        ];
+        let studentDataStore = [];
 
         // System Configuration Variables
         let activePage = 1;
@@ -887,6 +876,44 @@
         const infoText = document.getElementById('tableInfoText');
         const paginationWrap = document.getElementById('tablePagination');
 
+        async function loadStudents() {
+
+    try {
+
+        const response = await fetch("http://localhost:5000/api/students");
+
+        const result = await response.json();
+
+        if(result.success){
+
+            studentDataStore = result.data.map(student => ({
+
+                id: student.id,
+                admissionNo: student.admission_no,
+                name: student.student_name,
+                rollNo: student.id,
+                class: student.class_name,
+                section: student.section,
+                gender: student.gender,
+                fatherName: student.father_name,
+                mobile: student.mobile,
+                status: "Active",
+                address: student.address
+
+            }));
+
+            compileRenderEngine();
+
+        }
+
+    } catch(error){
+
+        console.error(error);
+
+        alert("Failed to load students");
+
+    }
+}
         document.addEventListener('DOMContentLoaded', () => {
             initWorkspaceModule();
             
@@ -907,8 +934,8 @@
         });
 
         function initWorkspaceModule() {
-            compileRenderEngine();
-        }
+    loadStudents();
+    }
 
         // --- COMPILATION & FILTERING CONTROLLER ---
         function compileRenderEngine() {

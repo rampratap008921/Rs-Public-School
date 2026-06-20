@@ -1067,37 +1067,78 @@
 
                 // Execution sequence on validation check status
                 if (systemFormIsValid) {
-                    // Activate System Submit Processing Animation
+
+                    const studentData = {
+                        admission_no: document.getElementById('admissionNumber').value,
+                        student_name: document.getElementById('studentName').value,
+                        father_name: document.getElementById('fatherName').value,
+                        class_name: document.getElementById('studentClass').value,
+                        section: document.getElementById('studentSection').value,
+                        mobile: document.getElementById('fatherMobile').value,
+                        gender: document.getElementById('gender').value,
+                        address: document.getElementById('address').value,
+                        admission_date: document.getElementById('admissionDate').value
+                    };
+
                     overlay.style.display = 'flex';
 
-                    // Simulate Server API Latency Hook
-                    setTimeout(() => {
-                        overlay.style.display = 'none'; // Dismiss loader
-                        
-                        // Fire Toast Notification Banner System
-                        toast.style.display = 'flex';
-                        setTimeout(() => toast.classList.add('show'), 50);
+                    fetch('http://localhost:5000/api/students', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(studentData)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
 
-                        // Reset Workspace Form after transaction cycle completes
-                        form.reset();
-                        imagePreview.style.display = 'none';
-                        placeholderWrap.style.display = 'flex';
-                        docInputs.forEach(i => i.nextElementSibling.style.display = 'none');
+                        overlay.style.display = 'none';
 
-                        // Clear banner elements after brief presentation delay
-                        setTimeout(() => {
-                            toast.classList.remove('show');
-                            setTimeout(() => toast.style.display = 'none', 400);
-                        }, 4000);
+                        if(data.success){
 
-                    }, 2200);
-                } else {
-                    // Smooth scroll up to first problematic UI form element layout detected
+                            toast.style.display = 'flex';
+                            setTimeout(() => toast.classList.add('show'), 50);
+
+                            form.reset();
+
+                            setTimeout(() => {
+                                toast.classList.remove('show');
+                                setTimeout(() => toast.style.display = 'none', 400);
+                            }, 3000);
+
+                        }else{
+
+                            alert("Database Error");
+
+                        }
+
+                    })
+                    .catch(error => {
+
+                        overlay.style.display = 'none';
+
+                        console.error(error);
+
+                        alert("Server Error");
+
+                    });
+
+                }
+                else {
+
                     const firstFaultyInput = document.querySelector('.error-field');
-                    if (firstFaultyInput) {
-                        firstFaultyInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                    if(firstFaultyInput){
+
+                        firstFaultyInput.scrollIntoView({
+                            behavior:'smooth',
+                            block:'center'
+                        });
+
                         firstFaultyInput.focus();
+
                     }
+
                 }
             });
 

@@ -1,3 +1,5 @@
+const studentRoutes = require('./routes/studentRoutes');
+console.log(studentRoutes);
 const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
@@ -9,6 +11,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api', authRoutes);
+app.use('/api', studentRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

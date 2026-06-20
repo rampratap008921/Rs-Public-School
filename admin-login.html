@@ -132,47 +132,27 @@ body{
     </div>
 
 </div>
+
 <script>
-    async function loginAdmin() {
+function loginAdmin() {
+
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    if(!username || !password){
+    if (!username || !password) {
         alert("Please enter username and password");
         return;
     }
 
-    try {
+    if (username === "admin" && password === "admin123") {
 
-        const response = await fetch("http://localhost:5000/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                username,
-                password
-            })
-        });
+        alert("Login Successful");
+        window.location.href = "admin-dashboard.html";
 
-        const data = await response.json();
+    } else {
 
-        if(data.success){
+        alert("Invalid Username or Password");
 
-            if(data.role === "admin"){
-                alert("Login Successful");
-                window.location.href = "admin-dashboard.html";
-            }else{
-                alert("You are not Admin");
-            }
-
-        }else{
-            alert("Invalid Username or Password");
-        }
-
-    } catch(error){
-        console.error(error);
-        alert("Server Connection Error");
     }
 }
 </script>

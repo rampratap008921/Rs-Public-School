@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desk Slip Generator - R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F5B;
+            --accent-color: #D4A017;
+            --accent-hover: #B8860B;
+            --bg-color: #F4F6F9;
+            --card-bg: #FFFFFF;
+            --text-main: #1A2530;
+            --text-muted: #64748B;
+            --border-color: #CBD5E1;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navigation Dashboard link */
+        .erp-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .school-branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            background: white;
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            border: 2px solid var(--accent-color);
+        }
+
+        .school-info h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .school-info p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Container Layout framework grid */
+        .workspace-container {
+            max-width: 1550px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* Breadcrumbs navigation track line */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 5px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i { color: var(--text-muted); font-size: 0.75rem; }
+
+        .page-header { margin-bottom: 25px; }
+        .page-header h2 { font-size: 1.75rem; color: var(--primary-color); font-weight: 700; }
+        .page-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+
+        /* Multi Grid Split workspace modules panel */
+        .workspace-split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1200px) {
+            .workspace-split-layout { grid-template-columns: 1fr; }
+        }
+
+        .control-panel-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .enterprise-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-heading-legend {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #F1F5F9;
+            padding-bottom: 8px;
+        }
+
+        .card-heading-legend i { color: var(--accent-color); }
+
+        .grid-fields-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .grid-fields-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+        @media(max-width: 480px) {
+            .grid-fields-3, .grid-fields-2 { grid-template-columns: 1fr; }
+        }
+
+        .form-element-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.85rem; font-weight: 500; color: var(--text-main); }
+        
+        select, input[type="text"] {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            background: #FAFAFA;
+            transition: var(--transition);
+        }
+
+        select:focus, input:focus { border-color: var(--primary-color); background: #FFF; }
+
+        /* Data Tables for Roster views selection */
+        .table-responsive-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .enterprise-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .enterprise-data-table th {
+            background-color: #F1F5F9;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .enterprise-data-table td { padding: 8px 12px; border-bottom: 1px solid #E2E8F0; }
+        .enterprise-data-table tbody tr:hover { background-color: #F8FAFC; }
+
+        .master-checkbox, .row-checkbox { width: 15px; height: 15px; accent-color: var(--primary-color); cursor: pointer; }
+
+        /* Checkbox Layout option settings flags lines */
+        .checkbox-grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .custom-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; user-select: none; }
+        .custom-checkbox-label input { width: 15px; height: 15px; accent-color: var(--primary-color); }
+
+        /* System Operations Action Controllers block button elements */
+        .action-button-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        .btn-erp {
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            flex: 1;
+            min-width: 100px;
+        }
+
+        .btn-erp-primary { background-color: var(--primary-color); color: white; }
+        .btn-erp-primary:hover { background-color: #15328F; }
+        .btn-erp-accent { background-color: var(--accent-color); color: var(--primary-color); }
+        .btn-erp-accent:hover { background-color: var(--accent-hover); color: white; }
+        .btn-erp-secondary { background-color: #E2E8F0; color: var(--text-main); }
+        .btn-erp-secondary:hover { background-color: #CBD5E1; }
+
+        /* ========================================================
+           A4 VIRTUAL SCREEN WORKSPACE AND DESK SLIPS ARCHITECTURE 
+           ======================================================== */
+        .preview-pane-sticky-wrap {
+            position: sticky;
+            top: 30px;
+        }
+
+        .preview-pane-header-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-color);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .preview-pane-header-toolbar h3 { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+        .a4-virtual-scroll-viewport {
+            background: #525659; /* Mimics Adobe/Chrome PDF viewer canvas background color */
+            padding: 30px 15px;
+            border-radius: 0 0 8px 8px;
+            max-height: 780px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Absolute Virtual A4 Page Scaling */
+        .a4-page-sheet-node {
+            background: #FFFFFF;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 12.7mm; /* Standard 0.5 inch margins margin setup safely */
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Multi Column Grid distribution mechanics matrices logic */
+        .slips-layout-print-grid {
+            display: grid;
+            gap: 6mm; /* Inter-card gutters spacing */
+            align-content: start;
+        }
+
+        .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+        /* The Core Desk Card Block Item Object Model Spec */
+        .desk-slip-item-card {
+            border: 1.5px solid #000000;
+            background: #FFFFFF;
+            padding: 12px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slip-header-branding {
+            text-align: center;
+            border-bottom: 1px double #000000;
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+
+        .slip-header-branding h4 { font-size: 11pt; font-weight: 700; color: #000; letter-spacing: 0.5px; line-height: 1.2; }
+        .slip-header-branding p { font-size: 7.5pt; color: #333; font-weight: 500; }
+        
+        .slip-document-title-tag {
+            font-size: 8.5pt;
+            font-weight: 700;
+            background: #000000;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 2px 0;
+            margin: 4px 0 8px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .slip-data-table-fields-rows {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+
+        .slip-data-table-fields-rows td {
+            padding: 3px 0;
+            font-size: 9pt;
+            vertical-align: top;
+            color: #000000;
+        }
+
+        .slip-data-table-fields-rows td.label-cell {
+            font-weight: 600;
+            width: 38%;
+            white-space: nowrap;
+        }
+
+        .slip-data-table-fields-rows td.value-cell {
+            font-weight: 500;
+        }
+
+        .slip-footer-signature-line-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 10px;
+            border-top: 1px dashed #000000;
+            padding-top: 6px;
+        }
+
+        .slip-footer-signature-line-row span { font-size: 8pt; font-weight: 600; color: #000; }
+
+        footer {
+            background: var(--primary-color);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 16px;
+            font-size: 0.85rem;
+            border-top: 3px solid var(--accent-color);
+            margin-top: 50px;
+        }
+
+        /* ========================================================
+           COMPREHENSIVE PRINT OVERRIDES STYLESHEET CHANNELS (A4)
+           ======================================================== */
+        @media print {
+            body * { visibility: hidden; }
+            .a4-virtual-scroll-viewport, .a4-virtual-scroll-viewport *, .a4-page-sheet-node, .a4-page-sheet-node * {
+                visibility: visible;
+            }
+            body, html {
+                background: #FFFFFF !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .erp-header, .workspace-container header, .breadcrumb, .control-panel-stack, .preview-pane-header-toolbar, footer {
+                display: none !important;
+            }
+            .workspace-container {
+                padding: 0 !important;
+                margin: 0 !important;
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .workspace-split-layout {
+                display: block !important;
+                width: 100% !important;
+            }
+            .preview-pane-sticky-wrap {
+                position: static !important;
+                width: 100% !important;
+            }
+            .a4-virtual-scroll-viewport {
+                background: transparent !important;
+                box-shadow: none !important;
+                overflow: visible !important;
+                max-height: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+            .a4-page-sheet-node {
+                box-shadow: none !important;
+                margin: 0 !important;
+                padding: 12.7mm !important;
+                page-break-after: always !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                box-sizing: border-box !important;
+            }
+            .desk-slip-item-card {
+                page-break-inside: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="erp-header">
+        <div class="school-branding">
+            <div class="school-logo">RS</div>
+            <div class="school-info">
+                <h1>R.S. PUBLIC SCHOOL</h1>
+                <p><i class="fa-solid fa-location-dot"></i> Khutaha Bazar, Maharajganj</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace-container">
+        
+        <nav class="breadcrumb">
+            <a href="exam-dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="#">Examination Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Desk Slip Generator</span>
+        </nav>
+        
+        <header class="page-header">
+            <h2>Desk Slip Generator Workspace</h2>
+            <p>Configure layouts and dynamically execute batch print arrays for student workspace seating desk identifiers.</p>
+        </header>
+
+        <div class="workspace-split-layout">
+            
+            <div class="control-panel-stack">
+                
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-filter"></i> Filters & Query Parameters</div>
+                    <div class="grid-fields-2" style="margin-bottom:12px;">
+                        <div class="form-element-group">
+                            <label for="academicSession">Academic Session</label>
+                            <select id="academicSession">
+                                <option value="2025-2026">2025-2026</option>
+                                <option value="2026-2027" selected>2026-2027</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="examId">Exam Name *</label>
+                            <select id="examId" onchange="synchronizeActiveSlipsEnginePreview()">
+                                <option value="Half Yearly Examination" selected>Half Yearly Examination</option>
+                                <option value="Annual Examination">Annual Examination</option>
+                                <option value="Unit Test 1">Unit Test 1</option>
+                                <option value="Unit Test 2">Unit Test 2</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="className">Class *</label>
+                            <select id="className" onchange="executeMockQueryFetchRoster()">
+                                <option value="" disabled selected>Select Class</option>
+                                <option value="Class 6">Class 6</option>
+                                <option value="Class 7">Class 7</option>
+                                <option value="Class 8">Class 8</option>
+                                <option value="Class 9">Class 9</option>
+                                <option value="Class 10">Class 10</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="sectionName">Section *</label>
+                            <select id="sectionName" onchange="executeMockQueryFetchRoster()">
+                                <option value="" disabled selected>Select Section</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-element-group" style="margin-bottom:15px;">
+                        <label for="generateType">Batch Generation Scope Mode</label>
+                        <select id="generateType" onchange="handleGenerationScopeModeToggle()">
+                            <option value="All Students" selected>All Registered Students in Scope</option>
+                            <option value="Selected Students">Selected Row Items Checkboxes Only</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-erp btn-erp-primary" style="width:100%;" onclick="executeMockQueryFetchRoster()"><i class="fa-solid fa-cloud-arrow-down"></i> Load Student Roster Array</button>
+                </fieldset>
+
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-users-rectangle"></i> Target Student Selection Roster</div>
+                    <div class="table-responsive-container">
+                        <table class="enterprise-data-table" id="studentRosterSelectionGridTable">
+                            <thead>
+                                <tr>
+                                    <th style="width:40px; text-align:center;"><input type="checkbox" class="master-checkbox" id="masterRosterToggleCheckbox" onclick="toggleMasterGridCheckboxSelection(this)"></th>
+                                    <th>Admission No</th>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Father Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterTableContainerBodyNode">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Choose parameters fields and hit "Load Student Roster Array" to mount nodes.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </fieldset>
+
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-print"></i> Layout Grid Page Grid Matrix Settings</div>
+                    <div class="grid-fields-2" style="margin-bottom:15px;">
+                        <div class="form-element-group">
+                            <label for="layoutColumnsSetting">Column Grid Distribution</label>
+                            <select id="layoutColumnsSetting" onchange="synchronizeActiveSlipsEnginePreview()">
+                                <option value="1">1 Column Grid</option>
+                                <option value="2" selected>2 Columns Layout Grid</option>
+                                <option value="3">3 Columns Micro Grid</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="layoutMaxRowsPerPageSetting">Rows Distribution Limit Per Page</label>
+                            <select id="layoutMaxRowsPerPageSetting" onchange="synchronizeActiveSlipsEnginePreview()">
+                                <option value="4">4 Rows Per Sheet</option>
+                                <option value="5">5 Rows Per Sheet</option>
+                                <option value="6">6 Rows Per Sheet</option>
+                                <option value="10" selected>10 Rows Per Sheet</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="card-heading-legend" style="font-size:0.92rem; margin-bottom:10px;"><i class="fa-solid fa-eye-slash"></i> Field Visibility Masking Controls</div>
+                    <div class="checkbox-grid-layout">
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskSchoolName" checked onchange="synchronizeActiveSlipsEnginePreview()"> Institutional Branding</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskExamName" checked onchange="synchronizeActiveSlipsEnginePreview()"> Target Exam Label</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskAdmissionNo" checked onchange="synchronizeActiveSlipsEnginePreview()"> Admission ID Code</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskStudentName" checked onchange="synchronizeActiveSlipsEnginePreview()"> Student Entity Name</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskFatherName" checked onchange="synchronizeActiveSlipsEnginePreview()"> Parental Guardian Field</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskClassSec" checked onchange="synchronizeActiveSlipsEnginePreview()"> Grade Class / Section</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskRollNo" checked onchange="synchronizeActiveSlipsEnginePreview()"> Sequence Roll Number</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskSignature" checked onchange="synchronizeActiveSlipsEnginePreview()"> Signature Baseline row</label>
+                    </div>
+                </fieldset>
+
+                <div class="enterprise-card">
+                    <div class="action-button-group">
+                        <button type="button" class="btn-erp btn-erp-secondary" onclick="resetWorkspaceFormStateParameters()"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+                        <button type="button" class="btn-erp btn-erp-accent" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Save PDF</button>
+                        <button type="button" class="btn-erp btn-erp-primary" style="width:100%; margin-top:4px;" onclick="window.print()"><i class="fa-solid fa-print"></i> Execute Bulk Document Print</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="preview-pane-sticky-wrap">
+                <div class="preview-pane-header-toolbar">
+                    <h3><i class="fa-solid fa-desktop"></i> Real-time Virtual Print View Layout (A4 Scales)</h3>
+                    <span style="font-size:0.8rem; opacity:0.8;" id="pageCountIndicatorBadge">0 Sheet(s) Compiled</span>
+                </div>
+                
+                <div class="a4-virtual-scroll-viewport" id="virtualA4PagesCanvasViewportContainer">
+                    
+                    <div class="a4-page-sheet-node">
+                        <div style="text-align:center; color:var(--text-muted); padding-top:100px; font-size:0.9rem;">
+                            <i class="fa-solid fa-print" style="font-size:2.5rem; display:block; margin-bottom:12px; opacity:0.4;"></i>
+                            Configure filter dimensions and tap "Load Student Roster Array" or modify layout settings toggles to render virtual printable sheets structures.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        &copy; 2026 R.S. Public School, Khutaha Bazar, Maharajganj. Powered by Enterprise Academic ERP Systems.
+    </footer>
+
+    <script>
+        // High Performance Simulated Mock Database Pipeline Layer acting as GET /api/students returns
+        const localizedMockDatabaseRosterMatrixMap = {
+            "Class 7-A": [
+                { studentId: "ST-701", admissionNo: "RS-2021-094", rollNo: "01", studentName: "Ram Pratap Prajapati", fatherName: "S. Prajapati" },
+                { studentId: "ST-702", admissionNo: "RS-2021-105", rollNo: "02", studentName: "Aditya Narayan Mani", fatherName: "K. Mani" },
+                { studentId: "ST-703", admissionNo: "RS-2022-412", rollNo: "03", name: "Ananya Mishra", fatherName: "V. Mishra", studentName: "Ananya Mishra" },
+                { studentId: "ST-704", admissionNo: "RS-2021-318", rollNo: "04", studentName: "Deepak Kumar Sahani", fatherName: "M. Sahani" },
+                { studentId: "ST-705", admissionNo: "RS-2023-019", rollNo: "05", studentName: "Divya Prakash Vishwakarma", fatherName: "B. Vishwakarma" },
+                { studentId: "ST-706", admissionNo: "RS-2023-112", rollNo: "06", studentName: "Rahul Kumar Sahani", fatherName: "D. Sahani" },
+                { studentId: "ST-707", admissionNo: "RS-2023-561", rollNo: "07", studentName: "Sneha Kumari Prajapati", fatherName: "G. Prajapati" },
+                { studentId: "ST-708", admissionNo: "RS-2022-890", rollNo: "08", studentName: "Vikram Singh Thapa", fatherName: "L. Thapa" }
+            ],
+            "Class 10-B": [
+                { studentId: "ST-101", admissionNo: "RS-2018-002", rollNo: "01", studentName: "Aman Kumar Gupta", fatherName: "J. Gupta" },
+                { studentId: "ST-102", admissionNo: "RS-2018-054", rollNo: "02", studentName: "Kriti Kumari Serwani", fatherName: "L. Serwani" }
+            ]
+        };
+
+        let loadedRosterWorkspaceMemoryThread = [];
+
+        // Asynchronous Pipeline query fetching simulation triggers
+        function executeMockQueryFetchRoster() {
+            const cls = document.getElementById("className").value;
+            const sec = document.getElementById("sectionName").value;
+            const tbody = document.getElementById("rosterTableContainerBodyNode");
+
+            if(!cls || !sec) {
+                alert("ERP Layout Parameter Exception: Choose both Class and Section scoping dropdown parameters to fetch candidate lists nodes maps.");
+                return;
+            }
+
+            const searchLookupKey = `${cls}-${sec}`;
+            const queryPayloadResult = localizedMockDatabaseRosterMatrixMap[searchLookupKey] || [];
+
+            // Perform deep context copy block clone logic targeting operational system memory
+            loadedRosterWorkspaceMemoryThread = JSON.parse(JSON.stringify(queryPayloadResult));
+
+            if(loadedRosterWorkspaceMemoryThread.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:15px;">No registration profiles found matching choice scope variables.</td></tr>`;
+                synchronizeActiveSlipsEnginePreview();
+                return;
+            }
+
+            // Render checklist selector rows array components grid elements loops
+            tbody.innerHTML = "";
+            loadedRosterWorkspaceMemoryThread.forEach((student, idx) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${student.studentId}" data-index="${idx}" checked onchange="evaluateMasterGridCheckboxStateCheck(); synchronizeActiveSlipsEnginePreview();"></td>
+                    <td><strong>${student.admissionNo}</strong></td>
+                    <td>${student.rollNo}</td>
+                    <td style="font-weight:600; color:var(--primary-color);">${student.studentName}</td>
+                    <td>${student.fatherName}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("masterRosterToggleCheckbox").checked = true;
+            synchronizeActiveSlipsEnginePreview();
+        }
+
+        // Toggle validation control handlers mechanics loops
+        function handleGenerationScopeModeToggle() {
+            synchronizeActiveSlipsEnginePreview();
+        }
+
+        function toggleMasterGridCheckboxSelection(masterToggleInputElement) {
+            const state = masterToggleInputElement.checked;
+            document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox").forEach(box => box.checked = state);
+            synchronizeActiveSlipsEnginePreview();
+        }
+
+        function evaluateMasterGridCheckboxStateCheck() {
+            const masterCheck = document.getElementById("masterRosterToggleCheckbox");
+            const totalBoxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox");
+            const checkedBoxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox:checked");
+
+            if(totalBoxes.length > 0 && totalBoxes.length === checkedBoxes.length) {
+                masterCheck.checked = true;
+            } else {
+                masterCheck.checked = false;
+            }
+        }
+
+        // ========================================================
+        // CORE PRINT LAYOUT GENERATION ENGINE & AUTO-PAGINATION
+        // ========================================================
+        function synchronizeActiveSlipsEnginePreview() {
+            const canvasContainer = document.getElementById("virtualA4PagesCanvasViewportContainer");
+            canvasContainer.innerHTML = ""; // Clear active viewport elements layer pipelines
+
+            // Filter context candidates data based on target Scope Settings Selection criteria
+            const batchGenerationScopeMode = document.getElementById("generateType").value;
+            let activeCandidatesProcessingRosterArray = [];
+
+            if(batchGenerationScopeMode === "All Students") {
+                activeCandidatesProcessingRosterArray = loadedRosterWorkspaceMemoryThread;
+            } else {
+                // Fetch specific individual row array records indicated by physical checked flags loops controls
+                const checkedCheckboxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox:checked");
+                checkedCheckboxes.forEach(box => {
+                    const idx = parseInt(box.dataset.index);
+                    if(!isNaN(idx) && loadedRosterWorkspaceMemoryThread[idx]) {
+                        activeCandidatesProcessingRosterArray.push(loadedRosterWorkspaceMemoryThread[idx]);
+                    }
+                });
+            }
+
+            if(activeCandidatesProcessingRosterArray.length === 0) {
+                canvasContainer.innerHTML = `
+                    <div class="a4-page-sheet-node">
+                        <div style="text-align:center; color:var(--text-muted); padding-top:100px; font-size:0.9rem;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size:2.5rem; display:block; margin-bottom:12px; opacity:0.4;"></i>
+                            Operational Queue Vacant: No active student candidate entities map current filtering layouts configuration criteria structures.
+                        </div>
+                    </div>`;
+                document.getElementById("pageCountIndicatorBadge").innerText = "0 Sheet(s) Compiled";
+                return;
+            }
+
+            // Extract programmatic spacing constraints parameters values indices options
+            const layoutColumns = parseInt(document.getElementById("layoutColumnsSetting").value);
+            const layoutMaxRows = parseInt(document.getElementById("layoutMaxRowsPerPageSetting").value);
+            const totalSlipsCapacityLimitPerPage = layoutColumns * layoutMaxRows;
+
+            // Compute math configurations heights based on chosen vertical rows density parameters properties maps
+            const dynamicCardVerticalHeightStyleValue = Math.floor(270 / layoutMaxRows); // 270mm usable vertical printable viewport height distribution boundary bounds
+
+            // Extract dynamic configuration toggle field masking states flags values switches 
+            const showSchool = document.getElementById("maskSchoolName").checked;
+            const showExam = document.getElementById("maskExamName").checked;
+            const showAdNo = document.getElementById("maskAdmissionNo").checked;
+            const showName = document.getElementById("maskStudentName").checked;
+            const showFather = document.getElementById("maskFatherName").checked;
+            const showClassSec = document.getElementById("maskClassSec").checked;
+            const showRoll = document.getElementById("maskRollNo").checked;
+            const showSign = document.getElementById("maskSignature").checked;
+            
+            const selectedExamLabelText = document.getElementById("examId").value;
+            const selectedClassValue = document.getElementById("className").value || "—";
+            const selectedSectionValue = document.getElementById("sectionName").value || "—";
+
+            let currentSheetNodeInstanceElement = null;
+            let currentSheetGridContainerElement = null;
+            let totalSheetsRenderedCounter = 0;
+
+            // Core layout distribution processing loop matrix transformation array block maps
+            activeCandidatesProcessingRosterArray.forEach((student, targetIndex) => {
+                
+                // Orchestrate virtual programmatic pagination bounds triggers constraints loops paths
+                if(targetIndex % totalSlipsCapacityLimitPerPage === 0) {
+                    totalSheetsRenderedCounter++;
+                    
+                    currentSheetNodeInstanceElement = document.createElement("div");
+                    currentSheetNodeInstanceElement.className = "a4-page-sheet-node";
+                    
+                    currentSheetGridContainerElement = document.createElement("div");
+                    currentSheetGridContainerElement.className = `slips-layout-print-grid grid-cols-${layoutColumns}`;
+                    
+                    currentSheetNodeInstanceElement.appendChild(currentSheetGridContainerElement);
+                    canvasContainer.appendChild(currentSheetNodeInstanceElement);
+                }
+
+                // Compile internal element string models mapping custom visibility rules patterns modifiers
+                const deskSlipCardDOMElement = document.createElement("div");
+                deskSlipCardDOMElement.className = "desk-slip-item-card";
+                deskSlipCardDOMElement.style.height = `${dynamicCardVerticalHeightStyleValue}mm`;
+
+                let brandingBlockStr = showSchool ? `
+                    <div class="slip-header-branding">
+                        <h4>R.S. PUBLIC SCHOOL</h4>
+                        <p>Khutaha Bazar, Maharajganj</p>
+                    </div>` : '';
+
+                let documentTitleStr = showExam ? `<div class="slip-document-title-tag">${selectedExamLabelText}</div>` : `<div class="slip-document-title-tag">EXAMINATION DESK SLIP</div>`;
+
+                let rowAdmissionStr = showAdNo ? `<tr><td class="label-cell">Admission No:</td><td class="value-cell">${student.admissionNo}</td></tr>` : '';
+                let rowNameStr = showName ? `<tr><td class="label-cell">Student Name:</td><td class="value-cell" style="font-weight:700; text-transform:uppercase;">${student.studentName}</td></tr>` : '';
+                let rowFatherStr = showFather ? `<tr><td class="label-cell">Father Name:</td><td class="value-cell">${student.fatherName}</td></tr>` : '';
+                let rowClassSecStr = showClassSec ? `<tr><td class="label-cell">Class / Section:</td><td class="value-cell">${selectedClassValue} - ${selectedSectionValue}</td></tr>` : '';
+                let rowRollStr = showRoll ? `<tr><td class="label-cell">Roll Number:</td><td class="value-cell" style="font-weight:700; font-size:11pt;">${student.rollNo}</td></tr>` : '';
+
+                let footerSignatureStr = showSign ? `
+                    <div class="slip-footer-signature-line-row">
+                        <span>Desk No: ______</span>
+                        <span>Student Signature</span>
+                    </div>` : '';
+
+                deskSlipCardDOMElement.innerHTML = `
+                    <div>
+                        ${brandingBlockStr}
+                        ${documentTitleStr}
+                        <table class="slip-data-table-fields-rows">
+                            <tbody>
+                                ${rowAdmissionStr}
+                                ${rowNameStr}
+                                ${rowFatherStr}
+                                ${rowClassSecStr}
+                                ${rowRollStr}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${footerSignatureStr}
+                `;
+
+                currentSheetGridContainerElement.appendChild(deskSlipCardDOMElement);
+            });
+
+            document.getElementById("pageCountIndicatorBadge").innerText = `${totalSheetsRenderedCounter} Sheet(s) Compiled`;
+        }
+
+        // Wipe and clear active workspace definitions forms elements criteria fields controls
+        function resetWorkspaceFormStateParameters() {
+            if(confirm("Confirm action? Resetting components will clear roster memory buffers sheets grids arrays.")) {
+                document.getElementById("className").value = "";
+                document.getElementById("sectionName").value = "";
+                document.getElementById("generateType").value = "All Students";
+                document.getElementById("layoutColumnsSetting").value = "2";
+                document.getElementById("layoutMaxRowsPerPageSetting").value = "10";
+                document.getElementById("rosterTableContainerBodyNode").innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Choose parameters fields and hit "Load Student Roster Array" to mount nodes.</td></tr>`;
+                document.getElementById("masterRosterToggleCheckbox").checked = false;
+                
+                loadedRosterWorkspaceMemoryThread = [];
+                synchronizeActiveSlipsEnginePreview();
+            }
+        }
+    </script>
+</body>
+</html>

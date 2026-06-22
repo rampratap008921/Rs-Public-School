@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Examination - R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F5B;
+            --accent-color: #D4A017;
+            --accent-hover: #B8860B;
+            --bg-color: #F4F6F9;
+            --card-bg: #FFFFFF;
+            --text-main: #1A2530;
+            --text-muted: #64748B;
+            --border-color: #CBD5E1;
+            --error-color: #EF4444;
+            --success-color: #10B981;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.25s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Navigation */
+        .erp-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .school-branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            background: white;
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            border: 2px solid var(--accent-color);
+        }
+
+        .school-info h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .school-info p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Main Grid Wrapper */
+        .workspace-container {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+            flex: 1;
+        }
+
+        /* Breadcrumbs */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 5px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .breadcrumb span {
+            color: var(--text-muted);
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h2 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-top: 4px;
+        }
+
+        /* Split Screen Configuration Layout */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .split-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-sections-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Section Cards styling */
+        .config-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border: 1px solid #E2E8F0;
+        }
+
+        .config-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #F1F5F9;
+            padding-bottom: 10px;
+        }
+
+        .config-card-title i {
+            color: var(--accent-color);
+        }
+
+        /* Grid Framework for Inputs */
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid-2, .form-grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            position: relative;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        label span {
+            color: var(--error-color);
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.92rem;
+            color: var(--text-main);
+            outline: none;
+            background-color: #FAFAFA;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-color);
+            background-color: #FFF;
+            box-shadow: 0 0 0 3px rgba(11, 31, 91, 0.1);
+        }
+
+        /* Error States */
+        input.input-error, select.input-error, textarea.input-error {
+            border-color: var(--error-color) !important;
+            background-color: #FFF5F5;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 0.78rem;
+            font-weight: 500;
+            margin-top: 2px;
+            display: none;
+        }
+
+        /* Custom Modern Multi-Select Lists */
+        .pill-select-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: #FAFAFA;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .pill-checkbox {
+            display: none;
+        }
+
+        .pill-label {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            background: #FFF;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            transition: var(--transition);
+        }
+
+        .pill-checkbox:checked + .pill-label {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* Summary Context Box */
+        .summary-accent-box {
+            background-color: #F8FAFC;
+            border-left: 4px solid var(--accent-color);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .summary-accent-box span {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .summary-accent-box strong {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+        }
+
+        /* Table Architecture */
+        .table-responsive {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+        }
+
+        .enterprise-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .enterprise-table th {
+            background-color: #F1F5F9;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 12px 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .enterprise-table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #E2E8F0;
+            vertical-align: middle;
+        }
+
+        .btn-add-row {
+            background: #FFF;
+            border: 1px dashed var(--primary-color);
+            color: var(--primary-color);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            margin-top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+
+        .btn-add-row:hover {
+            background: rgba(11, 31, 91, 0.05);
+        }
+
+        .btn-delete-row {
+            background: transparent;
+            border: none;
+            color: var(--error-color);
+            cursor: pointer;
+            font-size: 1.1rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: var(--transition);
+        }
+
+        .btn-delete-row:hover {
+            background: #FEE2E2;
+        }
+
+        /* Grid Configuration Rules Checkboxes */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        @media(max-width: 480px){
+            .checkbox-grid { grid-template-columns: 1fr; }
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            user-select: none;
+        }
+
+        .custom-checkbox input {
+            accent-color: var(--primary-color);
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Live Right Panel Preview sticky mechanism */
+        .sticky-side-panel {
+            position: sticky;
+            top: 95px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-card {
+            background: linear-gradient(135deg, #0B1F5B 0%, #1E3A8A 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: var(--shadow);
+            border-top: 4px solid var(--accent-color);
+        }
+
+        .preview-card h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-card h3 i { color: var(--accent-color); }
+
+        .preview-data-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .preview-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .preview-item label {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-item span {
+            font-size: 0.95rem;
+            font-weight: 500;
+            word-break: break-word;
+        }
+
+        .preview-status {
+            align-self: flex-start;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Form Execution Buttons block */
+        .action-button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .btn-erp {
+            padding: 12px 24px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .btn-erp-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-erp-primary:hover {
+            background-color: #1E3A8A;
+        }
+
+        .btn-erp-accent {
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+        }
+
+        .btn-erp-accent:hover {
+            background-color: var(--accent-hover);
+            color: white;
+        }
+
+        .btn-erp-secondary {
+            background-color: #E2E8F0;
+            color: var(--text-main);
+        }
+
+        .btn-erp-secondary:hover {
+            background-color: #CBD5E1;
+        }
+
+        .btn-erp-danger {
+            background-color: transparent;
+            border-color: var(--error-color);
+            color: var(--error-color);
+        }
+
+        .btn-erp-danger:hover {
+            background-color: var(--error-color);
+            color: white;
+        }
+
+        footer {
+            background: var(--primary-color);
+            color: rgba(255, 255, 255, 0.7);
+            text-align: center;
+            padding: 20px;
+            font-size: 0.85rem;
+            border-top: 3px solid var(--accent-color);
+            margin-top: 60px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="erp-header">
+        <div class="school-branding">
+            <div class="school-logo">RS</div>
+            <div class="school-info">
+                <h1>R.S. PUBLIC SCHOOL</h1>
+                <p><i class="fa-solid fa-location-dot"></i> Khutaha Bazar, Maharajganj</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace-container">
+        
+        <nav class="breadcrumb">
+            <a href="exam-dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="#">Examination Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Create Examination</span>
+        </nav>
+        
+        <header class="page-header">
+            <h2>Create Examination</h2>
+            <p>Configure and manage examination sessions for the academic year.</p>
+        </header>
+
+        <form id="examCreationForm" onsubmit="handleFormSubmission(event)" novalidate>
+            <div class="split-layout">
+                
+                <div class="form-sections-wrapper">
+                    
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-circle-info"></i> Section 1: Exam Basic Information</legend>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="examName">Exam Name <span>*</span></label>
+                                <input type="text" id="examName" placeholder="e.g., Half Yearly Examination" required>
+                                <div class="error-message" id="err-examName">Exam Name is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="examCode">Exam Code <span>*</span></label>
+                                <input type="text" id="examCode" placeholder="e.g., HY-2026" required>
+                                <div class="error-message" id="err-examCode">Unique Exam Code is required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="academicSession">Academic Session <span>*</span></label>
+                                <select id="academicSession" required>
+                                    <option value="" disabled selected>Select Session</option>
+                                    <option value="2025-2026">2025-2026</option>
+                                    <option value="2026-2027">2026-2027</option>
+                                </select>
+                                <div class="error-message" id="err-academicSession">Please select an academic session.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="examType">Exam Type <span>*</span></label>
+                                <select id="examType" required>
+                                    <option value="" disabled selected>Select Type</option>
+                                    <option value="Unit Test">Unit Test</option>
+                                    <option value="Monthly Test">Monthly Test</option>
+                                    <option value="Quarterly Examination">Quarterly Examination</option>
+                                    <option value="Half Yearly Examination">Half Yearly Examination</option>
+                                    <option value="Annual Examination">Annual Examination</option>
+                                    <option value="Pre Board Examination">Pre Board Examination</option>
+                                    <option value="Board Pattern Test">Board Pattern Test</option>
+                                    <option value="Custom Examination">Custom Examination</option>
+                                </select>
+                                <div class="error-message" id="err-examType">Please choose an exam context type.</div>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="examStatus">Status <span>*</span></label>
+                                <select id="examStatus" required>
+                                    <option value="Draft" selected>Draft</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Completed">Completed</option>
+                                    <option value="Archived">Archived</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-sliders"></i> Section 2: Exam Scope Configuration</legend>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label>Applicable Classes <span>*</span> (Select Multiple)</label>
+                                <div class="pill-select-container" id="classSelectionContainer">
+                                    <input type="checkbox" name="classSelection" value="Playway" id="cls-pw" class="pill-checkbox"><label for="cls-pw" class="pill-label">Playway</label>
+                                    <input type="checkbox" name="classSelection" value="LKG" id="cls-lkg" class="pill-checkbox"><label for="cls-lkg" class="pill-label">LKG</label>
+                                    <input type="checkbox" name="classSelection" value="UKG" id="cls-ukg" class="pill-checkbox"><label for="cls-ukg" class="pill-label">UKG</label>
+                                    <input type="checkbox" name="classSelection" value="Class 1" id="cls-1" class="pill-checkbox"><label for="cls-1" class="pill-label">Class 1</label>
+                                    <input type="checkbox" name="classSelection" value="Class 2" id="cls-2" class="pill-checkbox"><label for="cls-2" class="pill-label">Class 2</label>
+                                    <input type="checkbox" name="classSelection" value="Class 3" id="cls-3" class="pill-checkbox"><label for="cls-3" class="pill-label">Class 3</label>
+                                    <input type="checkbox" name="classSelection" value="Class 4" id="cls-4" class="pill-checkbox"><label for="cls-4" class="pill-label">Class 4</label>
+                                    <input type="checkbox" name="classSelection" value="Class 5" id="cls-5" class="pill-checkbox"><label for="cls-5" class="pill-label">Class 5</label>
+                                    <input type="checkbox" name="classSelection" value="Class 6" id="cls-6" class="pill-checkbox"><label for="cls-6" class="pill-label">Class 6</label>
+                                    <input type="checkbox" name="classSelection" value="Class 7" id="cls-7" class="pill-checkbox"><label for="cls-7" class="pill-label">Class 7</label>
+                                    <input type="checkbox" name="classSelection" value="Class 8" id="cls-8" class="pill-checkbox"><label for="cls-8" class="pill-label">Class 8</label>
+                                    <input type="checkbox" name="classSelection" value="Class 9" id="cls-9" class="pill-checkbox"><label for="cls-9" class="pill-label">Class 9</label>
+                                    <input type="checkbox" name="classSelection" value="Class 10" id="cls-10" class="pill-checkbox"><label for="cls-10" class="pill-label">Class 10</label>
+                                </div>
+                                <div class="error-message" id="err-classSelection">Select at least one class framework.</div>
+                            </div>
+                            <div class="form-group">
+                                <label>Applicable Sections <span>*</span> (Select Multiple)</label>
+                                <div class="pill-select-container" id="sectionSelectionContainer">
+                                    <input type="checkbox" name="sectionSelection" value="A" id="sec-a" class="pill-checkbox"><label for="sec-a" class="pill-label">A</label>
+                                    <input type="checkbox" name="sectionSelection" value="B" id="sec-b" class="pill-checkbox"><label for="sec-b" class="pill-label">B</label>
+                                    <input type="checkbox" name="sectionSelection" value="C" id="sec-c" class="pill-checkbox"><label for="sec-c" class="pill-label">C</label>
+                                    <input type="checkbox" name="sectionSelection" value="D" id="sec-d" class="pill-checkbox"><label for="sec-d" class="pill-label">D</label>
+                                </div>
+                                <div class="error-message" id="err-sectionSelection">Select at least one operational section.</div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-clock"></i> Section 3: Exam Duration Settings</legend>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="examStartDate">Exam Start Date <span>*</span></label>
+                                <input type="date" id="examStartDate" required>
+                                <div class="error-message" id="err-examStartDate">Valid start date required.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="examEndDate">Exam End Date <span>*</span></label>
+                                <input type="date" id="examEndDate" required>
+                                <div class="error-message" id="err-examEndDate">End date must fall on or after start date.</div>
+                            </div>
+                            <div class="form-group full-width" style="margin-top: 5px;">
+                                <div class="summary-accent-box">
+                                    <span>Calculated Operational Workspace Window:</span>
+                                    <div><strong id="totalExamDaysDisplay">0</strong> <span>Days</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-book"></i> Section 4: Subject Configuration</legend>
+                        <div class="table-responsive">
+                            <table class="enterprise-table" id="subjectTable">
+                                <thead>
+                                    <tr>
+                                        <th>Subject Name <span>*</span></th>
+                                        <th>Subject Code <span>*</span></th>
+                                        <th>Maximum Marks <span>*</span></th>
+                                        <th>Passing Marks <span>*</span></th>
+                                        <th style="width: 50px; text-align: center;">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="subjectTableBody">
+                                    </tbody>
+                            </table>
+                        </div>
+                        <button type="button" class="btn-add-row" onclick="addSubjectRow()"><i class="fa-solid fa-plus"></i> Add Subject</button>
+                        <div class="error-message" id="err-subjectTable" style="margin-top: 10px;">Ensure all subjects are correctly configured without duplicate codes.</div>
+                    </fieldset>
+
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-shield-halved"></i> Section 5: Examination Automation Rules</legend>
+                        <div class="checkbox-grid">
+                            <label class="custom-checkbox"><input type="checkbox" id="ruleAdmitCard" checked> Enable Admit Card Generation</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="ruleDeskSlip" checked> Enable Desk Slip Generation</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="ruleSeating"> Enable Seating Arrangement</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="rulePublish"> Enable Timetable Publication</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="ruleSMS"> Enable SMS Notification</label>
+                            <label class="custom-checkbox"><input type="checkbox" id="ruleParent"> Enable Parent Notification</label>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="config-card">
+                        <legend class="config-card-title"><i class="fa-solid fa-file-pen"></i> Section 6: Exam Textual Specifications</legend>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="examInstructions">Exam Instructions</label>
+                            <textarea id="examInstructions" rows="3" placeholder="General rules governing administration of the whole examination..."></textarea>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 15px;">
+                            <label for="studentGuidelines">Student Guidelines</label>
+                            <textarea id="studentGuidelines" rows="3" placeholder="Mandatory requirements for students (e.g., Reporting times, uniform)..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="invigilatorNotes">Invigilator Notes</label>
+                            <textarea id="invigilatorNotes" rows="3" placeholder="Confidential protocols or distribution guidance for room control supervisors..."></textarea>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <div class="sticky-side-panel">
+                    
+                    <div class="preview-card">
+                        <h3><i class="fa-solid fa-eye"></i> Live Summary Preview</h3>
+                        <div class="preview-data-list">
+                            <div class="preview-item">
+                                <label>Exam Scope Name</label>
+                                <span id="prevName">—</span>
+                            </div>
+                            <div class="preview-item">
+                                <label>Configuration Profile</label>
+                                <span id="prevType">—</span>
+                            </div>
+                            <div class="preview-item">
+                                <label>Target Scope Classes</label>
+                                <span id="prevClasses">—</span>
+                            </div>
+                            <div class="preview-item">
+                                <label>Subjects Monitored</label>
+                                <span id="prevSubjectsCount">0 Subjects</span>
+                            </div>
+                            <div class="preview-item">
+                                <label>Chronological Framework</label>
+                                <span id="prevDates">—</span>
+                            </div>
+                            <div class="preview-item" style="margin-top: 5px;">
+                                <label>Status</label>
+                                <span class="preview-status" id="prevStatus">Draft</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-card">
+                        <div class="action-button-group">
+                            <button type="button" class="btn-erp btn-erp-danger" onclick="window.location.href='exam-dashboard.html'" style="flex: 1; justify-content: center;">Cancel</button>
+                            <button type="button" class="btn-erp btn-erp-secondary" onclick="resetWorkspaceForm()" style="flex: 1; justify-content: center;">Reset</button>
+                            <button type="button" class="btn-erp btn-erp-accent" onclick="saveFormStateAsDraft()" style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i> Save As Draft</button>
+                            <button type="submit" class="btn-erp btn-erp-primary" style="width: 100%; justify-content: center;"><i class="fa-solid fa-circle-check"></i> Save & Deploy Exam</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        &copy; 2026 R.S. Public School, Khutaha Bazar, Maharajganj. Powered by Enterprise Academic ERP Systems.
+    </footer>
+
+    <script>
+        // DOM Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            // Instantiate initial standard subject row
+            addSubjectRow();
+            setupRealtimePreviewHooks();
+        });
+
+        // Dynamic Subjects Configuration Logic Block
+        function addSubjectRow() {
+            const tbody = document.getElementById('subjectTableBody');
+            const rowCount = tbody.rows.length;
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td>
+                    <input type="text" class="sub-name" placeholder="e.g., Mathematics" oninput="updateLivePreview()" required>
+                </td>
+                <td>
+                    <input type="text" class="sub-code" placeholder="e.g., MATH101" oninput="updateLivePreview()" required>
+                </td>
+                <td>
+                    <input type="number" class="sub-max-marks" placeholder="100" min="1" oninput="updateLivePreview()" required>
+                </td>
+                <td>
+                    <input type="number" class="sub-min-marks" placeholder="33" min="0" oninput="updateLivePreview()" required>
+                </td>
+                <td style="text-align: center;">
+                    <button type="button" class="btn-delete-row" onclick="removeSubjectRow(this)" title="Remove Subject Row">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+            updateLivePreview();
+        }
+
+        function removeSubjectRow(button) {
+            const tbody = document.getElementById('subjectTableBody');
+            if (tbody.rows.length > 1) {
+                button.closest('tr').remove();
+                updateLivePreview();
+            } else {
+                alert("An operational examination configuration requires at least one evaluated syllabus subject profile.");
+            }
+        }
+
+        // Live Preview Hooks Registration
+        function setupRealtimePreviewHooks() {
+            const fields = ['examName', 'examType', 'examStartDate', 'examEndDate', 'examStatus'];
+            fields.forEach(id => {
+                document.getElementById(id).addEventListener('input', updateLivePreview);
+            });
+
+            // Set multi-select listeners
+            document.querySelectorAll('input[name="classSelection"]').forEach(el => {
+                el.addEventListener('change', updateLivePreview);
+            });
+        }
+
+        // Realtime Preview and Timeline Metrics Computations
+        function updateLivePreview() {
+            // Strings
+            document.getElementById('prevName').innerText = document.getElementById('examName').value || '—';
+            document.getElementById('prevType').innerText = document.getElementById('examType').value || '—';
+            document.getElementById('prevStatus').innerText = document.getElementById('examStatus').value;
+
+            // Date & Day Calculation Logic
+            const startVal = document.getElementById('examStartDate').value;
+            const endVal = document.getElementById('examEndDate').value;
+            const totalDaysDisplay = document.getElementById('totalExamDaysDisplay');
+            
+            if (startVal && endVal) {
+                const start = new Date(startVal);
+                const end = new Date(endVal);
+                const diffTime = end - start;
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                if (diffDays >= 1) {
+                    totalDaysDisplay.innerText = diffDays;
+                    document.getElementById('prevDates').innerText = `${startVal} to ${endVal} (${diffDays} Days)`;
+                } else {
+                    totalDaysDisplay.innerText = '0';
+                    document.getElementById('prevDates').innerText = 'Invalid range detected.';
+                }
+            } else {
+                totalDaysDisplay.innerText = '0';
+                document.getElementById('prevDates').innerText = '—';
+            }
+
+            // Target Class Arrays tracking
+            const selectedClasses = Array.from(document.querySelectorAll('input[name="classSelection"]:checked')).map(el => el.value);
+            document.getElementById('prevClasses').innerText = selectedClasses.length > 0 ? selectedClasses.join(', ') : '—';
+
+            // Dynamic Subject Rows tally
+            const rows = document.querySelectorAll('#subjectTableBody tr');
+            document.getElementById('prevSubjectsCount').innerText = `${rows.length} Subject(s) Listed`;
+        }
+
+        // Deep Validation Engine Pipeline 
+        function validateExamForm() {
+            let isValid = true;
+            
+            // Clean dynamic helper visibility states
+            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('input-error'));
+
+            // 1. Text Fields Validation
+            const requiredTextFields = ['examName', 'examCode', 'academicSession', 'examType'];
+            requiredTextFields.forEach(id => {
+                const input = document.getElementById(id);
+                if (!input.value.trim()) {
+                    document.getElementById(`err-${id}`).style.display = 'block';
+                    input.classList.add('input-error');
+                    isValid = false;
+                }
+            });
+
+            // 2. Multi-Select Dynamic Checkbox Configurations Validations
+            const checkedClasses = document.querySelectorAll('input[name="classSelection"]:checked');
+            if (checkedClasses.length === 0) {
+                document.getElementById('err-classSelection').style.display = 'block';
+                isValid = false;
+            }
+
+            const checkedSections = document.querySelectorAll('input[name="sectionSelection"]:checked');
+            if (checkedSections.length === 0) {
+                document.getElementById('err-sectionSelection').style.display = 'block';
+                isValid = false;
+            }
+
+            // 3. Chronology Context Date Checks
+            const startDateInput = document.getElementById('examStartDate');
+            const endDateInput = document.getElementById('examEndDate');
+            
+            if (!startDateInput.value) {
+                document.getElementById('err-examStartDate').style.display = 'block';
+                startDateInput.classList.add('input-error');
+                isValid = false;
+            }
+            if (!endDateInput.value) {
+                document.getElementById('err-examEndDate').style.display = 'block';
+                endDateInput.classList.add('input-error');
+                isValid = false;
+            } else if (startDateInput.value && new Date(endDateInput.value) < new Date(startDateInput.value)) {
+                document.getElementById('err-examEndDate').innerText = "End execution timestamp cannot chronological precede starting date.";
+                document.getElementById('err-examEndDate').style.display = 'block';
+                endDateInput.classList.add('input-error');
+                isValid = false;
+            }
+
+            // 4. Dynamic Matrix Subject Grid Verification Loops
+            const rows = document.querySelectorAll('#subjectTableBody tr');
+            const trackedSubjectCodes = new Set();
+            let subjectGridValid = true;
+
+            if(rows.length === 0) {
+                subjectGridValid = false;
+            }
+
+            rows.forEach(row => {
+                const nameInp = row.querySelector('.sub-name');
+                const codeInp = row.querySelector('.sub-code');
+                const maxInp = row.querySelector('.sub-max-marks');
+                const minInp = row.querySelector('.sub-min-marks');
+
+                if(!nameInp.value.trim() || !codeInp.value.trim() || !maxInp.value || !minInp.value) {
+                    subjectGridValid = false;
+                    if(!nameInp.value.trim()) nameInp.classList.add('input-error');
+                    if(!codeInp.value.trim()) codeInp.classList.add('input-error');
+                    if(!maxInp.value) maxInp.classList.add('input-error');
+                    if(!minInp.value) minInp.classList.add('input-error');
+                }
+
+                // Marks boundary constraints checks
+                if(Number(minInp.value) > Number(maxInp.value)) {
+                    subjectGridValid = false;
+                    minInp.classList.add('input-error');
+                }
+
+                // Code collision detection ruleset logic
+                const uniformCode = codeInp.value.trim().toUpperCase();
+                if(uniformCode) {
+                    if(trackedSubjectCodes.has(uniformCode)) {
+                        subjectGridValid = false;
+                        codeInp.classList.add('input-error');
+                    } else {
+                        trackedSubjectCodes.add(uniformCode);
+                    }
+                }
+            });
+
+            if(!subjectGridValid) {
+                document.getElementById('err-subjectTable').style.display = 'block';
+                isValid = false;
+            }
+
+            return isValid;
+        }
+
+        // Gather Payload Architecture mapping directly into RESTful Entity formats
+        function generateDataPayload() {
+            const subjectRows = document.querySelectorAll('#subjectTableBody tr');
+            const subjectsPayload = Array.from(subjectRows).map(row => ({
+                subjectName: row.querySelector('.sub-name').value.trim(),
+                subjectCode: row.querySelector('.sub-code').value.trim().toUpperCase(),
+                maximumMarks: Number(row.querySelector('.sub-max-marks').value),
+                minimumPassingMarks: Number(row.querySelector('.sub-min-marks').value)
+            }));
+
+            return {
+                examName: document.getElementById('examName').value.trim(),
+                examCode: document.getElementById('examCode').value.trim().toUpperCase(),
+                academicSession: document.getElementById('academicSession').value,
+                examType: document.getElementById('examType').value,
+                examStatus: document.getElementById('examStatus').value,
+                classSelection: Array.from(document.querySelectorAll('input[name="classSelection"]:checked')).map(el => el.value),
+                sectionSelection: Array.from(document.querySelectorAll('input[name="sectionSelection"]:checked')).map(el => el.value),
+                examStartDate: document.getElementById('examStartDate').value,
+                examEndDate: document.getElementById('examEndDate').value,
+                subjects: subjectsPayload,
+                automationRules: {
+                    enableAdmitCard: document.getElementById('ruleAdmitCard').checked,
+                    enableDeskSlip: document.getElementById('ruleDeskSlip').checked,
+                    enableSeatingArrangement: document.getElementById('ruleSeating').checked,
+                    enableTimetablePublication: document.getElementById('rulePublish').checked,
+                    enableSMSNotification: document.getElementById('ruleSMS').checked,
+                    enableParentNotification: document.getElementById('ruleParent').checked
+                },
+                textualSpecifications: {
+                    examInstructions: document.getElementById('examInstructions').value.trim(),
+                    studentGuidelines: document.getElementById('studentGuidelines').value.trim(),
+                    invigilatorNotes: document.getElementById('invigilatorNotes').value.trim()
+                }
+            };
+        }
+
+        // Active Submission Endpoint Strategy Pipeline handler
+        function handleFormSubmission(event) {
+            event.preventDefault();
+            
+            if(!validateExamForm()) {
+                // Focus context fallback logic pattern
+                const firstError = document.querySelector('.input-error');
+                if(firstError) firstError.focus();
+                return;
+            }
+
+            const apiPayload = generateDataPayload();
+            console.log("Ready Enterprise State JSON Payload Structure target for Node.js API pipeline mapping:", apiPayload);
+            
+            /* BACKEND CONNECTION SYNTAX EXAMPLE:
+               
+               fetch('/api/v1/examinations/create', {
+                   method: 'POST',
+                   headers: { 'Content-Type': 'application/json' },
+                   body: JSON.stringify(apiPayload)
+               })
+               .then(res => res.json())
+               .then(data => { window.location.href = 'exam-dashboard.html'; })
+               .catch(err => console.error(err));
+            */
+            
+            alert(`Success! Examination configuration profile [${apiPayload.examCode}] compilation completed. Structure logged to console workspace pipeline framework.`);
+        }
+
+        // Draft Operations Strategy Shortcut
+        function saveFormStateAsDraft() {
+            // Draft skips strict field enforcement validation structures
+            document.getElementById('examStatus').value = "Draft";
+            const currentPayload = generateDataPayload();
+            console.log("Saving entity state payload instance map into standard volatile LocalStorage database context:", currentPayload);
+            alert("Draft instance configurations saved in operational storage pipeline matrix state.");
+        }
+
+        // Reset workspace layout wrapper
+        function resetWorkspaceForm() {
+            if(confirm("Confirm action? This wipes all modifications in the current subject allocation tables and form structures.")) {
+                document.getElementById('examCreationForm').reset();
+                const tbody = document.getElementById('subjectTableBody');
+                tbody.innerHTML = '';
+                addSubjectRow();
+                updateLivePreview();
+            }
+        }
+    </script>
+</body>
+</html>

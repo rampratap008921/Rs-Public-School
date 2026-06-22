@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admit Card Generator (Landscape Matrix) - R.S. Public School ERP</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0B1F5B;
+            --accent-color: #D4A017;
+            --accent-hover: #B8860B;
+            --bg-color: #F4F6F9;
+            --card-bg: #FFFFFF;
+            --text-main: #1A2530;
+            --text-muted: #64748B;
+            --border-color: #CBD5E1;
+            --success-color: #10B981;
+            --error-color: #EF4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            --transition: all 0.2s ease-in-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header Component */
+        .erp-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .school-branding {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .school-logo {
+            background: white;
+            color: var(--primary-color);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            border: 2px solid var(--accent-color);
+        }
+
+        .school-info h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .school-info p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Workspace Structure */
+        .workspace-container {
+            max-width: 1700px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 25px;
+            flex: 1;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 5px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb i { color: var(--text-muted); font-size: 0.75rem; }
+
+        .page-header { margin-bottom: 25px; }
+        .page-header h2 { font-size: 1.75rem; color: var(--primary-color); font-weight: 700; }
+        .page-header p { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+
+        /* Structural Content Split View Split Panels */
+        .workspace-split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 25px;
+            align-items: start;
+        }
+
+        @media (max-width: 1400px) {
+            .workspace-split-layout { grid-template-columns: 1fr; }
+        }
+
+        .control-panel-stack { display: flex; flex-direction: column; gap: 25px; }
+
+        .enterprise-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 22px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-heading-legend {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #F1F5F9;
+            padding-bottom: 8px;
+        }
+
+        .card-heading-legend i { color: var(--accent-color); }
+
+        .grid-fields-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        @media (max-width: 480px) { .grid-fields-2 { grid-template-columns: 1fr; } }
+
+        .form-element-group { display: flex; flex-direction: column; gap: 5px; }
+        label { font-size: 0.85rem; font-weight: 500; color: var(--text-main); }
+        
+        select {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 0.9rem;
+            outline: none;
+            background: #FAFAFA;
+            transition: var(--transition);
+        }
+        select:focus { border-color: var(--primary-color); background: #FFF; }
+
+        /* Roster Tables View Selection */
+        .table-responsive-container {
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: white;
+            max-height: 220px;
+            overflow-y: auto;
+        }
+
+        .enterprise-data-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .enterprise-data-table th {
+            background-color: #F1F5F9;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .enterprise-data-table td { padding: 8px 12px; border-bottom: 1px solid #E2E8F0; }
+        .enterprise-data-table tbody tr:hover { background-color: #F8FAFC; }
+
+        .master-checkbox, .row-checkbox { width: 15px; height: 15px; accent-color: var(--primary-color); cursor: pointer; }
+
+        /* Checklist Toggles Switches visibility rules controls */
+        .checkbox-grid-layout { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .custom-checkbox-label { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer; user-select: none; }
+        .custom-checkbox-label input { width: 15px; height: 15px; accent-color: var(--primary-color); }
+
+        .bulk-actions-wrapper { display: flex; flex-wrap: wrap; gap: 8px; border-top: 1px dashed #E2E8F0; padding-top: 15px; margin-top: 15px; }
+
+        .btn-action-util {
+            background: #FFF;
+            border: 1px solid var(--border-color);
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+        }
+        .btn-action-util:hover { background: #F1F5F9; border-color: #94A3B8; }
+
+        /* Commands Triggers form executing control buttons array */
+        .action-button-group { display: flex; flex-wrap: wrap; gap: 8px; }
+        
+        .btn-erp {
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            flex: 1;
+            min-width: 100px;
+        }
+        .btn-erp-primary { background-color: var(--primary-color); color: white; }
+        .btn-erp-primary:hover { background-color: #15328F; }
+        .btn-erp-accent { background-color: var(--accent-color); color: var(--primary-color); }
+        .btn-erp-accent:hover { background-color: var(--accent-hover); color: white; }
+        .btn-erp-secondary { background-color: #E2E8F0; color: var(--text-main); }
+        .btn-erp-secondary:hover { background-color: #CBD5E1; }
+
+        .global-error-alert { color: var(--error-color); font-size: 0.8rem; font-weight: 500; margin-top: 10px; display: none; padding: 10px; background: #FEE2E2; border-radius: 4px; border-left: 4px solid var(--error-color); }
+
+        /* ========================================================
+           A4 LANDSCAPE VIEWPORT AND SIDE-BY-SIDE MATRIX LAYOUTS
+           ======================================================== */
+        .preview-pane-sticky-wrap { position: sticky; top: 20px; }
+        .preview-pane-header-toolbar { display: flex; justify-content: space-between; align-items: center; background: var(--primary-color); color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; }
+        .preview-pane-header-toolbar h3 { font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+
+        .a4-virtual-scroll-viewport {
+            background: #525659;
+            padding: 25px 15px;
+            border-radius: 0 0 8px 8px;
+            max-height: 840px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Virtual A4 Sheet Rendered explicitly in Landscape Scaling orientation bounds */
+        .a4-landscape-sheet-node {
+            background: #FFFFFF;
+            width: 297mm;
+            min-height: 210mm;
+            padding: 10mm;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+            color: #000000;
+        }
+
+        /* Twin Column Distribution side-by-side matrices logic grid layout */
+        .admit-cards-twin-landscape-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8mm; /* Gutters separating the two cards side-by-side */
+            width: 100%;
+        }
+
+        /* Absolute corporate formatted Admit card frame item design model */
+        .admit-card-landscape-frame {
+            border: 2px solid #000000;
+            padding: 14px;
+            background: #FFFFFF;
+            box-sizing: border-box;
+            height: 190mm; /* Maximum usable safety layout height inside landscape bounds */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+
+        /* Internal sub components elements structures branding line */
+        .card-header-branding-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 6px;
+            margin-bottom: 8px;
+        }
+        .header-crest-logo-box { width: 42px; height: 42px; border: 1px solid #000; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 12pt; }
+        .header-title-address-text { text-align: center; flex: 1; }
+        .header-title-address-text h4 { font-size: 12pt; font-weight: 700; color: #000; letter-spacing: 0.5px; line-height: 1.2; }
+        .header-title-address-text p { font-size: 8pt; color: #222; font-weight: 500; }
+
+        .document-title-banner-tag {
+            font-size: 9pt; font-weight: 700; background: #000000; color: #FFFFFF; text-align: center;
+            padding: 2px 0; margin: 4px 0 10px 0; text-transform: uppercase; letter-spacing: 0.5px;
+            -webkit-print-color-adjust: exact; print-color-adjust: exact;
+        }
+
+        /* Split data columns profiles grids lists views components */
+        .profile-data-layout-columns { display: flex; gap: 12px; margin-bottom: 10px; align-items: flex-start; }
+        .profile-fields-data-table { width: 100%; border-collapse: collapse; }
+        .profile-fields-data-table td { padding: 3px 0; font-size: 8.5pt; vertical-align: top; color: #000; }
+        .profile-fields-data-table td.lbl { font-weight: 600; width: 38%; white-space: nowrap; }
+
+        .student-photo-box-node {
+            width: 26mm; height: 32mm; border: 1.5px dashed #000000;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 7pt; font-weight: 500; color: #333; background: #FAFAFA;
+            box-sizing: border-box; overflow: hidden;
+        }
+        .student-photo-box-node img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Timetable core component data matrices layout grids list block */
+        .timetable-matrix-data-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+        .timetable-matrix-data-table th, .timetable-matrix-data-table td { border: 1px solid #000000; padding: 4px 6px; font-size: 8pt; text-align: left; }
+        .timetable-matrix-data-table th { background: #E2E8F0; font-weight: 600; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+        /* Rules instructions lists textual components strings */
+        .instructions-text-block-area { border-top: 1px dashed #000; padding-top: 6px; margin-bottom: 10px; }
+        .instructions-text-block-area h5 { font-size: 8pt; font-weight: 600; margin-bottom: 2px; text-transform: uppercase; }
+        .instructions-text-block-area ul { padding-left: 12px; font-size: 7.5pt; line-height: 1.3; color: #111; }
+
+        /* Integrated multi axis verification signature line block mapping */
+        .signatures-matrix-layout-row { display: flex; justify-content: space-between; align-items: flex-end; padding-top: 15px; }
+        .signature-vector-item-box { display: flex; flex-direction: column; align-items: center; width: 30%; text-align: center; }
+        .signature-vector-item-box span { font-size: 7.5pt; font-weight: 600; border-top: 1px solid #000000; width: 100%; padding-top: 3px; display: block; margin-top: 4px; }
+        .school-seal-circle-placeholder { width: 45px; height: 45px; border: 1px dashed #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 6pt; font-weight: 500; color: #444; text-transform: uppercase; text-align: center; line-height: 1.1; }
+
+        footer { background: var(--primary-color); color: rgba(255, 255, 255, 0.7); text-align: center; padding: 16px; font-size: 0.85rem; border-top: 3px solid var(--accent-color); margin-top: 50px; }
+
+        /* ========================================================
+           COMPREHENSIVE PRINT OVERRIDES FOR A4 LANDSCAPE OUTPUT
+           ======================================================== */
+        @media print {
+            body * { visibility: hidden; }
+            .a4-virtual-scroll-viewport, .a4-virtual-scroll-viewport *, .a4-landscape-sheet-node, .a4-landscape-sheet-node * { visibility: visible; }
+            body, html { background: #FFFFFF !important; padding: 0 !important; margin: 0 !important; width: 297mm !important; height: 210mm !important; }
+            .erp-header, .workspace-container header, .breadcrumb, .control-panel-stack, .preview-pane-header-toolbar, footer { display: none !important; }
+            .workspace-container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; width: 100% !important; }
+            .workspace-split-layout { display: block !important; width: 100% !important; }
+            .preview-pane-sticky-wrap { position: static !important; width: 100% !important; }
+            .a4-virtual-scroll-viewport { background: transparent !important; box-shadow: none !important; overflow: visible !important; max-height: none !important; padding: 0 !important; margin: 0 !important; display: block !important; }
+            .a4-landscape-sheet-node { box-shadow: none !important; margin: 0 !important; padding: 10mm !important; page-break-after: always !important; width: 297mm !important; min-height: 210mm !important; height: 210mm !important; box-sizing: border-box !important; }
+            .admit-card-landscape-frame { page-break-inside: avoid !important; }
+            @page { size: landscape; margin: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="erp-header">
+        <div class="school-branding">
+            <div class="school-logo">RS</div>
+            <div class="school-info">
+                <h1>R.S. PUBLIC SCHOOL</h1>
+                <p><i class="fa-solid fa-location-dot"></i> Khutaha Bazar, Maharajganj</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="workspace-container">
+        
+        <nav class="breadcrumb">
+            <a href="exam-dashboard.html">Dashboard</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <a href="#">Examination Management</a>
+            <i class="fa-solid fa-chevron-right"></i>
+            <span>Admit Card Generator Workspace</span>
+        </nav>
+        
+        <header class="page-header">
+            <h2>Admit Card Generator</h2>
+            <p>Deploy side-by-side twin column landscape credential items optimizing dual cards print distribution configurations.</p>
+        </header>
+
+        <div class="workspace-split-layout">
+            
+            <div class="control-panel-stack">
+                
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-filter-list"></i> Query Constraints Parameters</div>
+                    <div class="grid-fields-2" style="margin-bottom:12px;">
+                        <div class="form-element-group">
+                            <label for="academicSession">Academic Session</label>
+                            <select id="academicSession">
+                                <option value="2025-2026">2025-2026</option>
+                                <option value="2026-2027" selected>2026-2027</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="examId">Select Examination *</label>
+                            <select id="examId" onchange="synchronizeLandscapePrintLayoutEngine()">
+                                <option value="Half Yearly Examination" selected>Half Yearly Examination</option>
+                                <option value="Annual Examination">Annual Examination</option>
+                                <option value="Unit Test 1">Unit Test 1</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="className">Select Class *</label>
+                            <select id="className" onchange="executeAsynchronousRosterFetchQuery()">
+                                <option value="" disabled selected>Select Class</option>
+                                <option value="Class 6">Class 6</option>
+                                <option value="Class 7">Class 7</option>
+                                <option value="Class 8">Class 8</option>
+                                <option value="Class 9">Class 9</option>
+                                <option value="Class 10">Class 10</option>
+                            </select>
+                        </div>
+                        <div class="form-element-group">
+                            <label for="sectionName">Select Section *</label>
+                            <select id="sectionName" onchange="executeAsynchronousRosterFetchQuery()">
+                                <option value="" disabled selected>Select Section</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-element-group" style="margin-bottom:15px;">
+                        <label for="generateType">Compilation Target Scope Mode</label>
+                        <select id="generateType" onchange="synchronizeLandscapePrintLayoutEngine()">
+                            <option value="Entire Class" selected>Entire Loaded Class List</option>
+                            <option value="Selected Students">Selected Checkbox Row Nodes Only</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn-erp btn-erp-primary" style="width:100%;" onclick="executeAsynchronousRosterFetchQuery()"><i class="fa-solid fa-database-arrow-down"></i> Mount Candidates Database Roster</button>
+                </fieldset>
+
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-address-book"></i> Student Candidate Selection Matrix</div>
+                    <div class="table-responsive-container">
+                        <table class="enterprise-data-table" id="rosterSelectionGridTableComponent">
+                            <thead>
+                                <tr>
+                                    <th style="width:40px; text-align:center;"><input type="checkbox" class="master-checkbox" id="masterGridCheckboxToggler" onclick="toggleMasterGridCheckboxSelection(this)"></th>
+                                    <th>Admission No</th>
+                                    <th>Roll No</th>
+                                    <th>Student Name</th>
+                                    <th>Father Name</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rosterTableContainerBodyNode">
+                                <tr>
+                                    <td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Mount class scope parameters filters definitions and trigger search routines.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bulk-actions-wrapper">
+                        <button type="button" class="btn-action-util" onclick="executeBatchGenerationTriggerState(true)"><i class="fa-solid fa-id-card-clip"></i> Generate Selected</button>
+                        <button type="button" class="btn-action-util" onclick="executeBatchGenerationTriggerState(false)"><i class="fa-solid fa-trash-can"></i> Flush Cache Cards</button>
+                    </div>
+                    <div class="global-error-alert" id="engineAlertFaultBoxComponent"></div>
+                </fieldset>
+
+                <fieldset class="enterprise-card">
+                    <div class="card-heading-legend"><i class="fa-solid fa-sliders"></i> Print Layout Settings (A4 Landscape)</div>
+                    <div style="font-size:0.82rem; font-weight:600; color:var(--text-muted); margin-bottom:12px; background:#F1F5F9; padding:8px; border-radius:4px;">
+                        <i class="fa-solid fa-circle-info" style="color:var(--primary-color);"></i> Hardware Target Setup: Multi-matrix configured to render 2 side-by-side admit cards horizontally per sheet.
+                    </div>
+                    <div class="checkbox-grid-layout">
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskLogo" checked onchange="synchronizeLandscapePrintLayoutEngine()"> Institutional Logo Crest</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskPhoto" checked onchange="synchronizeLandscapePrintLayoutEngine()"> Candidate Photo Frame</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskTimetable" checked onchange="synchronizeLandscapePrintLayoutEngine()"> Scheduled Timetable Subgrid</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskInstructions" checked onchange="synchronizeLandscapePrintLayoutEngine()"> General Code Instructions</label>
+                        <label class="custom-checkbox-label"><input type="checkbox" id="maskSignatures" checked onchange="synchronizeLandscapePrintLayoutEngine()"> Verification Signatures Block</label>
+                    </div>
+                </fieldset>
+
+                <div class="enterprise-card">
+                    <div class="action-button-group">
+                        <button type="button" class="btn-erp btn-erp-secondary" onclick="resetFormWorkspaceStateTrackers()"><i class="fa-solid fa-arrow-rotate-left"></i> Reset</button>
+                        <button type="button" class="btn-erp btn-erp-accent" onclick="window.print()"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+                        <button type="button" class="btn-erp btn-erp-primary" style="width:100%; margin-top:4px;" onclick="window.print()"><i class="fa-solid fa-print"></i> Dispatch Print Command Pipeline</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="preview-pane-sticky-wrap">
+                <div class="preview-pane-header-toolbar">
+                    <h3><i class="fa-solid fa-desktop"></i> Real-time Virtual Canvas Output Landscape (A4 View)</h3>
+                    <span style="font-size:0.8rem; font-weight:600; opacity:0.9;" id="pageCountIndicatorBadge">0 Sheet(s) Compiled</span>
+                </div>
+                
+                <div class="a4-virtual-scroll-viewport" id="virtualA4SheetsCanvasScrollContainer">
+                    
+                    <div class="a4-landscape-sheet-node">
+                        <div style="text-align:center; color:var(--text-muted); padding-top:90px; font-size:0.9rem;">
+                            <i class="fa-solid fa-table-columns" style="font-size:2.6rem; display:block; margin-bottom:12px; opacity:0.4;"></i>
+                            Configure parameters variables fields filters and pull student roster maps database records to populate twin landscape sheets.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+        &copy; 2026 R.S. Public School, Khutaha Bazar, Maharajganj. Powered by Enterprise Academic ERP Systems.
+    </footer>
+
+    <script>
+        // High Performance Mock Data Layer matching student registries entity profiles arrays
+        const structuralMockDatabaseRosterMatrixMap = {
+            "Class 7-A": [
+                { studentId: "ST-701", admissionNo: "RS-2021-094", rollNo: "01", studentName: "Ram Pratap Prajapati", fatherName: "S. Prajapati" },
+                { studentId: "ST-702", admissionNo: "RS-2021-105", rollNo: "02", studentName: "Aditya Narayan Mani", fatherName: "K. Mani" },
+                { studentId: "ST-703", admissionNo: "RS-2022-412", studentName: "Ananya Mishra", fatherName: "V. Mishra" },
+                { studentId: "ST-704", admissionNo: "RS-2021-318", studentName: "Deepak Kumar Sahani", fatherName: "M. Sahani" },
+                { studentId: "ST-705", admissionNo: "RS-2023-019", studentName: "Divya Prakash Vishwakarma", fatherName: "B. Vishwakarma" }
+            ],
+            "Class 10-B": [
+                { studentId: "ST-101", admissionNo: "RS-2018-002", studentName: "Aman Kumar Gupta", fatherName: "J. Gupta" },
+                { studentId: "ST-102", admissionNo: "RS-2018-054", studentName: "Kriti Kumari Serwani", fatherName: "L. Serwani" }
+            ]
+        };
+
+        // Linked structural timetabled exam records matrices acting as core tracking profiles components
+        const localizedSharedMockTimetableScheduleMatrixMap = [
+            { subject: "Mathematics", code: "MATH-7", date: "2026-09-12", day: "Saturday", time: "09:00 AM - 12:00 PM" },
+            { subject: "English Language", code: "ENG-7", date: "2026-09-14", day: "Monday", time: "09:00 AM - 12:00 PM" },
+            { subject: "General Science", code: "SCI-7", date: "2026-09-16", day: "Wednesday", time: "09:00 AM - 12:00 PM" },
+            { subject: "Social Studies", code: "SST-7", date: "2026-09-18", day: "Friday", time: "09:00 AM - 12:00 PM" }
+        ];
+
+        let loadedRosterMemoryThreadBuffer = [];
+
+        // Asynchronous structural database pipeline simulator hooks
+        function executeAsynchronousRosterFetchQuery() {
+            const cls = document.getElementById("className").value;
+            const sec = document.getElementById("sectionName").value;
+            const tbody = document.getElementById("rosterTableContainerBodyNode");
+
+            if(!cls || !sec) {
+                return; // Gracefully halt execution routines pending complete scoping context definitions locks
+            }
+
+            const searchLookupKey = `${cls}-${sec}`;
+            const queryResponseArray = structuralMockDatabaseRosterMatrixMap[searchLookupKey] || [];
+
+            // Execute deep copy duplication into active thread storage structures arrays matrices logs
+            loadedRosterMemoryThreadBuffer = JSON.parse(JSON.stringify(queryResponseArray));
+
+            if(loadedRosterMemoryThreadBuffer.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:15px;">No structural registries match chosen focus parameters inputs.</td></tr>`;
+                synchronizeLandscapePrintLayoutEngine();
+                return;
+            }
+
+            tbody.innerHTML = "";
+            loadedRosterMemoryThreadBuffer.forEach((student, indexId) => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                    <td style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${student.studentId}" data-index="${indexId}" checked onchange="evaluateMasterGridCheckboxStateCheck(); synchronizeLandscapePrintLayoutEngine();"></td>
+                    <td><strong>${student.admissionNo}</strong></td>
+                    <td>${student.rollNo || (indexId+1).toString().padStart(2, '0')}</td>
+                    <td style="font-weight:600; color:var(--primary-color);">${student.studentName}</td>
+                    <td>${student.fatherName}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById("masterGridCheckboxToggler").checked = true;
+            synchronizeLandscapePrintLayoutEngine();
+        }
+
+        function executeBatchGenerationTriggerState(stateFlag) {
+            const targetCheckboxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox");
+            targetCheckboxes.forEach(box => box.checked = stateFlag);
+            document.getElementById("masterGridCheckboxToggler").checked = stateFlag;
+            synchronizeLandscapePrintLayoutEngine();
+        }
+
+        function toggleMasterGridCheckboxSelection(masterToggleDOMElementReference) {
+            const state = masterToggleDOMElementReference.checked;
+            document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox").forEach(box => box.checked = state);
+            synchronizeLandscapePrintLayoutEngine();
+        }
+
+        function evaluateMasterGridCheckboxStateCheck() {
+            const masterCheck = document.getElementById("masterGridCheckboxToggler");
+            const totalBoxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox");
+            const checkedBoxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox:checked");
+
+            if(totalBoxes.length > 0 && totalBoxes.length === checkedBoxes.length) {
+                masterCheck.checked = true;
+            } else {
+                masterCheck.checked = false;
+            }
+        }
+
+        // ========================================================
+        // TWIN LANDSCAPE A4 PRINT ENGINE COMPILED CONFIGURATIONS
+        // ========================================================
+        function synchronizeLandscapePrintLayoutEngine() {
+            const canvasScrollContainer = document.getElementById("virtualA4SheetsCanvasScrollContainer");
+            canvasScrollContainer.innerHTML = ""; // Clear active rendering layers tracks nodes lines
+
+            const contextCompilationScopeModeFlagText = document.getElementById("generateType").value;
+            let filteredActiveCandidatesRosterProcessingArray = [];
+
+            if(contextCompilationScopeModeFlagText === "Entire Class") {
+                filteredActiveCandidatesRosterProcessingArray = loadedRosterMemoryThreadBuffer;
+            } else {
+                const checkedBoxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox:checked");
+                checkedBoxes.forEach(box => {
+                    const idx = parseInt(box.dataset.index);
+                    if(!isNaN(idx) && loadedRosterMemoryThreadBuffer[idx]) {
+                        filteredActiveCandidatesRosterProcessingArray.push(loadedRosterMemoryThreadBuffer[idx]);
+                    }
+                });
+            }
+
+            if(filteredActiveCandidatesRosterProcessingArray.length === 0) {
+                canvasScrollContainer.innerHTML = `
+                    <div class="a4-landscape-sheet-node">
+                        <div style="text-align:center; color:var(--text-muted); padding-top:90px; font-size:0.9rem;">
+                            <i class="fa-solid fa-folder-closed" style="font-size:2.6rem; display:block; margin-bottom:12px; opacity:0.4;"></i>
+                            Operational Print Queue Vacant: Adjust query parameter drop downs values or check individual student entry boxes.
+                        </div>
+                    </div>`;
+                document.getElementById("pageCountIndicatorBadge").innerText = "0 Sheet(s) Compiled";
+                return;
+            }
+
+            // Extract visibility mask configuration properties switches variables fields state flags
+            const showLogo = document.getElementById("maskLogo").checked;
+            const showPhoto = document.getElementById("maskPhoto").checked;
+            const showTable = document.getElementById("maskTimetable").checked;
+            const showInst = document.getElementById("maskInstructions").checked;
+            const showSign = document.getElementById("maskSignatures").checked;
+
+            const targetSelectedExamLabelText = document.getElementById("examId").value;
+            const chosenClassNameTextValue = document.getElementById("className").value || "—";
+            const chosenSectionNameTextValue = document.getElementById("sectionName").value || "—";
+
+            let currentSheetNodeInstanceElement = null;
+            let currentSheetTwinGridContainerNode = null;
+            let calculatedPageSheetsCounter = 0;
+
+            filteredActiveCandidatesRosterProcessingArray.forEach((student, indexTrackLoopId) => {
+                
+                // Orchestrate double card horizontal landscape split sheet pagination bounds parameters rules
+                if(indexTrackLoopId % 2 === 0) {
+                    calculatedPageSheetsCounter++;
+
+                    currentSheetNodeInstanceElement = document.createElement("div");
+                    currentSheetNodeInstanceElement.className = "a4-landscape-sheet-node";
+
+                    currentSheetTwinGridContainerNode = document.createElement("div");
+                    currentSheetTwinGridContainerNode.className = "admit-cards-twin-landscape-grid";
+
+                    currentSheetNodeInstanceElement.appendChild(currentSheetTwinGridContainerNode);
+                    canvasScrollContainer.appendChild(currentSheetNodeInstanceElement);
+                }
+
+                // Construct component frame node item structures
+                const cardFrameDOMNodeItem = document.createElement("div");
+                cardFrameDOMNodeItem.className = "admit-card-landscape-frame";
+
+                // Sub structural layout mappings values parameters rules definitions
+                let logoMarkMarkupStr = showLogo ? `<div class="header-crest-logo-box">RS</div>` : `<div style="width:42px;"></div>`;
+                let photoNodeMarkupStr = showPhoto ? `
+                    <div class="student-photo-box-node">
+                        <img src="https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.studentName)}" alt="Candidate Photo">
+                    </div>` : '';
+
+                // Timetable array rendering matrix loop codes block items
+                let timetableRowsMarkupStr = "";
+                if(showTable) {
+                    localizedSharedMockTimetableScheduleMatrixMap.forEach(item => {
+                        timetableRowsMarkupStr += `<tr><td><strong>${item.subject}</strong></td><td>${item.date}</td><td>${item.day}</td><td>${item.time}</td></tr>`;
+                    });
+                }
+
+                let timetableBlockMarkupStr = showTable ? `
+                    <table class="timetable-matrix-data-table">
+                        <thead>
+                            <tr><th>Subject Paper</th><th>Exam Date</th><th>Day</th><th>Timing Window</th></tr>
+                        </thead>
+                        <tbody>
+                            ${timetableRowsMarkupStr}
+                        </tbody>
+                    </table>` : '';
+
+                let instructionsBlockMarkupStr = showInst ? `
+                    <div class="instructions-text-block-area">
+                        <h5>Instructions for Centre Candidates:</h5>
+                        <ul>
+                            <li>Candidates must present this credential node at designated check lines.</li>
+                            <li>Report to your allocated centre row exactly 30 minutes before verification start parameters.</li>
+                            <li>Smart wear electronic watch bands, mobile terminals, and compute chips are strictly prohibited inside halls.</li>
+                            <li>Wearing verified full institutional school uniform configurations is compulsory for entry parameters.</li>
+                        </ul>
+                    </div>` : '';
+
+                let signaturesBlockMarkupStr = showSign ? `
+                    <div class="signatures-matrix-layout-row">
+                        <div class="signature-vector-item-box"><span>Student Signature</span></div>
+                        <div class="signature-vector-item-box"><span>Invigilator Signature</span></div>
+                        <div class="signature-vector-item-box" style="align-items:center;">
+                            <div class="school-seal-circle-placeholder">School Seal</div>
+                            <span style="border-top:1px solid #000; width:100%; text-align:center; margin-top:2px; display:block;">Principal Authority Signature</span>
+                        </div>
+                    </div>` : '';
+
+                cardFrameDOMNodeItem.innerHTML = `
+                    <div>
+                        <div class="card-header-branding-block">
+                            ${logoMarkMarkupStr}
+                            <div class="header-title-address-text">
+                                <h4>R.S. PUBLIC SCHOOL</h4>
+                                <p>Khutaha Bazar, Maharajganj, Uttar Pradesh</p>
+                            </div>
+                            <div style="width:42px;"></div>
+                        </div>
+                        <div class="document-title-banner-tag">${targetSelectedExamLabelText || 'EXAMINATION ADMIT CARD'}</div>
+                        
+                        <div class="profile-data-layout-columns">
+                            <table class="profile-fields-data-table">
+                                <tbody>
+                                    <tr><td class="lbl">Admission No:</td><td><strong>${student.admissionNo}</strong></td><td class="lbl">Roll Number:</td><td><strong>${student.rollNo || (indexTrackLoopId+1).toString().padStart(2, '0')}</strong></td></tr>
+                                    <tr><td class="lbl">Student Name:</td><td style="font-weight:700; text-transform:uppercase;">${student.studentName}</td><td class="lbl">Grade Class:</td><td>${chosenClassNameTextValue} (${chosenSectionNameTextValue})</td></tr>
+                                    <tr><td class="lbl">Father Name:</td><td>${student.fatherName}</td><td class="lbl">Academic Session:</td><td>2026-2027</td></tr>
+                                </tbody>
+                            </table>
+                            ${photoNodeMarkupStr}
+                        </div>
+                        
+                        ${timetableBlockMarkupStr}
+                        ${instructionsBlockMarkupStr}
+                    </div>
+                    <div>
+                        ${signaturesBlockMarkupStr}
+                    </div>
+                `;
+
+                currentSheetTwinGridContainerNode.appendChild(cardFrameDOMNodeItem);
+            });
+
+            document.getElementById("pageCountIndicatorBadge").innerText = `${calculatedPageSheetsCounter} Sheet(s) Compiled`;
+        }
+
+        // Wipe and restore form variables properties metrics parameter maps trackers contexts
+        function resetFormWorkspaceStateTrackers() {
+            if(confirm("Destructive Action Confirmation: Wiping worksheet elements maps will clear current rows memory cache thread arrays.")) {
+                document.getElementById("className").value = "";
+                document.getElementById("sectionName").value = "";
+                document.getElementById("generateType").value = "Entire Class";
+                document.getElementById("rosterTableContainerBodyNode").innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:20px;">Mount class scope parameters filters definitions and trigger search routines.</td></tr>`;
+                document.getElementById("masterGridCheckboxToggler").checked = false;
+
+                loadedRosterMemoryThreadBuffer = [];
+                synchronizeLandscapePrintLayoutEngine();
+            }
+        }
+    </script>
+</body>
+</html>

@@ -737,9 +737,6 @@
                         <option value="Female">Female</option>
                     </select>
                 </div>
-                <button type="button" class="btn-filter-reset" id="btnResetFilters">
-                    <i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters
-                </button>
             </div>
         </section>
 
@@ -784,55 +781,7 @@
     </div>
 
     <!-- MODAL POPUP: VIEW PROFILE DETAILS -->
-    <div class="modal-overlay" id="viewModal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3 id="v-title-name">Student Academic Portfolio</h3>
-                <button type="button" class="btn-modal-close" onclick="closeModal('viewModal')"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="modal-body">
-                <div class="view-profile-layout">
-                    <div class="profile-photo-wrap">
-                        <img src="" alt="Student Profile Big" class="profile-big-avatar" id="v-photo">
-                    </div>
-                    <div class="profile-sections">
-                        <div class="p-block">
-                            <h4>Admission Configurations</h4>
-                            <div class="p-grid">
-                                <div class="p-item"><span>Admission No:</span><span id="v-admission" style="font-weight:400;color:inherit;width:auto"></span></div>
-                                <div class="p-item"><span>Current Status:</span><span id="v-status" style="font-weight:400;color:inherit;width:auto"></span></div>
-                            </div>
-                        </div>
-                        <div class="p-block">
-                            <h4>Academic Profile</h4>
-                            <div class="p-grid">
-                                <div class="p-item"><span>Class:</span><span id="v-class" style="font-weight:400;color:inherit;width:auto"></span></div>
-                                <div class="p-item"><span>Section Lane:</span><span id="v-section" style="font-weight:400;color:inherit;width:auto"></span></div>
-                                <div class="p-item"><span>Roll Sequence:</span><span id="v-roll" style="font-weight:400;color:inherit;width:auto"></span></div>
-                                <div class="p-item"><span>Gender Identity:</span><span id="v-gender" style="font-weight:400;color:inherit;width:auto"></span></div>
-                            </div>
-                        </div>
-                        <div class="p-block">
-                            <h4>Parental Affiliations</h4>
-                            <div class="p-grid">
-                                <div class="p-item"><span>Father Name:</span><span id="v-father" style="font-weight:400;color:inherit;width:auto"></span></div>
-                                <div class="p-item"><span>Mobile Line:</span><span id="v-mobile" style="font-weight:400;color:inherit;width:auto"></span></div>
-                            </div>
-                        </div>
-                        <div class="p-block">
-                            <h4>Contact Mapping</h4>
-                            <div class="p-grid" style="grid-template-columns: 1fr;">
-                                <div class="p-item"><span>Correspondence:</span><span id="v-address" style="font-weight:400;color:inherit;width:auto"></span></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer-btns">
-                <button type="button" class="btn-flat" onclick="closeModal('viewModal')">Close Viewport</button>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- MODAL POPUP: REMOVE CONFIRMATION ARCHIVE -->
     <div class="modal-overlay" id="deleteModal">
@@ -885,7 +834,15 @@
         const result = await response.json();
 
         if(result.success){
-
+                console.log(result.data);
+                console.log("API DATA =", result.data);
+                result.data.forEach(student => {
+                console.log(
+                    student.admission_no,
+                    "PHOTO DB =",
+                    student.photo
+                );
+            });
             studentDataStore = result.data.map(student => ({
 
                 id: student.id,
@@ -898,8 +855,8 @@
                 fatherName: student.father_name,
                 mobile: student.mobile,
                 status: "Active",
-                address: student.address
-
+                address: student.address,
+                photo: student.photo
             }));
 
             compileRenderEngine();
@@ -1011,9 +968,22 @@
                     : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>";
 
                 const statusClass = item.status === "Active" ? "badge-active" : "badge-inactive";
-
+                console.log("PHOTO =", item.photo);
+                                    console.log(
+                        "IMAGE URL =",
+                        item.photo
+                            ? `http://localhost:5000${item.photo}`
+                            : "NO PHOTO"
+                    );
+                console.log("ITEM =", item);
                 tr.innerHTML = `
-                    <td><img src="${mockAvatarSrc}" alt="Avatar" class="student-avatar"></td>
+                    <td>
+                        <img
+                            src="${item.photo ? `http://localhost:5000${item.photo}` : mockAvatarSrc}"
+                            alt="Student Photo"
+                            class="student-avatar"
+                        >
+                    </td>
                     <td style="font-weight:600;color:var(--primary);">${item.admissionNo}</td>
                     <td style="font-weight:500;">${item.name}</td>
                     <td>${item.rollNo}</td>
@@ -1024,7 +994,11 @@
                     <td>${item.mobile}</td>
                     <td><span class="badge ${statusClass}">${item.status}</span></td>
                     <td class="actions-cell">
-                        <button type="button" class="btn-act" title="View Profile" onclick="fireViewProfileModal(${item.id})"><i class="fa-solid fa-eye"></i></button>
+                        <a href="student-profile.html?id=${item.id}"
+                            class="btn-act"
+                            title="View Profile">
+                                <i class="fa-solid fa-eye"></i>
+                         </a>
                         <a href="edit-student.html?id=${item.id}" class="btn-act" title="Edit Student"><i class="fa-solid fa-pen-to-square"></i></a>
                         <a href="student-id-card.html?id=${item.id}" class="btn-act" title="Print Identity Badge"><i class="fa-solid fa-id-card"></i></a>
                         <button type="button" class="btn-act btn-act-delete" title="Remove Profile" onclick="fireDeleteModalTrigger(${item.id}, '${item.name}', '${item.admissionNo}')"><i class="fa-solid fa-trash-can"></i></button>
@@ -1101,30 +1075,6 @@
         }
 
         // --- MODAL LAYER LOGICAL DISPATCHERS ---
-        function fireViewProfileModal(id) {
-            const record = studentDataStore.find(s => s.id === id);
-            if(!record) return;
-
-            document.getElementById('v-title-name').innerText = `Academic Portfolio: ${record.name}`;
-            document.getElementById('v-admission').innerText = record.admissionNo;
-            document.getElementById('v-status').innerText = record.status;
-            document.getElementById('v-class').innerText = `Class ${record.class}`;
-            document.getElementById('v-section').innerText = `Section ${record.section}`;
-            document.getElementById('v-roll').innerText = record.rollNo;
-            document.getElementById('v-gender').innerText = record.gender;
-            document.getElementById('v-father').innerText = record.fatherName;
-            document.getElementById('v-mobile').innerText = record.mobile;
-            document.getElementById('v-address').innerText = record.address;
-
-            // Avatar Display
-            const defaultAvatarSrc = record.gender === "Male" 
-                ? "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230b1f5b'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>"
-                : "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ec4899'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5-4-8-4z'/></svg>";
-            
-            document.getElementById('v-photo').setAttribute('src', defaultAvatarSrc);
-
-            openModal('viewModal');
-        }
 
         function fireDeleteModalTrigger(id, labelName, codeAdmission) {
             selectedStudentIdForDeletion = id;

@@ -111,9 +111,7 @@
             max-width: 1440px;
             margin: 0 auto;
             padding: 24px;
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            gap: 24px;
+            display: block;
         }
 
         /* --- BREADCRUMBS --- */
@@ -615,7 +613,7 @@
 
     <header class="sticky-header">
         <div class="header-brand">
-            <img src="rslogo.png" alt="R.S. Public School" class="school-logo" onerror="this.style.display='none';">
+            <img src="rslogo.png.png" alt="R.S. Public School" class="school-logo" onerror="this.style.display='none';">
             <div class="header-title">
                 <h1>R.S. Public School</h1>
                 <p>ERP Admin Panel &bull; Portal Engine</p>
@@ -636,18 +634,7 @@
             <span>Add Student</span>
         </nav>
 
-        <aside class="sidebar-panel">
-            <h3 class="sidebar-title">Quick Operational Actions</h3>
-            <ul class="sidebar-menu">
-                <li><a href="add-student.html" class="sidebar-link active"><i class="fa-solid fa-user-plus"></i> Add Student</a></li>
-                <li><a href="student-list.html" class="sidebar-link"><i class="fa-solid fa-address-book"></i> Student List</a></li>
-                <li><a href="student-profile.html" class="sidebar-link"><i class="fa-solid fa-id-card-clip"></i> Student Profile</a></li>
-                <li><a href="student-id-card.html" class="sidebar-link"><i class="fa-solid fa-id-badge"></i> Student ID Card</a></li>
-                <li><a href="promote-student.html" class="sidebar-link"><i class="fa-solid fa-angles-up"></i> Promote Student</a></li>
-            </ul>
-        </aside>
-
-        <main class="form-container">
+            <main class="form-container">
             <form id="addStudentForm" class="form-master-card" novalidate>
                 
                 <section class="form-section">
@@ -657,17 +644,17 @@
                     </div>
                     <div class="inputs-grid">
                         <div class="form-group">
-                            <label for="admissionNumber">Admission Number <span class="required">*</span></label>
+                            <label for="admissionNumber">Admission Number</label>
                             <div class="input-inline-action">
-                                <input type="text" id="admissionNumber" class="form-control" placeholder="e.g. RS-2026-001" required>
+                                <input type="text" id="admissionNumber" class="form-control" placeholder="e.g. RS-2026-001">
                                 <button type="button" class="btn-inline" id="btnAutoGenerate">Auto Gen</button>
                             </div>
-                            <span class="error-message" id="err-admissionNumber">Admission ID required.</span>
+                            <span class="error-message" id="err-admissionNumber"></span>
                         </div>
                         <div class="form-group">
-                            <label for="admissionDate">Admission Date <span class="required">*</span></label>
-                            <input type="date" id="admissionDate" class="form-control" required>
-                            <span class="error-message" id="err-admissionDate">Select an admission entry date.</span>
+                            <label for="admissionDate">Admission Date </label>
+                            <input type="date" id="admissionDate" class="form-control">
+                            <span class="error-message" id="err-admissionDate"></span>
                         </div>
                         <div class="form-group">
                             <label for="studentName">Student Full Name <span class="required">*</span></label>
@@ -685,9 +672,9 @@
                             <span class="error-message" id="err-gender">Please select a biological gender.</span>
                         </div>
                         <div class="form-group">
-                            <label for="dob">Date of Birth <span class="required">*</span></label>
-                            <input type="date" id="dob" class="form-control" required>
-                            <span class="error-message" id="err-dob">Valid date of birth required.</span>
+                            <label for="dob">Date of Birth </label>
+                            <input type="date" id="dob" class="form-control">
+                            <span class="error-message" id="err-dob"></span>
                         </div>
                         <div class="form-group">
                             <label for="bloodGroup">Blood Group</label>
@@ -704,9 +691,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="aadhaarNo">Aadhaar Number <span class="required">*</span></label>
-                            <input type="text" id="aadhaarNo" class="form-control" placeholder="12 Digit Card Identity" maxlength="12" required>
-                            <span class="error-message" id="err-aadhaarNo">Enter a valid 12-digit UIDAI number.</span>
+                            <label for="aadhaarNo">Aadhaar Number </label>
+                            <input type="text" id="aadhaarNo" class="form-control" placeholder="12 Digit Card Identity" maxlength="12">
+                            <span class="error-message" id="err-aadhaarNo"></span>
                         </div>
                     </div>
                 </section>
@@ -731,19 +718,19 @@
                             <span class="error-message" id="err-studentClass">Assign a standard class.</span>
                         </div>
                         <div class="form-group">
-                            <label for="studentSection">Section <span class="required">*</span></label>
-                            <select id="studentSection" class="form-control" required>
+                            <label for="studentSection">Section</label>
+                            <select id="studentSection" class="form-control">
                                 <option value="">-- Select Section --</option>
                                 <option value="A">Section A</option>
                                 <option value="B">Section B</option>
                                 <option value="C">Section C</option>
                             </select>
-                            <span class="error-message" id="err-studentSection">Assign a section lane.</span>
+                            <span class="error-message" id="err-studentSection"></span>
                         </div>
                         <div class="form-group">
-                            <label for="rollNo">Roll Number <span class="required">*</span></label>
-                            <input type="number" id="rollNo" class="form-control" placeholder="e.g. 24" min="1" required>
-                            <span class="error-message" id="err-rollNo">Provide roll sequence identifier.</span>
+                            <label for="rollNo">Roll Number</label>
+                            <input type="number" id="rollNo" class="form-control" placeholder="e.g. 24" min="1">
+                            <span class="error-message" id="err-rollNo"></span>
                         </div>
                         <div class="form-group">
                             <label for="sessionYear">Session <span class="required">*</span></label>
@@ -768,9 +755,9 @@
                             <span class="error-message" id="err-fatherName">Father field cannot be blank.</span>
                         </div>
                         <div class="form-group">
-                            <label for="fatherMobile">Father Mobile Number <span class="required">*</span></label>
-                            <input type="tel" id="fatherMobile" class="form-control" placeholder="10 Digit Number" maxlength="10" required>
-                            <span class="error-message" id="err-fatherMobile">Enter a valid 10-digit mobile number.</span>
+                            <label for="fatherMobile">Father Mobile Number </label>
+                            <input type="tel" id="fatherMobile" class="form-control" placeholder="10 Digit Number" maxlength="10">
+                            <span class="error-message" id="err-fatherMobile"></span>
                         </div>
                         <div class="form-group">
                             <label for="fatherOcc">Father Occupation</label>
@@ -778,14 +765,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="motherName">Mother Name <span class="required">*</span></label>
-                            <input type="text" id="motherName" class="form-control" placeholder="Mother's Legal Name" required>
-                            <span class="error-message" id="err-motherName">Mother field cannot be blank.</span>
+                            <label for="motherName">Mother Name </label>
+                            <input type="text" id="motherName" class="form-control" placeholder="Mother's Legal Name">
+                            <span class="error-message" id="err-motherName"></span>
                         </div>
                         <div class="form-group">
-                            <label for="motherMobile">Mother Mobile Number <span class="required">*</span></label>
-                            <input type="tel" id="motherMobile" class="form-control" placeholder="10 Digit Number" maxlength="10" required>
-                            <span class="error-message" id="err-motherMobile">Enter a valid 10-digit mobile number.</span>
+                            <label for="motherMobile">Mother Mobile Number </label>
+                            <input type="tel" id="motherMobile" class="form-control" placeholder="10 Digit Number" maxlength="10">
+                            <span class="error-message" id="err-motherMobile"></span>
                         </div>
                         <div class="form-group">
                             <label for="motherOcc">Mother Occupation</label>
@@ -815,24 +802,24 @@
                             <span class="error-message" id="err-address">Address profile mapping required.</span>
                         </div>
                         <div class="form-group">
-                            <label for="city">City <span class="required">*</span></label>
-                            <input type="text" id="city" class="form-control" placeholder="City Location" required>
-                            <span class="error-message" id="err-city">Field required.</span>
+                            <label for="city">City</label>
+                            <input type="text" id="city" class="form-control" placeholder="City Location">
+                            <span class="error-message" id="err-city"></span>
                         </div>
                         <div class="form-group">
-                            <label for="state">State <span class="required">*</span></label>
-                            <input type="text" id="state" class="form-control" placeholder="State/Region" required>
-                            <span class="error-message" id="err-state">Field required.</span>
+                            <label for="state">State </label>
+                            <input type="text" id="state" class="form-control" placeholder="State/Region">
+                            <span class="error-message" id="err-state"></span>
                         </div>
                         <div class="form-group">
-                            <label for="pinCode">PIN Code <span class="required">*</span></label>
-                            <input type="text" id="pinCode" class="form-control" placeholder="6 Digit Number" maxlength="6" required>
-                            <span class="error-message" id="err-pinCode">Enter valid postal code.</span>
+                            <label for="pinCode">PIN Code </label>
+                            <input type="text" id="pinCode" class="form-control" placeholder="6 Digit Number" maxlength="6" >
+                            <span class="error-message" id="err-pinCode"></span>
                         </div>
                         <div class="form-group">
-                            <label for="email">Primary Email Address <span class="required">*</span></label>
-                            <input type="email" id="email" class="form-control" placeholder="username@domain.com" required>
-                            <span class="error-message" id="err-email">Enter a valid operational email format.</span>
+                            <label for="email">Primary Email Address </label>
+                            <input type="email" id="email" class="form-control" placeholder="username@domain.com">
+                            <span class="error-message" id="err-email"></span>
                         </div>
                     </div>
                 </section>
@@ -1027,7 +1014,7 @@
             });
 
             // --- 5. SYSTEM VALIDATION ENGINE & FORM TRANSIT ---
-            form.addEventListener('submit', (e) => {
+           form.addEventListener('submit', async (e) => {
                 e.preventDefault(); // Suspend default browser navigation pipelines
                 
                 let systemFormIsValid = true;
@@ -1066,29 +1053,87 @@
                 });
 
                 // Execution sequence on validation check status
-                if (systemFormIsValid) {
+if (systemFormIsValid) {
 
-                    const studentData = {
-                        admission_no: document.getElementById('admissionNumber').value,
-                        student_name: document.getElementById('studentName').value,
-                        father_name: document.getElementById('fatherName').value,
-                        class_name: document.getElementById('studentClass').value,
-                        section: document.getElementById('studentSection').value,
-                        mobile: document.getElementById('fatherMobile').value,
-                        gender: document.getElementById('gender').value,
-                        address: document.getElementById('address').value,
-                        admission_date: document.getElementById('admissionDate').value
-                    };
+    let photoPath = '';
 
-                    overlay.style.display = 'flex';
+    const photoFile =
+    document.getElementById('studentPhoto').files[0];
 
-                    fetch('http://localhost:5000/api/students', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(studentData)
-                    })
+    if(photoFile){
+
+        const photoFormData = new FormData();
+
+        photoFormData.append(
+            'photo',
+            photoFile
+        );
+
+        const uploadResponse =
+        await fetch(
+            'http://localhost:5000/api/upload-photo',
+            {
+                method:'POST',
+                body:photoFormData
+            }
+        );
+
+        const uploadData =
+        await uploadResponse.json();
+
+        console.log("Upload Response:", uploadData);
+
+        if(uploadData.success){
+
+            photoPath = uploadData.photoPath;
+
+            console.log("Photo Path:", photoPath);
+
+        }
+    }
+
+    const studentData = {
+        
+        photo: photoPath,
+
+        admission_no:
+        document.getElementById('admissionNumber').value,
+
+        student_name:
+        document.getElementById('studentName').value,
+
+        father_name:
+        document.getElementById('fatherName').value,
+
+        class_name:
+        document.getElementById('studentClass').value,
+
+        section:
+        document.getElementById('studentSection').value,
+
+        mobile:
+        document.getElementById('fatherMobile').value,
+
+        gender:
+        document.getElementById('gender').value,
+
+        address:
+        document.getElementById('address').value,
+
+        admission_date:
+        document.getElementById('admissionDate').value
+
+    };
+    console.log("Student Data Before Send:", studentData);
+    overlay.style.display = 'flex';
+    console.log(JSON.stringify(studentData));
+    fetch('http://localhost:5000/api/students', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(studentData)
+    })
                     .then(response => response.json())
                     .then(data => {
 

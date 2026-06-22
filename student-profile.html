@@ -430,7 +430,7 @@
     <!-- SYSTEM STICKY HEADER -->
     <header class="erp-header">
         <div class="header-brand">
-            <img src="rslogo.png" alt="R.S. Logo" class="school-logo" onerror="this.style.background='#d4a017';">
+            <img src="rslogo.png.png" alt="R.S. Logo" class="school-logo" onerror="this.style.background='#d4a017';">
             <div class="header-meta">
                 <h1>R.S. Public School</h1>
                 <p>Enterprise Resource Planning Engine</p>
@@ -602,42 +602,68 @@
     <!-- CORE BUSINESS LOGIC DATA BINDING REPOSITORIES MODULE -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
-            // Mock Single Profile Record Extraction Object Map mimicking active fetch results
-            const activeProfileRecord = {
-                admissionNo: "RS2026-042",
-                admissionDate: "05-Apr-2024",
-                rollNo: "18",
-                class: "12",
-                section: "B",
-                sessionYear: "2026-2027",
-                statusState: "Active",
-                fullName: "Aarav K. Sharma",
-                dobDate: "12-Aug-2009",
-                genderIdentity: "Male",
-                bloodGroupMap: "B+",
-                aadhaarUID: "4524 8965 1254",
-                father: { name: "Rajesh Kumar Sharma", mobile: "9871234560", occupation: "Senior Software Architect" },
-                mother: { name: "Sunita Sharma", mobile: "9871234561", occupation: "Academic Educator" },
-                guardian: { name: "N/A - Direct Lineage", contact: "---" },
-                contact: {
-                    addressLine: "Flat 405, Sector-15, Royal Palm Heights Cluster A",
-                    cityName: "Noida",
-                    stateRegion: "Uttar Pradesh",
-                    pinCode: "201301",
-                    emailAddress: "aarav.sharma@domain-erp.in"
-                },
-                prevSchoolHistory: "Delhi Public School, R.K. Puram Core Sector",
-                documentsLoaded: {
-                    birthCert: true,
-                    aadhaarCopy: true,
-                    transferCert: false,
-                    otherEncl: true
+            const params = new URLSearchParams(window.location.search);
+            const studentId = params.get("id");
+            fetch(`http://localhost:5000/api/students/${studentId}`)
+            .then(response => response.json())
+            .then(result => {
+
+                if(result.success){
+
+                    const student = result.data;
+
+                    document.getElementById("sp-name").innerText =
+                    student.student_name || "---";
+
+                    document.getElementById("sp-admNo").innerText =
+                    student.admission_no || "---";
+
+                    document.getElementById("sp-rollNo").innerText =
+                    student.roll_no || "---";
+
+                    document.getElementById("sp-classSec").innerText =
+                    `Class ${student.class_name || ""} - ${student.section || ""}`;
+
+                    document.getElementById("sp-status").innerText =
+                    "Active";
+
+                    document.getElementById("field-admDate").innerText =
+                    student.admission_date || "---";
+
+                    document.getElementById("field-gender").innerText =
+                    student.gender || "---";
+
+                    document.getElementById("field-fatherName").innerText =
+                    student.father_name || "---";
+
+                    document.getElementById("field-fatherMobile").innerText =
+                    student.mobile || "---";
+
+                    document.getElementById("field-class").innerText =
+                    student.class_name || "---";
+
+                    document.getElementById("field-section").innerText =
+                    student.section || "---";
+
+                    document.getElementById("field-address").innerText =
+                    student.address || "---";
+
+                    if(student.photo){
+
+                        document.getElementById("sp-photo").src =
+                        `http://localhost:5000${student.photo}`;
+                    }
+
                 }
-            };
+
+            })
+            .catch(error => {
+                console.error(error);
+            });
+            // Mock Single Profile Record Extraction Object Map mimicking active fetch results
+            
 
             // Process Data Loading Sequence Mapping Actions
-            bindDataToInterface(activeProfileRecord);
 
             function bindDataToInterface(data) {
                 // Header Display Mappings

@@ -621,8 +621,32 @@
                 
                 <!-- SECTION 1: BASIC REGISTRATION DETAILS -->
                 <section class="form-section">
+                    
                     <div class="section-header">
                         <i class="fa-solid fa-user-gear"></i>
+                        <div style="background:#f8f9fa;padding:15px;border-radius:10px;margin-bottom:20px;">
+    
+                            <h4>Search Student Record</h4>
+
+                            <div style="display:flex;gap:10px;align-items:center;">
+
+                                <input
+                                    type="text"
+                                    id="searchAdmissionNo"
+                                    placeholder="Enter Admission Number"
+                                    style="width:300px;"
+                                >
+
+                                <button
+                                    type="button"
+                                    onclick="searchStudent()"
+                                >
+                                    Search Student
+                                </button>
+
+                            </div>
+
+                        </div>
                         <h2>Section 1: Basic Operational Data</h2>
                     </div>
                     <div class="inputs-grid">
@@ -631,9 +655,9 @@
                             <input type="text" id="admissionNumber" class="form-control" readonly>
                         </div>
                         <div class="form-group">
-                            <label for="admissionDate">Admission Date <span class="required">*</span></label>
-                            <input type="date" id="admissionDate" class="form-control" required>
-                            <span class="error-message" id="err-admissionDate">Select a entry intake date.</span>
+                            <label for="admissionDate">Admission Date </label>
+                            <input type="date" id="admissionDate" class="form-control">
+                            <span class="error-message" id="err-admissionDate"></span>
                         </div>
                         <div class="form-group">
                             <label for="studentName">Student Full Name <span class="required">*</span></label>
@@ -649,9 +673,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="dob">Date of Birth <span class="required">*</span></label>
-                            <input type="date" id="dob" class="form-control" required>
-                            <span class="error-message" id="err-dob">Select valid biographical date.</span>
+                            <label for="dob">Date of Birth</label>
+                            <input type="date" id="dob" class="form-control">
+                            <span class="error-message" id="err-dob"></span>
                         </div>
                         <div class="form-group">
                             <label for="bloodGroup">Blood Group</label>
@@ -668,9 +692,9 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="aadhaarNo">Aadhaar Number <span class="required">*</span></label>
-                            <input type="text" id="aadhaarNo" class="form-control" maxlength="12" required>
-                            <span class="error-message" id="err-aadhaarNo">Enter a valid 12-digit identity number.</span>
+                            <label for="aadhaarNo">Aadhaar Number </label>
+                            <input type="text" id="aadhaarNo" class="form-control" maxlength="12">
+                            <span class="error-message" id="err-aadhaarNo"></span>
                         </div>
                     </div>
                 </section>
@@ -701,17 +725,17 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="studentSection">Section Lane <span class="required">*</span></label>
-                            <select id="studentSection" class="form-control" required>
+                            <label for="studentSection">Section Lane </label>
+                            <select id="studentSection" class="form-control">
                                 <option value="A">Section A</option>
                                 <option value="B">Section B</option>
                                 <option value="C">Section C</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="rollNo">Roll Number <span class="required">*</span></label>
-                            <input type="number" id="rollNo" class="form-control" min="1" required>
-                            <span class="error-message" id="err-rollNo">Provide standard index order value.</span>
+                            <label for="rollNo">Roll Number</label>
+                            <input type="number" id="rollNo" class="form-control" min="1">
+                            <span class="error-message" id="err-rollNo"></span>
                         </div>
                         <div class="form-group">
                             <label for="sessionYear">Active Term Session</label>
@@ -737,9 +761,9 @@
                             <span class="error-message" id="err-fatherName">This configuration parameter is required.</span>
                         </div>
                         <div class="form-group">
-                            <label for="fatherMobile">Father Mobile Line <span class="required">*</span></label>
-                            <input type="tel" id="fatherMobile" class="form-control" maxlength="10" required>
-                            <span class="error-message" id="err-fatherMobile">Enter valid 10-digit primary line.</span>
+                            <label for="fatherMobile">Father Mobile Line</label>
+                            <input type="tel" id="fatherMobile" class="form-control" maxlength="10">
+                            <span class="error-message" id="err-fatherMobile"></span>
                         </div>
                         <div class="form-group">
                             <label for="fatherOcc">Father Professional Field</label>
@@ -747,14 +771,14 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="motherName">Mother Legal Name <span class="required">*</span></label>
-                            <input type="text" id="motherName" class="form-control" required>
-                            <span class="error-message" id="err-motherName">This configuration parameter is required.</span>
+                            <label for="motherName">Mother Legal Name</label>
+                            <input type="text" id="motherName" class="form-control">
+                            <span class="error-message" id="err-motherName"></span>
                         </div>
                         <div class="form-group">
-                            <label for="motherMobile">Mother Mobile Line <span class="required">*</span></label>
-                            <input type="tel" id="motherMobile" class="form-control" maxlength="10" required>
-                            <span class="error-message" id="err-motherMobile">Enter valid 10-digit primary line.</span>
+                            <label for="motherMobile">Mother Mobile Line </label>
+                            <input type="tel" id="motherMobile" class="form-control" maxlength="10">
+                            <span class="error-message" id="err-motherMobile"></span>
                         </div>
                         <div class="form-group">
                             <label for="motherOcc">Mother Professional Field</label>
@@ -785,24 +809,24 @@
                             <span class="error-message" id="err-address">Provide structural route layout information.</span>
                         </div>
                         <div class="form-group">
-                            <label for="city">City <span class="required">*</span></label>
-                            <input type="text" id="city" class="form-control" required>
-                            <span class="error-message" id="err-city">Field required.</span>
+                            <label for="city">City </label>
+                            <input type="text" id="city" class="form-control">
+                            <span class="error-message" id="err-city">Field</span>
                         </div>
                         <div class="form-group">
-                            <label for="state">State / Region <span class="required">*</span></label>
-                            <input type="text" id="state" class="form-control" required>
-                            <span class="error-message" id="err-state">Field required.</span>
+                            <label for="state">State / Region </span></label>
+                            <input type="text" id="state" class="form-control" >
+                            <span class="error-message" id="err-state"></span>
                         </div>
                         <div class="form-group">
-                            <label for="pinCode">PIN Postal Code <span class="required">*</span></label>
-                            <input type="text" id="pinCode" class="form-control" maxlength="6" required>
-                            <span class="error-message" id="err-pinCode">Enter valid 6-digit number mapping.</span>
+                            <label for="pinCode">PIN Postal Code </label>
+                            <input type="text" id="pinCode" class="form-control" maxlength="6">
+                            <span class="error-message" id="err-pinCode"></span>
                         </div>
                         <div class="form-group">
-                            <label for="email">Primary Corporate Email <span class="required">*</span></label>
-                            <input type="email" id="email" class="form-control" required>
-                            <span class="error-message" id="err-email">Provide valid operational email format.</span>
+                            <label for="email">Primary Corporate Email </label>
+                            <input type="email" id="email" class="form-control">
+                            <span class="error-message" id="err-email"></span>
                         </div>
                     </div>
                 </section>
@@ -928,8 +952,8 @@
 
     <!-- CLIENT OPERATIONAL ENGINE LOGIC SCRIPT MODULE -->
     <script>
-            const params = new URLSearchParams(window.location.search);
-            const studentId = params.get("id");
+           // const params = new URLSearchParams(window.location.search);
+            //const studentId = params.get("id");
             async function loadStudentData() {
 
     try {
@@ -962,8 +986,89 @@
         console.error(error);
     }
 }
+        let currentStudentId = null;
+        let currentPhotoPath = "";
+        async function searchStudent() {
+
+    const admissionNo =
+    document.getElementById(
+        'searchAdmissionNo'
+    ).value.trim();
+
+    if(!admissionNo){
+
+        alert("Admission Number Enter Karo");
+
+        return;
+    }
+
+    try {
+
+        const response =
+        await fetch(
+            `http://localhost:5000/api/student/admission/${admissionNo}`
+        );
+
+        const data =
+        await response.json();
+
+        if(data.success){
+
+            const student =
+            data.data;
+
+            currentStudentId =
+            student.id;
+
+            document.getElementById("admissionNumber").value =
+            student.admission_no || "";
+
+            document.getElementById("studentName").value =
+            student.student_name || "";
+
+            document.getElementById("fatherName").value =
+            student.father_name || "";
+
+            document.getElementById("studentClass").value =
+            student.class_name || "";
+
+            document.getElementById("studentSection").value =
+            student.section || "";
+
+            document.getElementById("fatherMobile").value =
+            student.mobile || "";
+
+            document.getElementById("gender").value =
+            student.gender || "";
+
+            document.getElementById("address").value =
+            student.address || "";
+
+            if(student.photo){
+
+            document.getElementById("avatarPreview").src =
+            `http://localhost:5000${student.photo}`;
+
+}
+            alert("Student Record Loaded");
+
+        } else {
+
+            alert("Student Not Found");
+
+        }
+
+    } catch(error){
+
+        console.error(error);
+
+        alert("Server Error");
+
+    }
+
+}
         document.addEventListener('DOMContentLoaded', () => {
-            loadStudentData();
+            //loadStudentData();
             const form = document.getElementById('editStudentForm');
             const avatarInput = document.getElementById('studentPhoto');
             const avatarPreview = document.getElementById('avatarPreview');
@@ -1001,7 +1106,7 @@
             };
 
             // Inject record dictionary values into form field
-            loadStudentData();
+            //loadStudentData();
             function hydrateFormFields(record) {
                 document.getElementById('admissionNumber').value = record.admissionNo;
                 document.getElementById('admissionDate').value = record.admissionDate;
@@ -1033,6 +1138,10 @@
             // --- 2. LIVE PROFILE PASSPORT RE-SAMPLING CONTROLLER ---
             avatarInput.addEventListener('change', function() {
                 const file = this.files[0];
+                if(file){
+                    currentPhotoPath = "/uploads/" + file.name;
+                }
+                console.log("NEW PHOTO =", currentPhotoPath);
                 const errBox = document.getElementById('err-studentPhoto');
                 errBox.innerText = '';
 
@@ -1136,11 +1245,13 @@
             section: document.getElementById("studentSection").value,
             mobile: document.getElementById("fatherMobile").value,
             gender: document.getElementById("gender").value,
-            address: document.getElementById("address").value
+            address: document.getElementById("address").value,
+            photo: currentPhotoPath
 
         };
-
-        fetch(`http://localhost:5000/api/students/${studentId}`, {
+            console.log("Photo Path:", currentPhotoPath);
+        console.log(studentData);
+        fetch(`http://localhost:5000/api/students/${currentStudentId}`, {
 
             method: "PUT",
 

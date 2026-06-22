@@ -444,8 +444,8 @@
         }
 
         .card-passport-photo {
-            width: 72px;
-            height: 84px;
+            width: 90px;
+            height:110px;
             object-fit: cover;
             border: 1px solid var(--border-color);
             border-radius: 4px;
@@ -689,6 +689,18 @@
                         <div class="form-group">
                             <label>Select Standard Class</label>
                             <select id="cls-select" class="form-control" onchange="filterClassWiseStudents()">
+                                <option value="Playway">Class Playway</option>
+                                <option value="LKG">Class LKG</option>
+                                <option value="UKG">Class UKG</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
                                 <option value="10">Class 10</option>
                                 <option value="11">Class 11</option>
                                 <option value="12" selected>Class 12</option>
@@ -799,30 +811,51 @@
     <!-- CORE REPOSITORIES OPERATIONAL DATABASE MODULE LOGIC SCRIPT -->
     <script>
         // --- DATA SEED DICTIONARY REGISTRY ARRAY MAPS ---
-        const schoolEnclosureMeta = {
-            address: "Sector 4, Phase II, Corporate Hub, New Delhi",
-            email: "info@rspublicschool.edu.in",
-            phone: "+91 11 2645 8900"
-        };
+        let globalStudentDataStore = [];
 
-        const globalStudentDataStore = [
-            { admissionNo: "RS2601", name: "Aarav Sharma", fatherName: "Rajesh Sharma", mobile: "9876543210", address: "122, Civil Lines, New Delhi", class: "12", section: "A", rollNo: "01", gender: "Male" },
-            { admissionNo: "RS2602", name: "Ananya Verma", fatherName: "Amit Verma", mobile: "9876543211", address: "B-45, Shalimar Bagh, New Delhi", class: "12", section: "A", rollNo: "02", gender: "Female" },
-            { admissionNo: "RS2603", name: "Arjun Malhotra", fatherName: "Vikas Malhotra", mobile: "9876543212", address: "Flat 402, Royal Residency, Gurugram", class: "12", section: "A", rollNo: "03", gender: "Male" },
-            { admissionNo: "RS2604", name: "Diya Kaplan", fatherName: "Sanjay Kaplan", mobile: "9876543213", address: "H-18, Green Park Ext, New Delhi", class: "12", section: "A", rollNo: "04", gender: "Female" },
-            { admissionNo: "RS2605", name: "Ishaan Choudhury", fatherName: "Pradeep Choudhury", mobile: "9876543214", address: "Sector 15, Block C-9, Noida", class: "12", section: "A", rollNo: "05", gender: "Male" },
-            { admissionNo: "RS2606", name: "Kavya Iyer", fatherName: "Ramesh Iyer", mobile: "9876543215", address: "78, South Extension Part II, New Delhi", class: "12", section: "B", rollNo: "01", gender: "Female" },
-            { admissionNo: "RS2607", name: "Kabir Singh", fatherName: "Jasbir Singh", mobile: "9876543216", address: "Plot 29, Rajouri Garden, New Delhi", class: "11", section: "A", rollNo: "14", gender: "Male" },
-            { admissionNo: "RS2608", name: "Meera Nair", fatherName: "Gopal Nair", mobile: "9876543217", address: "Pocket 4, Vasant Kunj, New Delhi", class: "11", section: "B", rollNo: "09", gender: "Female" },
-            { admissionNo: "RS2609", name: "Rohan Das", fatherName: "Nitin Das", mobile: "9876543218", address: "C-11, Preet Vihar, New Delhi", class: "10", section: "A", rollNo: "22", gender: "Male" },
-            { admissionNo: "RS2610", name: "Sanya Gupta", fatherName: "Alok Gupta", mobile: "9876543219", address: "D-60, Anand Vihar, New Delhi", class: "10", section: "C", rollNo: "11", gender: "Female" }
-        ];
+fetch("http://localhost:5000/api/students")
+.then(response => response.json())
+.then(result => {
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initial component hydration arrays
-            filterClassWiseStudents();
-            filterNameWiseListing();
-        });
+    console.log(result);
+
+    if(result.success){
+
+        globalStudentDataStore = result.data.map(student => ({
+
+            id: student.id,
+            admissionNo: student.admission_no,
+            name: student.student_name,
+            fatherName: student.father_name,
+            mobile: student.mobile,
+            address: student.address,
+            class: student.class_name,
+            section: student.section,
+            rollNo: student.roll_no || student.id,
+            gender: student.gender,
+            photo: student.photo
+
+        }));
+
+        console.log(globalStudentDataStore);
+
+        filterClassWiseStudents();
+        filterNameWiseListing();
+
+    }
+
+})
+.catch(error => {
+
+    console.error(error);
+
+});
+
+                    const schoolEnclosureMeta = {
+                address: "Khutaha Bazar, Maharajganj, Uttar Pradesh",
+                email: "rspublicschool425@gmail.com",
+                phone: "+91 7306171479"
+            };
 
         // --- 1. INTERFACE DISPLAY TAB CHANGER ROUTINES ---
         function switchControlTab(event, targetTabId) {
@@ -841,8 +874,41 @@
             
             document.getElementById('class-select-all').checked = false;
             wrapper.innerHTML = '';
+            function filterClassWiseStudents() {
 
-            const filteredData = globalStudentDataStore.filter(s => s.class === cls && s.section === sec);
+    const cls = document.getElementById('cls-select').value;
+    const sec = document.getElementById('sec-select').value;
+    const wrapper = document.getElementById('classWiseContainerList');
+
+    console.log("CLASS =", cls);
+    console.log("SECTION =", sec);
+    console.log("STORE =", globalStudentDataStore);
+
+    document.getElementById('class-select-all').checked = false;
+    wrapper.innerHTML = '';
+
+    const filteredData = globalStudentDataStore.filter(
+        s => s.class === cls && s.section === sec
+    );
+
+    console.log("FILTERED DATA =", filteredData);
+
+    if(filteredData.length === 0) {
+        wrapper.innerHTML = `<div style="padding:10px;color:var(--text-muted)">No scholar items match this classroom allocation map.</div>`;
+        return;
+    }
+
+    filteredData.forEach(student => {
+        const row = document.createElement('div');
+        row.className = 'list-item-checkbox';
+        row.innerHTML = `
+            <input type="checkbox" class="class-box-item" value="${student.admissionNo}">
+            <span><strong>${student.admissionNo}</strong> • ${student.name} (Roll: ${student.rollNo})</span>
+        `;
+        wrapper.appendChild(row);
+    });
+}
+            const filteredData = globalStudentDataStore.filter(s => s.class == cls && s.section == sec);
 
             if(filteredData.length === 0) {
                 wrapper.innerHTML = `<div style="padding:10px;color:var(--text-muted)">No scholar items match this classroom allocation map.</div>`;
@@ -953,7 +1019,7 @@
                 card.className = 'id-portrait-card';
                 card.innerHTML = `
                     <div class="card-header-row">
-                        <img src="rslogo.png" class="card-logo-img" onerror="this.style.background='#0b1f5b';this.style.borderRadius='50%'">
+                        <img src="rslogo.png.png" class="card-logo-img" alt="School Logo" onerror="this.style.background='#d4a017';">
                         <div class="card-school-meta">
                             <h2>R.S. PUBLIC SCHOOL</h2>
                             <p>${schoolEnclosureMeta.address}</p>
@@ -962,7 +1028,10 @@
                     </div>
 
                     <div class="card-avatar-center-block">
-                        <img src="${fallbackAvatar}" class="card-passport-photo" alt="Passport View">
+                       <img
+                        src="${data.photo ? `http://localhost:5000${data.photo}` : fallbackAvatar}"
+                        class="card-passport-photo"
+                        alt="Passport View">
                     </div>
 
                     <div class="card-biography-block">

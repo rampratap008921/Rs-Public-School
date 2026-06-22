@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
-
+const upload = require('../config/multerConfig');
 router.post('/students', (req, res) => {
+
+    console.log("POST Student Data:", req.body);
 
     const {
         admission_no,
@@ -13,16 +15,14 @@ router.post('/students', (req, res) => {
         mobile,
         gender,
         address,
-        admission_date
+        admission_date,
+        photo
     } = req.body;
-
+    const finalAdmissionDate =
+    admission_date === "" ? null : admission_date;
     const sql = `
     INSERT INTO students
-    (admission_no, student_name, father_name, class_name, section, mobile, gender, address, admission_date)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `;
-
-    db.query(sql, [
+    (
         admission_no,
         student_name,
         father_name,
@@ -31,45 +31,66 @@ router.post('/students', (req, res) => {
         mobile,
         gender,
         address,
-        admission_date
-    ], (err, result) => {
+        admission_date,
+        photo
+    )
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    console.log("FINAL DATE =", finalAdmissionDate);
+    db.query(
+        sql,
+        [
+            admission_no,
+            student_name,
+            father_name,
+            class_name,
+            section,
+            mobile,
+            gender,
+            address,
+            finalAdmissionDate,
+            photo
+        ],
+        (err, result) => {
 
-        if(err){
-            return res.status(500).json({
-                success:false,
-                message:'Database Error',
-                error:err
+            if(err){
+                console.log("MYSQL POST ERROR =", err);
+                return res.status(500).json({
+                    success:false,
+                    message:'Database Error',
+                    error:err
+                });
+            }
+
+            res.json({
+                success:true,
+                message:'Student Added Successfully'
             });
+
         }
-
-        res.json({
-            success:true,
-            message:'Student Added Successfully'
-        });
-
-    });
+    );
 
 });
-
 router.get('/students', (req, res) => {
 
-    const sql = "SELECT * FROM students";
+    db.query(
+        "SELECT * FROM students",
+        (err, result) => {
 
-    db.query(sql, (err, result) => {
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    error:err
+                });
+            }
 
-        if(err){
-            return res.status(500).json({
-                success:false,
-                error:err
+            res.json({
+                success:true,
+                data:result
             });
+
         }
-
-        res.json({
-            success:true,
-            data:result
-        });
-
-    });
+    );
 
 });
 router.get('/students/:id', (req, res) => {
@@ -85,6 +106,45 @@ router.get('/students/:id', (req, res) => {
                 return res.status(500).json({
                     success:false,
                     error:err
+                });
+            }
+
+            if(result.length === 0){
+                return res.json({
+                    success:false,
+                    message:'Student Not Found'
+                });
+            }
+
+            res.json({
+                success:true,
+                data:result[0]
+            });
+
+        }
+    );
+
+});
+router.get('/student/admission/:admission_no', (req, res) => {
+
+    const admission_no = req.params.admission_no;
+
+    db.query(
+        "SELECT * FROM students WHERE admission_no = ?",
+        [admission_no],
+        (err, result) => {
+
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    error:err
+                });
+            }
+
+            if(result.length === 0){
+                return res.json({
+                    success:false,
+                    message:"Student Not Found"
                 });
             }
 
@@ -109,7 +169,9 @@ router.put('/students/:id', (req, res) => {
         section,
         mobile,
         gender,
-        address
+        address,
+       admission_date,
+        photo
     } = req.body;
 
     const sql = `
@@ -122,7 +184,9 @@ router.put('/students/:id', (req, res) => {
         section=?,
         mobile=?,
         gender=?,
-        address=?
+        address=?,
+        admission_date=?,
+        photo=?
     WHERE id=?
     `;
 
@@ -137,11 +201,14 @@ router.put('/students/:id', (req, res) => {
             mobile,
             gender,
             address,
+            admission_date,
+            photo,
             id
         ],
-        (err,result)=>{
+        (err, result) => {
 
             if(err){
+                console.log("MYSQL ERROR =", err);
                 return res.status(500).json({
                     success:false,
                     error:err
@@ -157,5 +224,46 @@ router.put('/students/:id', (req, res) => {
     );
 
 });
-console.log("Student Routes Loaded");
+router.delete('/students/:id', (req, res) => {
+
+    const id = req.params.id;
+
+    db.query(
+        "DELETE FROM students WHERE id = ?",
+        [id],
+        (err, result) => {
+
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    error:err
+                });
+            }
+
+            res.json({
+                success:true,
+                message:"Student Deleted Successfully"
+            });
+
+        }
+    );
+
+});
+
+router.post('/upload-photo',upload.single('photo'),(req, res) => {
+        console.log("Student Data Received:", req.body);
+        if (!req.file) {
+            return res.status(400).json({
+                success: false,
+                message: 'No Photo Uploaded'
+            });
+        }
+
+        res.json({
+            success: true,
+            photoPath: `/uploads/${req.file.filename}`
+        });
+
+    }
+);
 module.exports = router;

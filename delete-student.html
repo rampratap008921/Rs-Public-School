@@ -856,63 +856,70 @@
     let isAdminAuthenticated = false;
 
     // Simulation Data Model Repository Mocking
-    const mockStudentDatabase = {
-        "RS-2024-0894": {
-            admNo: "RS-2024-0894",
-            name: "Aarav Sharma",
-            father: "Rajesh Sharma",
-            mother: "Priya Sharma",
-            class: "Class X",
-            section: "Section-B",
-            roll: "14",
-            mobile: "9876543210",
-            gender: "Male",
-            admissionDate: "2024-04-12",
-            address: "H.No 452, Sector 15, Gurugram, Haryana, 122001",
-            status: "active",
-            photo: "https://images.unsplash.com/photo-1597586124394-fbd6ef244026?q=80&w=200&auto=format&fit=crop",
-            metrics: { attendance: "94.2%", fee: "PAID", exams: "24", docs: "6" }
-        }
-    };
 
     /**
      * Interface Target: Extraction Engine
      * Evaluates UI search inputs and binds internal data maps to DOM
      */
-    function searchStudent() {
-        const inputAdm = document.getElementById('searchAdmNo').value.trim();
-        const inputName = document.getElementById('searchName').value.trim().toLowerCase();
-        const inputMobile = document.getElementById('searchMobile').value.trim();
+    async function searchStudent() {
 
-        showLoadingAnimation(true);
+    const inputAdm = document.getElementById('searchAdmNo').value.trim();
 
-        setTimeout(() => {
-            showLoadingAnimation(false);
-            
-            // Search validation simulation logic 
-            let matchedStudent = mockStudentDatabase[inputAdm];
-            
-            if(!matchedStudent && (inputName || inputMobile)) {
-                matchedStudent = Object.values(mockStudentDatabase).find(s => 
-                    s.name.toLowerCase().includes(inputName) || s.mobile === inputMobile
-                );
-            }
-
-            if (matchedStudent) {
-                loadStudentProfile(matchedStudent);
-                triggerToast('success', 'Student records verified and structured.');
-            } else {
-                triggerToast('danger', 'Profile footprint not identified in active index.');
-                resetSearch();
-            }
-        }, 800);
+    if(!inputAdm){
+        triggerToast('danger','Admission Number Enter Karo');
+        return;
     }
+
+    showLoadingAnimation(true);
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:5000/api/student/admission/${inputAdm}`
+        );
+
+        const data = await response.json();
+
+        showLoadingAnimation(false);
+
+        if(data.success){
+
+            loadStudentProfile(data.data);
+
+            triggerToast(
+                'success',
+                'Student Record Found'
+            );
+
+        }else{
+
+            triggerToast(
+                'danger',
+                'Student Not Found'
+            );
+
+            resetSearch();
+        }
+
+    } catch(error){
+
+        showLoadingAnimation(false);
+
+        console.error(error);
+
+        triggerToast(
+            'danger',
+            'Server Connection Error'
+        );
+    }
+}
 
     /**
      * Interface Target: Object Matrix Binding Engine
      * @param {Object} student 
      */
     function loadStudentProfile(student) {
+        console.log(student);
         activeExtractedStudent = student;
 
         // UI View state unlock sequences
@@ -926,11 +933,11 @@
         document.getElementById('profileStatus').className = `status-badge ${student.status}`;
         document.getElementById('profileStatus').innerText = student.status;
         
-        document.getElementById('valAdmNo').innerText = student.admNo;
-        document.getElementById('valName').innerText = student.name;
-        document.getElementById('valFather').innerText = student.father;
-        document.getElementById('valMother').innerText = student.mother;
-        document.getElementById('valClass').innerText = student.class;
+        document.getElementById('valAdmNo').innerText = student.admission_no;
+        document.getElementById('valName').innerText = student.student_name;
+        document.getElementById('valFather').innerText = student.father_name;
+        document.getElementById('valMother').innerText = student.mother_name;
+        document.getElementById('valClass').innerText = student.class_name;
         document.getElementById('valSection').innerText = student.section;
         document.getElementById('valRoll').innerText = student.roll;
         document.getElementById('valMobile').innerText = student.mobile;
@@ -1043,20 +1050,43 @@
     /**
      * Complete Permanent Hard Record Purge execution transaction pipeline pipeline logic
      */
-    function deleteStudent() {
-        closeConfirmationModal();
-        showLoadingAnimation(true);
+    async function deleteStudent() {
 
-        setTimeout(() => {
-            showLoadingAnimation(false);
-            triggerToast('success', 'Student record deleted successfully.');
+    if (!activeExtractedStudent) return;
+
+    closeConfirmationModal();
+    showLoadingAnimation(true);
+
+    try {
+
+        const response = await fetch(
+            `http://localhost:5000/api/students/${activeExtractedStudent.id}`,
+            {
+                method: "DELETE"
+            }
+        );
+
+        const data = await response.json();
+
+        showLoadingAnimation(false);
+
+        if(data.success){
+
+            triggerToast('success', 'Student Deleted Successfully');
             resetSearch();
-            
-            // Adjust running operational state dashboard numbers safely
-            document.getElementById('stat-active').innerText = "2,411";
-            document.getElementById('stat-deleted').innerText = "3";
-        }, 2000);
+
+        }else{
+
+            triggerToast('danger', 'Delete Failed');
+        }
+
+    } catch(error){
+
+        showLoadingAnimation(false);
+        console.error(error);
+        triggerToast('danger', 'Server Error');
     }
+}
 
     /**
      * System Context Navigation Route Emulation

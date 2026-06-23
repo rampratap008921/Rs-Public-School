@@ -3,1146 +3,888 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher Allocation Management | R.S. Public School ERP</title>
+    <title>Teacher Class & Subject Allocation | R.S. Public School ERP</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* --- Enterprise Core System Variables --- */
         :root {
-            --primary-color: #0B1F4B;
-            --secondary-color: #d4a017;
-            --bg-color: #f4f7fc;
-            --text-color: #333333;
-            --text-light: #666666;
-            --white: #ffffff;
-            --border-color: #cbd5e1;
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --radius: 8px;
+            --primary-navy: #0B1F4B;
+            --accent-gold: #D4A017;
+            --bg-canvas: #F8FAFC;
+            --surface-card: rgba(255, 255, 255, 0.85);
+            --border-glass: rgba(226, 232, 240, 0.8);
+            --text-main: #1E293B;
+            --text-muted: #64748B;
+            --success: #10B981;
+            --danger: #EF4444;
+            --gray-light: #E2E8F0;
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
             font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
+            background-color: var(--bg-canvas);
+            color: var(--text-main);
             min-height: 100vh;
+            padding: 30px 20px;
         }
 
-        /* ERP Layout Sidebar Workspace Base */
-        .sidebar {
-            width: 260px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px;
-            flex-shrink: 0;
+        .erp-wrapper {
+            max-width: 1440px;
+            margin: 0 auto;
         }
 
-        .brand {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 40px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            color: #a0aec0;
-            text-decoration: none;
-            border-radius: var(--radius);
-            margin-bottom: 5px;
-            transition: all 0.3s;
-        }
-
-        .menu-item.active, .menu-item:hover {
-            background-color: rgba(212, 160, 23, 0.15);
-            color: var(--secondary-color);
-        }
-
-        /* Main Workspace Section */
-        .main-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-x: hidden;
-        }
-
-        /* Top Title & Configuration Header Actions Panel */
-        .header-actions {
+        /* --- Header Styles --- */
+        header {
+            background: white;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(11, 31, 75, 0.03);
+            margin-bottom: 30px;
+            border-left: 6px solid var(--primary-navy);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 16px;
         }
 
-        .page-title h1 {
-            font-size: 24px;
-            color: var(--primary-color);
+        .header-title h1 {
+            color: var(--primary-navy);
+            font-size: 26px;
             font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
-        .page-title p {
+        .header-title p {
+            color: var(--text-muted);
             font-size: 14px;
-            color: var(--text-light);
             margin-top: 4px;
         }
 
-        .top-action-btns {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
+        .security-badge {
+            background: rgba(11, 31, 75, 0.06);
+            color: var(--primary-navy);
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            padding: 10px 18px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            border: none;
-            text-decoration: none;
+            border: 1px solid rgba(11, 31, 75, 0.1);
         }
 
-        .btn-primary { background-color: var(--primary-color); color: var(--white); }
-        .btn-primary:hover { background-color: #123070; }
-        
-        .btn-secondary { background-color: var(--white); color: var(--primary-color); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background-color: #f8fafc; border-color: #cbd5e1; }
-        
-        .btn-success { background-color: var(--success); color: var(--white); }
-        .btn-success:hover { background-color: #059669; }
-
-        .btn-danger { background-color: #fee2e2; color: var(--danger); }
-        .btn-danger:hover { background-color: var(--danger); color: var(--white); }
-
-        /* Master Selection Frame Bar Block */
-        .selection-filter-bar {
-            background-color: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-            border-left: 5px solid var(--secondary-color);
-        }
-
-        .search-grid {
+        /* --- Glassmorphism Stat Cards --- */
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
-        .form-group {
+        .stat-card {
+            background: var(--surface-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.04);
             display: flex;
-            flex-direction: column;
-            gap: 6px;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-light);
-            text-transform: uppercase;
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(11, 31, 75, 0.08);
         }
 
-        .form-control {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
-            width: 100%;
-            background-color: var(--white);
+        .stat-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
         }
 
-        .form-control:focus { border-color: var(--primary-color); }
+        .stat-info h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-navy);
+        }
 
-        /* Dynamic Component Layout Breakdown Matrix Panels */
-        .workspace-split-layout {
+        .stat-info p {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Specific Stat Themes */
+        .stat-card:nth-child(1) .stat-icon { background: rgba(11, 31, 75, 0.1); color: var(--primary-navy); }
+        .stat-card:nth-child(2) .stat-icon { background: rgba(214, 160, 23, 0.15); color: #b5850b; }
+        .stat-card:nth-child(3) .stat-icon { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .stat-card:nth-child(4) .stat-icon { background: rgba(99, 102, 241, 0.1); color: #6366f1; }
+
+        /* --- Workspace Row Layout --- */
+        .workspace-layout {
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 25px;
+            grid-template-columns: 380px 1fr;
+            gap: 30px;
             align-items: start;
         }
 
-        .left-column-panel, .right-column-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+        @media (max-width: 1024px) {
+            .workspace-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .section-card {
-            background-color: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 25px;
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .section-card.accent-card { border-top-color: var(--secondary-color); }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #f1f5f9;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .card-title span { display: flex; align-items: center; gap: 10px; }
-        .card-title i { color: var(--secondary-color); }
-
-        /* Teacher Info Details Card Context Elements */
-        .teacher-meta-profile-view {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #f1f5f9;
-            margin-bottom: 15px;
-        }
-
-        .teacher-large-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--border-color);
-        }
-
-        .teacher-meta-profile-view h3 { font-size: 18px; color: var(--primary-color); font-weight: 700; }
-        .teacher-meta-profile-view p { font-size: 13px; color: var(--text-light); }
-
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 11px;
-            font-weight: 600;
-        }
-        .badge-active { background-color: #e6f4ea; color: var(--success); }
-        .badge-inactive { background-color: #fce8e6; color: var(--danger); }
-
-        .profile-data-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            font-size: 13px;
-            margin-bottom: 15px;
-        }
-
-        .profile-data-row {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .profile-data-row span:first-child { color: var(--text-light); font-weight: 500; }
-        .profile-data-row span:last-child { color: var(--text-color); font-weight: 600; }
-
-        .profile-action-links {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-        .profile-action-links .btn { flex: 1; justify-content: center; font-size: 12px; padding: 8px 12px; }
-
-        /* Workload Tracking Component Analytics Elements */
-        .workload-tracker-analytics {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .workload-metrics-summary-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-        }
-
-        .metric-mini-pill {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .metric-mini-pill div:first-child { font-size: 11px; text-transform: uppercase; color: var(--text-light); font-weight: 500; }
-        .metric-mini-pill div:last-child { font-size: 18px; font-weight: 700; color: var(--primary-color); margin-top: 4px; }
-
-        .progress-bar-track {
-            background-color: #e2e8f0;
-            height: 10px;
-            border-radius: 50px;
+        /* --- Interactive Panels --- */
+        .panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--gray-light);
             overflow: hidden;
-            margin-top: 5px;
         }
 
-        .progress-bar-fill {
-            background-color: #3b82f6;
-            height: 100%;
-            width: 0%;
-            transition: width 0.4s ease, background-color 0.4s ease;
-        }
-
-        .workload-status-label {
+        .panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--gray-light);
+            background: #FAFCFF;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+        }
+
+        .panel-header h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-navy);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-body {
+            padding: 24px;
+        }
+
+        /* --- UI Forms --- */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
             font-size: 13px;
             font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
         }
 
-        /* Allocation Segment Form + Table Interface Layout Matrix */
-        .allocation-control-flow-group {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr) auto;
-            gap: 15px;
-            align-items: end;
+        .form-group label span {
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 14px;
+            border: 1px solid #CBD5E1;
+            border-radius: 8px;
+            outline: none;
+            background-color: white;
+            color: var(--text-main);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-navy);
+            box-shadow: 0 0 0 3px rgba(11, 31, 75, 0.1);
+        }
+
+        /* Radio Options styling */
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 4px;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .radio-label input {
+            accent-color: var(--primary-navy);
+            width: 16px;
+            height: 16px;
+        }
+
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: var(--primary-navy); color: white; }
+        .btn-primary:hover { background: #123070; }
+        .btn-secondary { background: #F1F5F9; color: var(--text-main); }
+        .btn-secondary:hover { background: #E2E8F0; }
+
+        /* --- Search & Controls --- */
+        .search-wrapper {
             margin-bottom: 20px;
-            background-color: #f8fafc;
-            padding: 15px;
-            border-radius: var(--radius);
-            border: 1px solid #e2e8f0;
+            position: relative;
         }
 
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-control {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            font-size: 14px;
+            border: 1px solid var(--gray-light);
+            border-radius: 10px;
+            outline: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.01);
+            transition: border-color 0.2s;
+        }
+
+        .search-control:focus {
+            border-color: var(--primary-navy);
+        }
+
+        /* --- Data Grid Tables --- */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--gray-light);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 13px;
+            font-size: 14px;
         }
 
-        thead { background-color: #f1f5f9; }
-        th { padding: 12px 16px; font-weight: 600; color: var(--primary-color); text-transform: uppercase; font-size: 11px; }
-        tbody tr { border-bottom: 1px solid #e2e8f0; }
-        tbody tr:hover { background-color: #f8fafc; }
-        td { padding: 10px 16px; vertical-align: middle; }
-
-        /* Timetable Visualization Layout Panel Component Layout Elements */
-        .timetable-matrix-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 10px;
+        th, td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--gray-light);
         }
 
-        .timetable-day-column {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            padding: 10px;
-            min-height: 150px;
+        th {
+            background: #F8FAFC;
+            color: var(--primary-navy);
+            font-weight: 600;
+            white-space: nowrap;
         }
 
-        .day-column-header {
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #FAFCFF;
+        }
+
+        /* --- Status/Badge Universals --- */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
             font-size: 12px;
-            font-weight: 700;
-            color: var(--primary-color);
-            text-align: center;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--secondary-color);
-            margin-bottom: 10px;
-            text-transform: uppercase;
+            font-weight: 600;
+            display: inline-block;
         }
 
-        .timetable-period-node {
-            background-color: var(--white);
-            border: 1px solid #cbd5e1;
-            border-left: 3px solid #3b82f6;
-            border-radius: 4px;
-            padding: 6px 8px;
-            font-size: 11px;
-            margin-bottom: 6px;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
+        .badge-success { background: #E6F4EA; color: #137333; }
+        .badge-danger { background: #FCE8E6; color: #C5221F; }
+        .badge-gray { background: #F1F5F9; color: #475569; }
 
-        .timetable-period-node div:first-child { font-weight: 700; color: var(--text-color); }
-        .timetable-period-node div:last-child { color: var(--text-light); margin-top: 2px; font-size: 10px; }
-
-        .no-allocations-placeholder {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-light);
-            font-style: italic;
-            font-size: 13px;
-        }
-
-        /* Action Save Matrix Footer Control Box Panel Layout */
-        .global-form-footer-actions {
+        /* Action Controls */
+        .action-actions {
             display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            background-color: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-top: 25px;
+            gap: 8px;
         }
 
-        /* Responsive Configuration Grid Adaptations Media Queries Framework Layer Breakpoints */
-        @media (max-width: 1200px) {
-            .workspace-split-layout { grid-template-columns: 1fr; }
-            .search-grid { grid-template-columns: repeat(2, 1fr); }
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 13px;
+            transition: background 0.2s, color 0.2s;
         }
 
-        @media (max-width: 992px) {
-            .allocation-control-flow-group { grid-template-columns: 1fr; gap: 12px; }
-            .allocation-control-flow-group .btn { width: 100%; justify-content: center; }
-            .timetable-matrix-grid { grid-template-columns: repeat(3, 1fr); }
+        .btn-edit { background: #FEF3C7; color: #D97706; }
+        .btn-edit:hover { background: #FDE68A; }
+        .btn-delete { background: #FEE2E2; color: #DC2626; }
+        .btn-delete:hover { background: #FCA5A5; }
+
+        /* --- Messaging & State Fallbacks --- */
+        .empty-card {
+            padding: 50px 24px;
+            text-align: center;
+            color: var(--text-muted);
         }
 
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; padding: 15px; }
-            .brand { margin-bottom: 15px; }
-            .main-content { padding: 15px; }
-            .search-grid { grid-template-columns: 1fr; }
-            .timetable-matrix-grid { grid-template-columns: 1fr; }
-            .global-form-footer-actions { flex-direction: column-reverse; }
-            .global-form-footer-actions .btn { width: 100%; justify-content: center; }
+        .empty-card i {
+            font-size: 40px;
+            color: var(--gray-light);
+            margin-bottom: 14px;
+        }
+
+        .spinner-layer {
+            padding: 40px;
+            text-align: center;
+            color: var(--primary-navy);
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        /* --- Toast Toast Notifications --- */
+        .toast-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1E293B;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+        }
+
+        .toast-notification.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-notification i {
+            color: var(--success);
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand">
-            <i class="fa-solid fa-school"></i> R.S. Public School
-        </div>
-        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-        <a href="teachers-management.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
+    <div class="erp-wrapper">
+        <header>
+            <div class="header-title">
+                <h1><i class="fa-solid fa-chalkboard-user"></i> Teacher Class & Subject Allocation</h1>
+                <p>Assign classes, sections and professional subjects to teachers for real-time schedule distribution.</p>
+            </div>
+            <div class="security-badge">
+                <i class="fa-solid fa-shield-halved"></i> Access Level: Secure ERP Admin
+            </div>
+        </header>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <div class="stat-info">
+                    <h3 id="statTotal">0</h3>
+                    <p>Total Allocations</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-user-tie"></i></div>
+                <div class="stat-info">
+                    <h3 id="statClassTeachers">0</h3>
+                    <p>Class Teachers</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-toggle-on"></i></div>
+                <div class="stat-info">
+                    <h3 id="statActive">0</h3>
+                    <p>Active Allocations</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                <div class="stat-info">
+                    <h3 id="statUniqueTeachers">0</h3>
+                    <p>Teachers Assigned</p>
+                </div>
+            </div>
+        </section>
+
+        <main class="workspace-layout">
+            
+            <section class="panel">
+                <div class="panel-header">
+                    <h2 id="formPanelTitle"><i class="fa-solid fa-plus-circle"></i> Create Allocation</h2>
+                </div>
+                <div class="panel-body">
+                    <form id="allocationForm" onsubmit="saveAllocation(event)">
+                        <input type="hidden" id="allocationId">
+
+                        <div class="form-group">
+                            <label for="teacherSelect">Teacher <span>*</span></label>
+                            <select id="teacherSelect" class="form-control" required>
+                                <option value="">-- Select Teacher --</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="classSelect">Class <span>*</span></label>
+                            <select id="classSelect" class="form-control" required>
+                                <option value="">-- Select Class --</option>
+                                <option value="Playway">Playway</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="LKG">LKG</option>
+                                <option value="UKG">UKG</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="sectionSelect">Section <span>*</span></label>
+                            <select id="sectionSelect" class="form-control" required>
+                                <option value="">-- Select Section --</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="subjectName">Subject <span>*</span></label>
+                            <input type="text" id="subjectName" class="form-control" placeholder="e.g., Computer" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Class Teacher</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="isClassTeacher" value="Yes"> Yes
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="isClassTeacher" value="No" checked> No
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="statusSelect">Status</label>
+                            <select id="statusSelect" class="form-control">
+                                <option value="Active">Active</option>
+                                <option value="Inactive">Inactive</option>
+                            </select>
+                        </div>
+
+                        <div class="button-row">
+                            <button type="button" class="btn btn-secondary" onclick="resetForm()">Reset</button>
+                            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Save Allocation</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-header">
+                    <h2><i class="fa-solid fa-table-list"></i> Current Enterprise System Allocations</h2>
+                </div>
+                <div class="panel-body">
+                    <div class="search-wrapper">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchBar" class="search-control" placeholder="Search by Teacher Name, Code, Class or Subject..." oninput="searchAllocations()">
+                    </div>
+
+                    <div id="tableSpinner" class="spinner-layer" style="display: none;">
+                        <i class="fa-solid fa-circle-notch spinner"></i>
+                        <p>Updating System Allocation Tables...</p>
+                    </div>
+
+                    <div id="emptyState" class="empty-card" style="display: none;">
+                        <i class="fa-solid fa-folder-open"></i>
+                        <p>No Allocations Found matching search parameters.</p>
+                    </div>
+
+                    <div class="table-responsive" id="tableContainer">
+                        <table id="allocationsTable">
+                            <thead>
+                                <tr>
+                                    <th>Teacher Code</th>
+                                    <th>Teacher Name</th>
+                                    <th>Class</th>
+                                    <th>Section</th>
+                                    <th>Subject</th>
+                                    <th>Class Teacher</th>
+                                    <th>Status</th>
+                                    <th width="90">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="allocationsTableBody">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
     </div>
 
-    <div class="main-content" id="allocationManagementRoot">
-        
-        <div class="header-actions">
-            <div class="page-title">
-                <h1>Teacher Allocation Management</h1>
-                <p>Configure structural resource matrices, mapping faculty nodes across classes, sections, syllabi, and administrative operational duties.</p>
-            </div>
-            <div class="top-action-btns">
-                <button type="button" id="btnPrintReport" class="btn btn-secondary"><i class="fa-solid fa-print"></i> Print Allocation Report</button>
-                <button type="button" id="btnExportExcel" class="btn btn-secondary"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
-                <a href="teachers-management.html" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back</a>
-            </div>
-        </div>
-
-        <div class="selection-filter-bar" id="searchFilterPanel">
-            <div class="search-grid">
-                <div class="form-group">
-                    <label for="searchTeacher">Search Teacher Node</label>
-                    <select id="searchTeacher" name="searchTeacher" class="form-control">
-                        </select>
-                </div>
-                <div class="form-group">
-                    <label for="filterDepartment">Filter Department</label>
-                    <select id="filterDepartment" name="filterDepartment" class="form-control">
-                        <option value="">-- All Departments --</option>
-                        <option value="Science">Science</option>
-                        <option value="Mathematics">Mathematics</option>
-                        <option value="Languages">Languages</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filterClass">Filter Allocated Class</label>
-                    <select id="filterClass" name="filterClass" class="form-control">
-                        <option value="">-- All Classes --</option>
-                        <option value="Class 10">Class 10</option>
-                        <option value="Class 11">Class 11</option>
-                        <option value="Class 12">Class 12</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="filterStatus">Teacher System Status</label>
-                    <select id="filterStatus" name="filterStatus" class="form-control">
-                        <option value="">-- All Status States --</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="workspace-split-layout">
-            
-            <div class="left-column-panel">
-                
-                <div class="section-card" id="teacherInfoCard">
-                    <div class="card-title">
-                        <span><i class="fa-solid fa-id-card-clip"></i> Active Faculty Profile Summary</span>
-                    </div>
-                    <div class="teacher-meta-profile-view">
-                        <img src="" id="infoPhoto" class="teacher-large-avatar" alt="Faculty Photo">
-                        <div>
-                            <h3 id="infoName">--------</h3>
-                            <p id="infoDesignation">----</p>
-                            <span id="infoStatusBadge" class="badge">----</span>
-                        </div>
-                    </div>
-                    <div class="profile-data-list">
-                        <div class="profile-data-row"><span>Teacher ID Key:</span><span id="lblInfoId">----</span></div>
-                        <div class="profile-data-row"><span>Core Division:</span><span id="lblInfoDept">----</span></div>
-                        <div class="profile-data-row"><span>Mobile Track:</span><span id="lblInfoMobile">----</span></div>
-                        <div class="profile-data-row"><span>Qualifications:</span><span id="lblInfoQual">----</span></div>
-                    </div>
-                    <div class="profile-action-links">
-                        <a href="" id="lnkViewProfile" class="btn btn-secondary"><i class="fa-solid fa-eye"></i> Profile</a>
-                        <a href="" id="lnkEditTeacher" class="btn btn-secondary"><i class="fa-solid fa-user-pen"></i> Edit Profile</a>
-                    </div>
-                </div>
-
-                <div class="section-card accent-card" id="workloadSummaryCard">
-                    <div class="card-title">
-                        <span><i class="fa-solid fa-chart-pie"></i> Dynamic Workload Audit Summary</span>
-                    </div>
-                    <div class="workload-tracker-analytics">
-                        <div class="workload-status-label">
-                            <span>Computed Loading Index:</span>
-                            <span id="lblWorkloadStatus" style="color: var(--success);">Light</span>
-                        </div>
-                        <div class="progress-bar-track">
-                            <div class="progress-bar-fill" id="pbWorkloadFill"></div>
-                        </div>
-                        <div class="workload-metrics-summary-grid">
-                            <div class="metric-mini-pill">
-                                <div>Classes Mapped</div>
-                                <div id="lblCountClasses">0</div>
-                            </div>
-                            <div class="metric-mini-pill">
-                                <div>Sections Mapped</div>
-                                <div id="lblCountSections">0</div>
-                            </div>
-                            <div class="metric-mini-pill">
-                                <div>Syllabi Subjects</div>
-                                <div id="lblCountSubjects">0</div>
-                            </div>
-                            <div class="metric-mini-pill">
-                                <div>Admin Duties</div>
-                                <div id="lblCountResponsibilities">0</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="right-column-panel">
-                
-                <div class="section-card" id="classAllocationSection">
-                    <div class="card-title"><span><i class="fa-solid fa-chalkboard"></i> Academic Class Room Division Allocator Matrix</span></div>
-                    
-                    <div class="allocation-control-flow-group">
-                        <div class="form-group">
-                            <label for="allocClassSelect">Target Grade Class</label>
-                            <select id="allocClassSelect" class="form-control"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="allocClassSectionSelect">Division Section</label>
-                            <select id="allocClassSectionSelect" class="form-control">
-                                <option value="A">Section A</option>
-                                <option value="B">Section B</option>
-                                <option value="C">Section C</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Designated Class Teacher Status?</label>
-                            <div style="display: flex; gap: 15px; margin-top: 10px;">
-                                <label style="display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500;"><input type="radio" name="radClassTeacherRole" value="Yes" style="accent-color: var(--primary-color);"> Yes</label>
-                                <label style="display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 500;"><input type="radio" name="radClassTeacherRole" value="No" checked style="accent-color: var(--primary-color);"> No</label>
-                            </div>
-                        </div>
-                        <button type="button" id="btnAssignClassSubmit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Map Class</button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tblClassAllocations">
-                            <thead>
-                                <tr>
-                                    <th>Class Room Node</th>
-                                    <th>Section Division</th>
-                                    <th>Allocated Operational Role</th>
-                                    <th>Transaction Initialization Date</th>
-                                    <th style="width: 80px; text-align: center;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyClassAllocations"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="section-card" id="subjectAllocationSection">
-                    <div class="card-title"><span><i class="fa-solid fa-book"></i> Course Syllabus Subject Curriculum Allocator Matrix</span></div>
-                    
-                    <div class="allocation-control-flow-group">
-                        <div class="form-group">
-                            <label for="allocSubjClassSelect">Target Class</label>
-                            <select id="allocSubjClassSelect" class="form-control"></select>
-                        </div>
-                        <div class="form-group">
-                            <label for="allocSubjSectionSelect">Target Section</label>
-                            <select id="allocSubjSectionSelect" class="form-control">
-                                <option value="A">Section A</option>
-                                <option value="B">Section B</option>
-                                <option value="C">Section C</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="allocSubjectSelect">Syllabus Core Course Subject</label>
-                            <select id="allocSubjectSelect" class="form-control"></select>
-                        </div>
-                        <button type="button" id="btnAssignSubjectSubmit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Map Subject</button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tblSubjectAllocations">
-                            <thead>
-                                <tr>
-                                    <th>Course Syllabus Subject</th>
-                                    <th>Target Class Room</th>
-                                    <th>Assigned Section</th>
-                                    <th>Transaction Initialization Date</th>
-                                    <th style="width: 80px; text-align: center;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodySubjectAllocations"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="section-card" id="responsibilityAllocationSection">
-                    <div class="card-title"><span><i class="fa-solid fa-user-shield"></i> Institutional Administrative Mandates & Core Responsibilities</span></div>
-                    
-                    <div class="allocation-control-flow-group" style="grid-template-columns: 2fr auto;">
-                        <div class="form-group">
-                            <label for="allocResponsibilitySelect">Designated Institutional Command Board Mandated Role Responsibility</label>
-                            <select id="allocResponsibilitySelect" class="form-control">
-                                <option value="House Incharge">House Incharge</option>
-                                <option value="Sports Incharge">Sports Incharge</option>
-                                <option value="Exam Coordinator">Exam Coordinator</option>
-                                <option value="Discipline Incharge">Discipline Incharge</option>
-                                <option value="Event Coordinator">Event Coordinator</option>
-                                <option value="Library Incharge">Library Incharge</option>
-                                <option value="Transport Incharge">Transport Incharge</option>
-                                <option value="Academic Head">Academic Head</option>
-                            </select>
-                        </div>
-                        <button type="button" id="btnAssignResponsibilitySubmit" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Delegate Responsibility</button>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table id="tblResponsibilityAllocations">
-                            <thead>
-                                <tr>
-                                    <th>Delegated Functional Responsibility Mandate Designation</th>
-                                    <th>Authorization Initialization Timestamp</th>
-                                    <th style="width: 80px; text-align: center;">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="tbodyResponsibilityAllocations"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="section-card accent-card" id="timetablePreviewSection">
-                    <div class="card-title"><span><i class="fa-solid fa-calendar-days"></i> Automated Operational Timetable Weekly Structural Preview Grid</span></div>
-                    <div class="timetable-matrix-grid" id="containerTimetableGrid">
-                        
-                        <div class="timetable-day-column" data-day="Monday"><div class="day-column-header">Mon</div><div class="day-bucket-slot"></div></div>
-                        <div class="timetable-day-column" data-day="Tuesday"><div class="day-column-header">Tue</div><div class="day-bucket-slot"></div></div>
-                        <div class="timetable-day-column" data-day="Wednesday"><div class="day-column-header">Wed</div><div class="day-bucket-slot"></div></div>
-                        <div class="timetable-day-column" data-day="Thursday"><div class="day-column-header">Thu</div><div class="day-bucket-slot"></div></div>
-                        <div class="timetable-day-column" data-day="Friday"><div class="day-column-header">Fri</div><div class="day-bucket-slot"></div></div>
-                        <div class="timetable-day-column" data-day="Saturday"><div class="day-column-header">Sat</div><div class="day-bucket-slot"></div></div>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="global-form-footer-actions">
-            <button type="button" id="btnResetAllocationChanges" class="btn btn-secondary">Reset View State</button>
-            <button type="button" id="btnUpdateAllocationChangesSubmit" class="btn btn-success"><i class="fa-solid fa-circle-check"></i> Commit Changes & Update Allocation Schema</button>
-            <button type="button" id="btnSaveAllocationMasterSubmit" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Complete Master Save Configuration</button>
-        </div>
-
+    <div id="toast" class="toast-notification">
+        <i class="fa-solid fa-circle-check"></i> <span id="toastMessage">Allocation Saved Successfully</span>
     </div>
 
     <script>
-        /**
-         * APPLICATION SCHEMA SEED ARRAYS MASTER PAYLOAD REFERENCE CONTEXT
-         */
-        const teachersSampleRegistryArray = [
-            { id: "T001", name: "Dr. Alok Ranjan", department: "Science", designation: "Senior Faculty PGT", mobile: "9876543210", qualification: "M.Sc, Ph.D Physics, B.Ed", status: "Active", photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150" },
-            { id: "T002", name: "Meenakshi Sharma", department: "Mathematics", designation: "Faculty TGT", mobile: "8765432109", qualification: "M.Sc Mathematics, B.Ed", status: "Active", photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150" },
-            { id: "T003", name: "Rajesh Verma", department: "Languages", designation: "Primary Instructor PRT", mobile: "7654321098", qualification: "M.A. English, B.Ed", status: "Inactive", photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150" }
-        ];
-
-        const classesSampleRegistryArray = ["Class 10", "Class 11", "Class 12"];
-        const subjectsSampleRegistryArray = ["Physics", "Core Mathematics", "Advanced Mechanics", "Calculus", "English Literature"];
-
-        /**
-         * VOLATILE TRACKING FACTORY STATE METRIC SYSTEM DATA PAYLOADS
-         */
-        let currentSelectedTeacherEntityTrackKeyId = "T001";
+        const API_BASE = "http://localhost:5000/api";
         
-        // Active structural data allocation models mapped context layers tracker state variables 
-        let activeClassAllocationsDataCollection = [
-            { classRoom: "Class 12", section: "A", role: "Class Teacher Designation", date: "2026-04-10" },
-            { classRoom: "Class 11", section: "B", role: "Subject Teacher", date: "2026-05-02" }
-        ];
+        // Data arrays holding baseline state metrics
+        let systemTeachers = [];
+        let systemAllocations = [];
 
-        let activeSubjectAllocationsDataCollection = [
-            { subject: "Physics", classRoom: "Class 12", section: "A", date: "2026-04-10" },
-            { subject: "Advanced Mechanics", classRoom: "Class 11", section: "B", date: "2026-05-02" },
-            { subject: "Physics", classRoom: "Class 12", section: "C", date: "2026-05-18" }
-        ];
-
-        let activeResponsibilitiesDataCollection = ["Academic Head", "Exam Coordinator"];
-
-        // Simulated period tracking array model structure matching class configurations metrics
-        const mockupTimetableStaticWeeklyProfileSchema = [
-            { day: "Monday", text: "Physics", scope: "Class 12-A [09:30 AM]" },
-            { day: "Monday", text: "Adv Mechanics", scope: "Class 11-B [11:15 AM]" },
-            { day: "Tuesday", text: "Physics Laboratory", scope: "Class 12-C [01:45 PM]" },
-            { day: "Wednesday", text: "Physics", scope: "Class 12-A [09:30 AM]" },
-            { day: "Thursday", text: "Adv Mechanics", scope: "Class 11-B [11:15 AM]" },
-            { day: "Friday", text: "Physics", scope: "Class 12-A [09:30 AM]" },
-            { day: "Saturday", text: "Syllabus Review", scope: "Seminar Hall [10:00 AM]" }
-        ];
-
-        document.addEventListener("DOMContentLoaded", () => {
-            initializeMasterAllocationModulePipeline();
+        // Application Context Lifecycle Initialization Hook
+        window.addEventListener('DOMContentLoaded', () => {
+            loadTeachers();
+            loadAllocations();
         });
 
-        function initializeMasterAllocationModulePipeline() {
-            populateConfigurationFormDropdownFiltersOptionsSelectors();
-            synchronizeActiveTeacherStateContextRecordLayouts();
-            setupInteractivityActionControlListeners();
+        // 1. Fetch live application teachers profiles array
+        async function loadTeachers() {
+            try {
+                const response = await fetch(`${API_BASE}/teachers`);
+                if (!response.ok) throw new Error(`Fetch Exception: status code ${response.status}`);
+                const result = await response.json();
+
+                    if(result.success){
+
+                        systemTeachers = result.data;
+
+                        populateTeacherDropdown(systemTeachers);
+
+                    }
+            } catch (err) {
+                console.error("Critical Connection Error mapping system teacher datasets:", err);
+                showToast("System Error loading operational teacher metrics.", true);
+            }
         }
 
-        /**
-         * INTERFACE CONTROLS EXTRACTOR DROPDOWNS POPULATION ENGINE
-         */
-        function populateConfigurationFormDropdownFiltersOptionsSelectors() {
-            const teacherSelect = document.getElementById("searchTeacher");
-            const classSelect1 = document.getElementById("allocClassSelect");
-            const classSelect2 = document.getElementById("allocSubjClassSelect");
-            const subjectSelect = document.getElementById("allocSubjectSelect");
-
-            // Ingest and build teacher selections data maps context elements
-            teacherSelect.innerHTML = "";
-            teachersSampleRegistryArray.forEach(t => {
-                const opt = document.createElement("option");
-                opt.value = t.id;
-                opt.textContent = `${t.name} (ID: ${t.id}) [${t.department}]`;
-                teacherSelect.appendChild(opt);
-            });
-
-            // Ingest and build class selectors components
-            classSelect1.innerHTML = "";
-            classSelect2.innerHTML = "";
-            classesSampleRegistryArray.forEach(c => {
-                const opt1 = document.createElement("option"); opt1.value = c; opt1.textContent = c;
-                const opt2 = document.createElement("option"); opt2.value = c; opt2.textContent = c;
-                classSelect1.appendChild(opt1);
-                classSelect2.appendChild(opt2);
-            });
-
-            // Ingest and build subject choices selections models
-            subjectSelect.innerHTML = "";
-            subjectsSampleRegistryArray.forEach(s => {
-                const opt = document.createElement("option");
-                opt.value = s;
-                opt.textContent = s;
-                subjectSelect.appendChild(opt);
-            });
-        }
-
-        /**
-         * DYNAMIC RE-SYNCHRONIZATION CONTROLLER LAYER
-         * Re-evaluates tracking loops metrics context views layout properties across user modifications data actions
-         */
-        function synchronizeActiveTeacherStateContextRecordLayouts() {
+        // Dropdown dynamic processing sequence
+        function populateTeacherDropdown(teachers) {
+            const select = document.getElementById('teacherSelect');
+            // Remove previous programmatic entries keeping baseline option intact
+            select.innerHTML = '<option value="">-- Select Teacher --</option>';
             
-            /* BACKEND DATA INTERACTION PATH ROUTE PIPELINE SYNC REFERENCE CONTEXT BRIDGE NOTE:
-             * Expected GET Ingestion Vectors Path Target: GET /api/teachers/:id
-             * Expected Allocations Payload Path Target: GET /api/allocations?teacherId=T001
-             */
-
-            const targetLookupIdStr = document.getElementById("searchTeacher").value || currentSelectedTeacherEntityTrackKeyId;
-            currentSelectedTeacherEntityTrackKeyId = targetLookupIdStr;
-
-            const teacherObj = teachersSampleRegistryArray.find(t => t.id === targetLookupIdStr) || teachersSampleRegistryArray[0];
-
-            // 1. Core Profile Details Element Structural Text Modifiers Injections Mappings
-            document.getElementById("infoPhoto").setAttribute("src", teacherObj.photo);
-            document.getElementById("infoName").textContent = teacherObj.name;
-            document.getElementById("infoDesignation").textContent = teacherObj.designation;
-            document.getElementById("lblInfoId").textContent = teacherObj.id;
-            document.getElementById("lblInfoDept").textContent = teacherObj.department;
-            document.getElementById("lblInfoMobile").textContent = teacherObj.mobile;
-            document.getElementById("lblInfoQual").textContent = teacherObj.qualification;
-
-            const badgeNode = document.getElementById("infoStatusBadge");
-            badgeNode.textContent = `${teacherObj.status} System Mapped Status`;
-            badgeNode.className = teacherObj.status === "Active" ? "badge badge-active" : "badge badge-inactive";
-
-            // Update Navigation Directives Anchors Hyperlinks Targets Context 
-            document.getElementById("lnkViewProfile").setAttribute("href", `teacher-profile.html?id=${teacherObj.id}`);
-            document.getElementById("lnkEditTeacher").setAttribute("href", `teacher-edit.html?id=${teacherObj.id}`);
-
-            // 2. Refresh dynamic database grid views layout matrix loops
-            renderClassAllocationsTableGridTree();
-            renderSubjectAllocationsTableGridTree();
-            renderResponsibilitiesTableGridTree();
-
-            // 3. Re-evaluate workload tracking algorithms summary analytics properties
-            calculateDynamicWorkloadSummaryAnalyticsEngine();
-
-            // 4. Ingest and paint timetable allocations scheduling block structures
-            renderWeeklyTimetableGridBlocksContext();
-        }
-
-        /**
-         * DOM CORE RENDER INJECTOR SUBCOMPONENT HOOKS
-         */
-        function renderClassAllocationsTableGridTree() {
-            const tbody = document.getElementById("tbodyClassAllocations");
-            tbody.innerHTML = "";
-
-            if (activeClassAllocationsDataCollection.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="no-allocations-placeholder">No class divisions currently assigned onto current faculty profile node.</td></tr>`;
-                return;
-            }
-
-            activeClassAllocationsDataCollection.forEach((item, index) => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td><strong>${item.classRoom}</strong></td>
-                    <td>Section ${item.section}</td>
-                    <td><span style="font-weight:600; color:var(--primary-color);">${item.role}</span></td>
-                    <td>${item.date}</td>
-                    <td style="text-align:center;"><button type="button" class="btn btn-danger btn-mini-remove" data-type="class" data-index="${index}" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-trash"></i> Remove</button></td>
-                `;
-                tbody.appendChild(tr);
+            teachers.forEach(teacher => {
+                const option = document.createElement('option');
+                option.value = teacher.id;
+                option.textContent = `${teacher.teacher_code || `TCH-${teacher.id}`} - ${teacher.teacher_name}`;
+                select.appendChild(option);
             });
-            bindDynamicRowRemovalUtilityTriggers();
         }
 
-        function renderSubjectAllocationsTableGridTree() {
-            const tbody = document.getElementById("tbodySubjectAllocations");
-            tbody.innerHTML = "";
-
-            if (activeSubjectAllocationsDataCollection.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="no-allocations-placeholder">No curriculum syllabus core course subjects mapped onto target entity reference index.</td></tr>`;
-                return;
-            }
-
-            activeSubjectAllocationsDataCollection.forEach((item, index) => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td><strong>${item.subject}</strong></td>
-                    <td>${item.classRoom}</td>
-                    <td>Section ${item.section}</td>
-                    <td>${item.date}</td>
-                    <td style="text-align:center;"><button type="button" class="btn btn-danger btn-mini-remove" data-type="subject" data-index="${index}" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-trash"></i> Remove</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-            bindDynamicRowRemovalUtilityTriggers();
-        }
-
-        function renderResponsibilitiesTableGridTree() {
-            const tbody = document.getElementById("tbodyResponsibilityAllocations");
-            tbody.innerHTML = "";
-
-            if (activeResponsibilitiesDataCollection.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="no-allocations-placeholder">No administrative mandates delegated onto active resource target framework data loops.</td></tr>`;
-                return;
-            }
-
-            activeResponsibilitiesDataCollection.forEach((item, index) => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td><strong>${item}</strong></td>
-                    <td>2026-05-10 [System Default Authorization Log Timestamp]</td>
-                    <td style="text-align:center;"><button type="button" class="btn btn-danger btn-mini-remove" data-type="responsibility" data-index="${index}" style="padding:4px 8px; font-size:11px;"><i class="fa-solid fa-trash"></i> Remove</button></td>
-                `;
-                tbody.appendChild(tr);
-            });
-            bindDynamicRowRemovalUtilityTriggers();
-        }
-
-        /**
-         * TIMETABLE WEEKLY PERIOD SLOT DRAW DATA PIPELINE UTILITY
-         */
-        function renderWeeklyTimetableGridBlocksContext() {
-            const dayColumns = document.querySelectorAll(".timetable-day-column");
+        // 2. Fetch system configurations from structural assignments model table
+        async function loadAllocations() {
+            const spinner = document.getElementById('tableSpinner');
+            const container = document.getElementById('tableContainer');
+            const emptyState = document.getElementById('emptyState');
             
-            dayColumns.forEach(col => {
-                const dayNameKey = col.getAttribute("data-day");
-                const bucketContainer = col.querySelector(".day-bucket-slot");
-                bucketContainer.innerHTML = "";
+            spinner.style.display = 'block';
+            container.style.display = 'none';
+            emptyState.style.display = 'none';
 
-                const filteredPeriodNodeMatches = mockupTimetableStaticWeeklyProfileSchema.filter(p => p.day === dayNameKey);
+            try {
+                const response = await fetch(`${API_BASE}/allocations`);
+                if (!response.ok) throw new Error(`Fetch Exception: status code ${response.status}`);
+                const result = await response.json();
+
+            if(result.success){
+
+                systemAllocations = result.data;
+
+                renderAllocationsTable(systemAllocations);
+
+                updateStatistics(systemAllocations);
+
+            }
+            } catch (err) {
+                console.error("Critical Connection Error mapping system allocations datasets:", err);
+                emptyState.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i><p>Failed to establish link array to core system datasets.</p>`;
+                emptyState.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        }
+
+        // Render system allocations records grid architecture
+        function renderAllocationsTable(allocations) {
+            const tbody = document.getElementById('allocationsTableBody');
+            const container = document.getElementById('tableContainer');
+            const emptyState = document.getElementById('emptyState');
+            const spinner = document.getElementById('tableSpinner');
+            
+            tbody.innerHTML = '';
+            spinner.style.display = 'none';
+
+            if (allocations.length === 0) {
+                emptyState.style.display = 'block';
+                container.style.display = 'none';
+                return;
+            }
+
+            emptyState.style.display = 'none';
+            container.style.display = 'block';
+
+            allocations.forEach(item => {
+                // Cross-reference data components dynamically safely extracting contextual metrics if needed
+                const teacherCode = item.teacher_code || `TCH-${item.teacher_id}`;
+                const teacherName = item.teacher_name || 'Unknown Faculty Profile';
                 
-                if (filteredPeriodNodeMatches.length === 0 || activeSubjectAllocationsDataCollection.length === 0) {
-                    bucketContainer.innerHTML = `<div style="font-size:10px; color:var(--text-light); text-align:center; padding-top:10px;">No Classes</div>`;
+                const classTeacherBadge = item.is_class_teacher === 'Yes' 
+                    ? '<span class="badge badge-success">Yes</span>' 
+                    : '<span class="badge badge-gray">No</span>';
+                    
+                const statusBadge = item.status === 'Active' 
+                    ? '<span class="badge badge-success">Active</span>' 
+                    : '<span class="badge badge-danger">Inactive</span>';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${teacherCode}</strong></td>
+                    <td>${teacherName}</td>
+                    <td>Class ${item.class_name}</td>
+                    <td>Section ${item.section}</td>
+                    <td>${item.subject_name}</td>
+                    <td>${classTeacherBadge}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <div class="action-actions">
+                            <button class="action-btn btn-edit" title="Modify Allocation Element" onclick="editAllocation(${item.id})"><i class="fa-solid fa-pen-to-square"></i></button>
+                            <button class="action-btn btn-delete" title="Purge Context Allocation" onclick="deleteAllocation(${item.id})"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. Dynamic Interactive Form Processing Sequence Core Component
+        async function saveAllocation(event) {
+            event.preventDefault();
+
+            const allocationId = document.getElementById('allocationId').value;
+            const teacherId = document.getElementById('teacherSelect').value;
+            const className = document.getElementById('classSelect').value;
+            const section = document.getElementById('sectionSelect').value;
+            const subjectName = document.getElementById('subjectName').value.trim();
+            const isClassTeacher = document.querySelector('input[name="isClassTeacher"]:checked').value;
+            const status = document.getElementById('statusSelect').value;
+
+            // Runtime Functional Guard Statements Validation
+            if (!teacherId || !className || !section || !subjectName) {
+                showToast("System Verification Fault: Mandatory attributes incomplete.", true);
+                return;
+            }
+
+            const payload = {
+                teacher_id: parseInt(teacherId, 10),
+                class_name: className,
+                section: section,
+                subject_name: subjectName,
+                is_class_teacher: isClassTeacher,
+                status: status
+            };
+
+            try {
+                let response;
+                // Determine transaction route depending on baseline action identity type
+                if (allocationId) {
+                    // PUT / UPDATE request route processing sequence (Future Proofing Extension Module Setup)
+                    response = await fetch(`${API_BASE}/allocations/${allocationId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
                 } else {
-                    filteredPeriodNodeMatches.forEach(p => {
-                        const node = document.createElement("div");
-                        node.className = "timetable-period-node";
-                        node.innerHTML = `<div>${p.text}</div><div>${p.scope}</div>`;
-                        bucketContainer.appendChild(node);
+                    // Default baseline pipeline structure: POST transaction payload
+                    response = await fetch(`${API_BASE}/allocations`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
                 }
-            });
-        }
 
-        /**
-         * BUSINESS RULES PROCESSING COMPUTATION LOGIC ENGINE
-         * Analyzes assigned load allocations parameters dynamically, updating workload metrics indicator components
-         */
-        function calculateDynamicWorkloadSummaryAnalyticsEngine() {
-            const countClassesVal = activeClassAllocationsDataCollection.length;
-            const countSubjectsVal = activeSubjectAllocationsDataCollection.length;
-            const countResponsibilitiesVal = activeResponsibilitiesDataCollection.length;
+                if (!response.ok) throw new Error(`Persistence validation error processing write sequences.`);
+                
+                showToast(allocationId ? "Allocation Updated Successfully" : "Allocation Saved Successfully", false);
+                resetForm();
+                loadAllocations();
 
-            // Extract unique section code occurrences configurations strings mapped counts trackers bounds
-            const uniqueSectionsTrackSet = new Set();
-            activeClassAllocationsDataCollection.forEach(c => uniqueSectionsTrackSet.add(`${c.classRoom}-${c.section}`));
-            activeSubjectAllocationsDataCollection.forEach(s => uniqueSectionsTrackSet.add(`${s.classRoom}-${s.section}`));
-            const countSectionsVal = uniqueSectionsTrackSet.size;
-
-            // Reflect numerical results values back inside dashboard text layout panels tokens properties 
-            document.getElementById("lblCountClasses").textContent = countClassesVal;
-            document.getElementById("lblCountSections").textContent = countSectionsVal;
-            document.getElementById("lblCountSubjects").textContent = countSubjectsVal;
-            document.getElementById("lblCountResponsibilities").textContent = countResponsibilitiesVal;
-
-            // Composite Weighted Workload Allocation Linear Progression Stress Formulating Algorithmic Logic Check
-            const computedAggregatedScoreWeight = (countClassesVal * 20) + (countSubjectsVal * 15) + (countResponsibilitiesVal * 25);
-            const computedLoadPercentValueTrack = Math.min(100, computedAggregatedScoreWeight);
-
-            const progressBarFillNodeElement = document.getElementById("pbWorkloadFill");
-            const lblStatusTrackerNodeElement = document.getElementById("lblWorkloadStatus");
-
-            progressBarFillNodeElement.style.width = `${computedLoadPercentValueTrack}%`;
-
-            // Operational Constraint Threshold Checks Matching Structural Loading Classes Boundaries
-            if (computedLoadPercentValueTrack <= 40) {
-                lblStatusTrackerNodeElement.textContent = "Light Workload Status Track";
-                lblStatusTrackerNodeElement.style.color = "var(--success)";
-                progressBarFillNodeElement.style.backgroundColor = "var(--success)";
-            } else if (computedLoadPercentValueTrack <= 75) {
-                lblStatusTrackerNodeElement.textContent = "Medium Operational Profile Workload Bound";
-                lblStatusTrackerNodeElement.style.color = "var(--warning)";
-                progressBarFillNodeElement.style.backgroundColor = "var(--warning)";
-            } else {
-                lblStatusTrackerNodeElement.textContent = "Heavy Allocation Boundary Security Threshold Strain Alert";
-                lblStatusTrackerNodeElement.style.color = "var(--danger)";
-                progressBarFillNodeElement.style.backgroundColor = "var(--danger)";
+            } catch (err) {
+                console.error("Critical Persistence Failure Core Endpoint Protocol:", err);
+                showToast("Persistence Error processing target payload array validation data.", true);
             }
         }
 
-        /**
-         * COMPONENT ACTIONS USER INTERACTIVITY BINDINGS LOGIC LAYERS
-         */
-        function setupInteractivityActionControlListeners() {
+        // 4. Client Side Parsing Live Filter Engine
+        function searchAllocations() {
+            const query = document.getElementById('searchBar').value.toLowerCase().trim();
             
-            // Primary Search Switch Event Trigger Initialization Pipeline Handshake Data Mappings Context
-            document.getElementById("searchTeacher").addEventListener("change", synchronizeActiveTeacherStateContextRecordLayouts);
+            if (!query) {
+                renderAllocationsTable(systemAllocations);
+                return;
+            }
 
-            // Filter Dropdowns Synchronization Logic Replications
-            const executeFiltersTriggerWrapper = () => {
-                alert("Data Filter Pipeline Notification Layer Context: Filtering sample records workspace database dataset instances grid according onto specified dropdown matrix parameters selections rules.");
-            };
-            document.getElementById("filterDepartment").addEventListener("change", executeFiltersTriggerWrapper);
-            document.getElementById("filterClass").addEventListener("change", executeFiltersTriggerWrapper);
-            document.getElementById("filterStatus").addEventListener("change", executeFiltersTriggerWrapper);
-
-            // Global Workflow Document Management Framework Action Control Initializations
-            document.getElementById("btnPrintReport").addEventListener("click", () => { window.print(); });
-            document.getElementById("btnExportExcel").addEventListener("click", () => {
-                alert("Data Serialization Matrix Utility Handler: Compiling active configuration structural allocation profiles mapping dataset matrices streams context layout into secure platform spreadsheet download object file formats framework layer.");
-            });
-
-            // Master Bottom Configuration Save Trigger Target Operations Logic Block
-            document.getElementById("btnResetAllocationChanges").addEventListener("click", () => {
-                if(confirm("Are you sure you wish to discard structural modification updates from active workspace allocations draft matrix layouts memory trace bounds?")) {
-                    location.reload();
-                }
-            });
-
-            const executeCommitAlertWrapperSuccessNodeNotification = () => {
+            const filtered = systemAllocations.filter(item => {
+                const name = (item.teacher_name || '').toLowerCase();
+                const code = (item.teacher_code || String(item.teacher_id)).toLowerCase();
+                const cls = (item.class_name || '').toLowerCase();
+                const sub = (item.subject_name || '').toLowerCase();
                 
-                /* API CONNECTION TRANSACTION ENDPOINT HOOK POOL PATH ROUTING BLUEPRINT DETAILS REFERENCE:
-                 * Target Route Node Mapping: POST /api/allocations OR PUT /api/allocations/:id
-                 *
-                 * =========================================================================================
-                 * Express framework integration node script transaction schema mutation engine block code:
-                 * =========================================================================================
-                 * app.post('/api/allocations', async (req, res) => {
-                 * try {
-                 * const { teacherId, classesDataTreePayload, subjectsDataTreePayload, mandatesResponsibilitiesDataTreePayload } = req.body;
-                 * * // Initialize ACID database connection transaction architecture schema isolation lock execution parameters block
-                 * await db.beginTransaction();
-                 * * await db.query('DELETE FROM allocations_classes WHERE teacher_id = ?', [teacherId]);
-                 * // Loop dynamic map rows inserting into target data tables relational mapping keys structures context
-                 * // ... execution processing updates commits loops logic sequences ...
-                 * await db.commit();
-                 * return res.status(200).json({ success: true, message: 'Resource parameters mapping metadata successfully synchronized inside transactional database layers.' });
-                 * } catch (error) {
-                 * await db.rollback();
-                 * return res.status(500).json({ success: false, error: error.message });
-                 * }
-                 * });
-                 */
-
-                alert("Data Matrix Synchronization Pipeline State Status: Master tracking parameters allocation update payload successfully transmitted onto endpoint pipeline channels, writing updates securely inside school enterprise database transactional log layers schema rows context.");
-            };
-
-            document.getElementById("btnUpdateAllocationChangesSubmit").addEventListener("click", executeCommitAlertWrapperSuccessNodeNotification);
-            document.getElementById("btnSaveAllocationMasterSubmit").addEventListener("click", executeCommitAlertWrapperSuccessNodeNotification);
-
-            // INPUT FORM SUBMIT TRIGGERS PIPELINES ADDITION SUB-MODULES OPERATIONS INTERACTION CONTROLLERS
-            
-            // 1. Class Add Action Submission Pipeline Handler
-            document.getElementById("btnAssignClassSubmit").addEventListener("click", () => {
-                const classRoomVal = document.getElementById("allocClassSelect").value;
-                const sectionVal = document.getElementById("allocClassSectionSelect").value;
-                const isClassTeacherSelectedRoleRadioStr = document.querySelector('input[name="radClassTeacherRole"]:checked').value;
-                const calculatedRoleDescriptorLabelString = isClassTeacherSelectedRoleRadioStr === "Yes" ? "Class Teacher Designation" : "Subject Teacher";
-
-                // Validation Guard Rule Check Checking Duplications Collisions In Data Matrix Properties Mappings
-                const duplicateCheckNodeMatch = activeClassAllocationsDataCollection.find(c => c.classRoom === classRoomVal && c.section === sectionVal);
-                if (duplicateCheckNodeMatch) {
-                    alert("Configuration Error Constraint Allocation Collision: Target grade class room section combination already allocated inside active data tracking variables matrix layers.");
-                    return;
-                }
-
-                activeClassAllocationsDataCollection.push({
-                    classRoom: classRoomVal,
-                    section: sectionVal,
-                    role: calculatedRoleDescriptorLabelString,
-                    date: new Date().toISOString().slice(0, 10)
-                });
-
-                renderClassAllocationsTableGridTree();
-                calculateDynamicWorkloadSummaryAnalyticsEngine();
+                return name.includes(query) || code.includes(query) || cls.includes(query) || sub.includes(query);
             });
 
-            // 2. Subject Add Action Submission Pipeline Handler
-            document.getElementById("btnAssignSubjectSubmit").addEventListener("click", () => {
-                const subjVal = document.getElementById("allocSubjectSelect").value;
-                const classRoomVal = document.getElementById("allocSubjClassSelect").value;
-                const sectionVal = document.getElementById("allocSubjSectionSelect").value;
-
-                const duplicateCheckNodeMatch = activeSubjectAllocationsDataCollection.find(s => s.subject === subjVal && s.classRoom === classRoomVal && s.section === sectionVal);
-                if (duplicateCheckNodeMatch) {
-                    alert("Configuration Guard Collision: Selected course subject already mapped onto that targeted batch segment structural data loop property.");
-                    return;
-                }
-
-                activeSubjectAllocationsDataCollection.push({
-                    subject: subjVal,
-                    classRoom: classRoomVal,
-                    section: sectionVal,
-                    date: new Date().toISOString().slice(0, 10)
-                });
-
-                renderSubjectAllocationsTableGridTree();
-                calculateDynamicWorkloadSummaryAnalyticsEngine();
-                renderWeeklyTimetableGridBlocksContext();
-            });
-
-            // 3. Administrative Mandates Add Action Submission Pipeline Handler
-            document.getElementById("btnAssignResponsibilitySubmit").addEventListener("click", () => {
-                const mandateRoleSelectedStr = document.getElementById("allocResponsibilitySelect").value;
-
-                if (activeResponsibilitiesDataCollection.includes(mandateRoleSelectedStr)) {
-                    alert("Validation Conflict Error: Selected institutional command responsibility mandate already assigned to active teacher configuration matrix.");
-                    return;
-                }
-
-                activeResponsibilitiesDataCollection.push(mandateRoleSelectedStr);
-                renderResponsibilitiesTableGridTree();
-                calculateDynamicWorkloadSummaryAnalyticsEngine();
-            });
-
+            renderAllocationsTable(filtered);
         }
 
-        /**
-         * MUTABLE ROW ACTION REMOVAL HANDLER ROUTER HOOK PIPELINE
-         * Attaches context triggers back onto dynamically re-drawn table content trees loops components
-         */
-        function bindDynamicRowRemovalUtilityTriggers() {
-            const removalActionBtnCollectionNodesList = document.querySelectorAll(".btn-mini-remove");
+        // 5. Calculate Metrics Board Framework Elements dynamically
+        function updateStatistics(allocations) {
+            document.getElementById('statTotal').textContent = allocations.length;
             
-            removalActionBtnCollectionNodesList.forEach(btn => {
-                // Ensure clear decoupled separation event contexts tracking using explicit target clones overrides logic block configurations
-                btn.removeAttribute("onclick"); 
-                
-                btn.addEventListener("click", (e) => {
-                    const structuralContextCategoryType = e.currentTarget.getAttribute("data-type");
-                    const indexTargetKeyPositionInteger = parseInt(e.currentTarget.getAttribute("data-index"), 10);
+            const classTeachersCount = allocations.filter(item => item.is_class_teacher === 'Yes').length;
+            document.getElementById('statClassTeachers').textContent = classTeachersCount;
+            
+            const activeCount = allocations.filter(item => item.status === 'Active').length;
+            document.getElementById('statActive').textContent = activeCount;
+            
+            const uniqueTeachers = new Set(allocations.map(item => item.teacher_id));
+            document.getElementById('statUniqueTeachers').textContent = uniqueTeachers.size;
+        }
 
-                    /* BACKEND TRANSACTIONS API ROUTE REFERENCE HOOK BRIDGE GRAPH:
-                     * Path Node Target Specification Endpoint Structure: DELETE /api/allocations/:id
-                     */
+        // 6. Inline record state handling sequence
+        function editAllocation(id) {
+            const allocation = systemAllocations.find(item => item.id === id);
+            if (!allocation) return;
 
-                    if (confirm(`Are you certain you wish to purge and remove this specific target ${structuralContextCategoryType} allocation reference assignment node parameter from active entity memory profiles layout layers tracking?`)) {
-                        
-                        if (structuralContextCategoryType === "class") {
-                            activeClassAllocationsDataCollection.splice(indexTargetKeyPositionInteger, 1);
-                            renderClassAllocationsTableGridTree();
-                        } else if (structuralContextCategoryType === "subject") {
-                            activeSubjectAllocationsDataCollection.splice(indexTargetKeyPositionInteger, 1);
-                            renderSubjectAllocationsTableGridTree();
-                            renderWeeklyTimetableGridBlocksContext();
-                        } else if (structuralContextCategoryType === "responsibility") {
-                            activeResponsibilitiesDataCollection.splice(indexTargetKeyPositionInteger, 1);
-                            renderResponsibilitiesTableGridTree();
-                        }
-
-                        calculateDynamicWorkloadSummaryAnalyticsEngine();
-                    }
-                });
+            document.getElementById('formPanelTitle').innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Modify Allocation Reference #${id}`;
+            document.getElementById('allocationId').value = allocation.id;
+            document.getElementById('teacherSelect').value = allocation.teacher_id;
+            document.getElementById('classSelect').value = allocation.class_name;
+            document.getElementById('sectionSelect').value = allocation.section;
+            document.getElementById('subjectName').value = allocation.subject_name;
+            
+            // Toggle explicit context values checking state matching targets
+            const radioButtons = document.querySelectorAll('input[name="isClassTeacher"]');
+            radioButtons.forEach(radio => {
+                if(radio.value === allocation.is_class_teacher) radio.checked = true;
             });
+
+            document.getElementById('statusSelect').value = allocation.status || 'Active';
+            document.getElementById('teacherSelect').focus();
+        }
+
+        // Destruction sequence architecture mapping pipeline routes
+        async function deleteAllocation(id) {
+            if (!confirm("ERP Safety Protocol Check: Are you sure you want to remove this teacher assignment record?")) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/allocations/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error("Processing logic mapping failure processing backend response deletion routines.");
+                
+                showToast("Allocation Assignment Purged Successfully", false);
+                loadAllocations();
+            } catch (err) {
+                console.error("Critical Pipeline operational system breakdown executing deletion procedures:", err);
+                showToast("Failed to complete structural deletion protocol routes.", true);
+            }
+        }
+
+        // Reset system forms baseline components mapping default target settings
+        function resetForm() {
+            document.getElementById('formPanelTitle').innerHTML = `<i class="fa-solid fa-plus-circle"></i> Create Allocation`;
+            document.getElementById('allocationId').value = '';
+            document.getElementById('allocationForm').reset();
+        }
+
+        // Functional Toast Alert Messaging Architecture System Components
+        function showToast(message, isError = false) {
+            const toast = document.getElementById('toast');
+            const msgSpan = document.getElementById('toastMessage');
+            
+            msgSpan.textContent = message;
+            toast.style.borderLeft = isError ? "4px solid var(--danger)" : "4px solid var(--success)";
+            toast.querySelector('i').className = isError ? "fa-solid fa-circle-xmark" : "fa-solid fa-circle-check";
+            toast.querySelector('i').style.color = isError ? "var(--danger)" : "var(--success)";
+            
+            toast.classList.add('active');
+            
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 4000);
         }
     </script>
 </body>

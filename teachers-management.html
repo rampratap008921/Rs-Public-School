@@ -4,728 +4,1321 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Teacher Management | R.S. Public School ERP</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --primary-color: #0B1F4B;
-            --secondary-color: #d4a017;
-            --bg-color: #f4f7fc;
-            --text-color: #333333;
-            --text-light: #666666;
-            --white: #ffffff;
-            --border-color: #e2e8f0;
-            --success: #10b981;
-            --danger: #ef4444;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --radius: 8px;
+            --primary-navy: #0B1F4B;
+            --primary-gold: #D4A017;
+            --gold-hover: #B8860B;
+            --bg-white: #FFFFFF;
+            --bg-body: #F8FAFC;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --border-color: #E2E8F0;
+            --success: #10B981;
+            --error: #EF4444;
+            --info: #3B82F6;
+            --warning: #F59E0B;
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(226, 232, 240, 0.8);
+            --radius-lg: 16px;
+            --radius-md: 10px;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -5px rgba(11, 31, 75, 0.06);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(214, 160, 23, 0.02) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(11, 31, 75, 0.02) 0px, transparent 50%);
+            color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Sidebar Placeholder for ERP Structure Context */
-        .sidebar {
-            width: 260px;
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 20px;
-            flex-shrink: 0;
+        /* Top Navigation Header bar */
+        header {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, #17326C 100%);
+            color: var(--bg-white);
+            padding: 1.25rem 2rem;
+            border-bottom: 3px solid var(--primary-gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-wrapper {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .brand {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--secondary-color);
-            margin-bottom: 40px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 1rem;
         }
 
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 15px;
-            color: #a0aec0;
-            text-decoration: none;
-            border-radius: var(--radius);
-            margin-bottom: 5px;
-            transition: all 0.3s;
-        }
-
-        .menu-item.active, .menu-item:hover {
-            background-color: rgba(212, 160, 23, 0.15);
-            color: var(--secondary-color);
-        }
-
-        /* Main Content Container */
-        .main-content {
-            flex-grow: 1;
-            padding: 30px;
-            overflow-x: hidden;
-        }
-
-        /* Top Header Action Bar */
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .page-title h1 {
-            font-size: 24px;
-            color: var(--primary-color);
-            font-weight: 700;
-        }
-
-        .page-title p {
-            font-size: 14px;
-            color: var(--text-light);
-            margin-top: 4px;
-        }
-
-        .action-btns {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            border-radius: var(--radius);
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            border: none;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: #123070;
-        }
-
-        .btn-secondary {
-            background-color: var(--white);
-            color: var(--primary-color);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: #f8fafc;
-            border-color: #cbd5e1;
-        }
-
-        /* Dashboard Summary Cards */
-        .dashboard-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .card {
-            background-color: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .card:nth-child(2) { border-left-color: var(--success); }
-        .card:nth-child(3) { border-left-color: var(--secondary-color); }
-        .card:nth-child(4) { border-left-color: #3b82f6; }
-
-        .card-details h3 {
-            font-size: 14px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .card-details .count {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .card-icon {
-            font-size: 24px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+        .brand-logo {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--primary-gold);
+            width: 45px;
+            height: 45px;
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: #f1f5f9;
-            color: var(--primary-color);
+            color: var(--primary-gold);
+            font-size: 1.3rem;
         }
 
-        /* Advanced Search Filter Section */
-        .search-section {
-            background-color: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 30px;
-        }
-
-        .search-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .form-group label {
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-light);
+        .brand-text h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
         }
 
-        .form-control {
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            font-size: 14px;
-            outline: none;
-            transition: border-color 0.2s;
+        .brand-text p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Principal Framework Layout Container */
+        main {
+            flex: 1;
+            max-width: 1500px;
             width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
         }
 
-        .form-control:focus {
-            border-color: var(--primary-color);
+        /* Page Metadata Header Row */
+        .page-headline-block {
+            margin-bottom: 1.5rem;
         }
 
-        /* Responsive Data Table Section */
-        .table-container {
-            background-color: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+        .page-headline-block h2 {
+            font-size: 1.75rem;
+            color: var(--primary-navy);
+            font-weight: 800;
+        }
+
+        .page-headline-block p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Global Control Actions Toolbar Grid Layout */
+        .actions-toolbar-panel {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.7rem 1.35rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .action-btn-gold {
+            background: var(--primary-gold);
+            color: var(--primary-navy);
+        }
+
+        .action-btn-gold:hover {
+            background: var(--gold-hover);
+            color: var(--bg-white);
+            box-shadow: 0 4px 12px rgba(212, 160, 23, 0.2);
+        }
+
+        .action-btn-navy {
+            background: var(--primary-navy);
+            color: var(--bg-white);
+        }
+
+        .action-btn-navy:hover:not(:disabled) {
+            background: #122c66;
+            box-shadow: 0 4px 12px rgba(11, 31, 75, 0.15);
+        }
+
+        .action-btn-outline {
+            background: var(--bg-white);
+            color: var(--primary-navy);
+            border-color: var(--border-color);
+        }
+
+        .action-btn-outline:hover:not(:disabled) {
+            background: var(--bg-body);
+            border-color: #CBD5E1;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #E2E8F0 !important;
+            color: #94A3B8 !important;
+            border-color: #CBD5E1 !important;
+            box-shadow: none !important;
+        }
+
+        /* Analytics Metric Dashboard Framework Layout Grid */
+        .analytics-matrix-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-md);
+            position: relative;
             overflow: hidden;
-            margin-bottom: 30px;
         }
 
-        .table-responsive {
+        .stat-glass-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary-navy);
+        }
+
+        .stat-glass-card.stat-gold::before { background: var(--primary-gold); }
+        .stat-glass-card.stat-success::before { background: var(--success); }
+        .stat-glass-card.stat-info::before { background: var(--info); }
+
+        .stat-meta-data h4 {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .stat-meta-data .stat-counter {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary-navy);
+            margin-top: 0.25rem;
+        }
+
+        .stat-icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: rgba(11, 31, 75, 0.04);
+            color: var(--primary-navy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+        }
+
+        .stat-gold .stat-icon-wrapper { background: rgba(212, 160, 23, 0.08); color: var(--primary-gold); }
+        .stat-success .stat-icon-wrapper { background: rgba(16, 185, 129, 0.08); color: var(--success); }
+        .stat-info .stat-icon-wrapper { background: rgba(59, 130, 246, 0.08); color: var(--info); }
+
+        /* Complex Advanced Query Search Filter Segment Panel Card */
+        .filter-panel-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-fields-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1rem;
+        }
+
+        .filter-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .filter-input-wrapper i {
+            position: absolute;
+            left: 0.85rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        .filter-control-element {
+            width: 100%;
+            padding: 0.65rem 0.75rem 0.65rem 2.25rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-dark);
+            background-color: var(--bg-white);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .filter-control-element:focus {
+            border-color: var(--primary-navy);
+            box-shadow: 0 0 0 3px rgba(11, 31, 75, 0.05);
+        }
+
+        select.filter-control-element {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748B'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1rem;
+            padding-right: 2rem;
+        }
+
+        /* Glassmorphic Central Master Records Data Card Panel Frame layout */
+        .registry-table-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .table-scroll-container {
             width: 100%;
             overflow-x: auto;
         }
 
-        table {
+        .registry-data-table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 14px;
+            font-size: 0.9rem;
         }
 
-        thead {
-            background-color: #f8fafc;
+        .registry-data-table th {
+            background: rgba(11, 31, 75, 0.01);
+            color: var(--primary-navy);
+            font-weight: 700;
+            padding: 1.1rem 1rem;
             border-bottom: 2px solid var(--border-color);
-        }
-
-        th {
-            padding: 16px 20px;
-            font-weight: 600;
-            color: var(--primary-color);
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 0.75rem;
             letter-spacing: 0.5px;
+            user-select: none;
         }
 
-        tbody tr {
+        .registry-data-table th.sortable-header {
+            cursor: pointer;
+        }
+
+        .registry-data-table th.sortable-header:hover {
+            background: rgba(11, 31, 75, 0.03);
+            color: var(--primary-gold);
+        }
+
+        .registry-data-table th.sortable-header i {
+            margin-left: 0.25rem;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .registry-data-table td {
+            padding: 1rem;
             border-bottom: 1px solid var(--border-color);
-            transition: background-color 0.2s;
-        }
-
-        tbody tr:hover {
-            background-color: #f8fafc;
-        }
-
-        td {
-            padding: 14px 20px;
+            color: var(--text-dark);
             vertical-align: middle;
         }
 
-        .teacher-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--border-color);
+        .registry-data-table tbody tr {
+            transition: var(--transition);
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 500;
-            text-align: center;
+        .registry-data-table tbody tr:hover {
+            background: rgba(11, 31, 75, 0.01);
         }
 
-        .badge-active {
-            background-color: #e6f4ea;
-            color: var(--success);
+        .registry-data-table tbody tr.row-selected {
+            background: rgba(214, 160, 23, 0.04) !important;
         }
 
-        .badge-inactive {
-            background-color: #fce8e6;
-            color: var(--danger);
-        }
-
-        .actions-cell {
-            display: flex;
-            gap: 8px;
-            flex-wrap: nowrap;
-        }
-
-        .btn-action {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
+        /* Checkbox Layout Core Elements Style */
+        .checkbox-cell-wrapper {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
-            font-size: 14px;
-            border: none;
+            position: relative;
             cursor: pointer;
-            transition: all 0.2s;
         }
 
-        .btn-view { background-color: #eff6ff; color: #2563eb; }
-        .btn-view:hover { background-color: #2563eb; color: var(--white); }
-        
-        .btn-edit { background-color: #fef9c3; color: #ca8a04; }
-        .btn-edit:hover { background-color: #ca8a04; color: var(--white); }
-        
-        .btn-alloc { background-color: #f3e8ff; color: #9333ea; }
-        .btn-alloc:hover { background-color: #9333ea; color: var(--white); }
-        
-        .btn-delete { background-color: #fee2e2; color: #dc2626; }
-        .btn-delete:hover { background-color: #dc2626; color: var(--white); }
+        .checkbox-cell-wrapper input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-navy);
+            cursor: pointer;
+        }
 
-        .no-records {
+        /* Avatar Graphical Properties Component Styling maps specifications */
+        .teacher-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-gold);
+            background-color: #F1F5F9;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .teacher-avatar-default {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #E2E8F0;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            border: 2px solid var(--primary-gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Component Row Badge Styles */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 50px;
+        }
+
+        .status-pill-active { background: #ECFDF5; color: var(--success); }
+        .status-pill-inactive { background: #FEF2F2; color: var(--error); }
+
+        /* Direct Action Grid Trigger Buttons */
+        .row-action-links-box {
+            display: flex;
+            gap: 0.45rem;
+        }
+
+        .row-action-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .link-view { color: var(--info); background: rgba(59, 130, 246, 0.06); border-color: rgba(59, 130, 246, 0.1); }
+        .link-view:hover { background: var(--info); color: var(--bg-white); }
+
+        .link-edit { color: var(--warning); background: rgba(245, 158, 11, 0.06); border-color: rgba(245, 158, 11, 0.1); }
+        .link-edit:hover { background: var(--warning); color: var(--bg-white); }
+
+        .link-delete { color: var(--error); background: rgba(239, 68, 68, 0.06); border-color: rgba(239, 68, 68, 0.1); }
+        .link-delete:hover { background: var(--error); color: var(--bg-white); box-shadow: 0 4px 10px rgba(239, 68, 68, 0.15); }
+
+        /* Layout State Controls Architecture Layers blocks styles */
+        #loading-state, #empty-state, #error-state {
+            background: var(--bg-white);
+            padding: 4.5rem 2rem;
             text-align: center;
-            padding: 40px;
-            color: var(--text-light);
-            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Print Specific Layout Optimization */
-        @media print {
-            .sidebar, .search-section, .action-btns, .actions-cell, th:last-child, td:last-child {
-                display: none !important;
-            }
-            body {
-                background-color: #fff;
-            }
-            .main-content {
-                padding: 0;
-                width: 100%;
-            }
-            .card {
-                border: 1px solid var(--border-color) !important;
-                box-shadow: none !important;
-            }
-            table {
-                border: 1px solid #000;
-            }
-            th, td {
-                padding: 10px;
-                border-bottom: 1px solid #000;
-            }
+        .spinner-core {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(11, 31, 75, 0.08);
+            border-top-color: var(--primary-navy);
+            border-right-color: var(--primary-gold);
+            border-radius: 50%;
+            animation: infiniteSpin 1.1s infinite linear;
+            margin-bottom: 1.25rem;
         }
 
-        /* Responsive Breakpoints */
+        @keyframes infiniteSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .state-illustration-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.25rem;
+            text-shadow: var(--shadow-sm);
+        }
+
+        .state-headline {
+            font-size: 1.35rem;
+            color: var(--primary-navy);
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .state-description {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 450px;
+            line-height: 1.5;
+        }
+
+        /* Permanent Destruction Safety Authorization Confirmation Modal Layout */
+        .modal-container-mask {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(11, 31, 75, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            z-index: 15000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-container-mask.modal-visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-frame-box {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 460px;
+            box-shadow: 0 25px 50px -12px rgba(11, 31, 75, 0.15);
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .modal-container-mask.modal-visible .modal-frame-box {
+            transform: scale(1);
+        }
+
+        .modal-top-headline-area {
+            padding: 1.5rem 1.5rem 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .modal-danger-badge-icon {
+            width: 38px;
+            height: 38px;
+            background: #FEF2F2;
+            color: var(--error);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            border: 1px solid #FEE2E2;
+        }
+
+        .modal-top-headline-area h3 {
+            font-size: 1.25rem;
+            color: var(--primary-navy);
+            font-weight: 700;
+        }
+
+        .modal-text-content-body {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            color: #334155;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .modal-control-footer {
+            background: #F8FAFC;
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-interactive-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.25rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-btn-cancel { background: var(--bg-white); color: #334155; border-color: var(--border-color); }
+        .modal-btn-cancel:hover:not(:disabled) { background: #F1F5F9; }
+        .modal-btn-confirm-delete { background: var(--error); color: #FFFFFF; }
+        .modal-btn-confirm-delete:hover:not(:disabled) { background: #DC2626; }
+        .modal-interactive-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-inline-loader {
+            width: 14px;
+            height: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #FFFFFF;
+            border-radius: 50%;
+            animation: infiniteSpin 0.8s infinite linear;
+            display: inline-block;
+        }
+
+        /* Global Overlay Toast System Stack Components Layout Engine */
+        .system-toast-stack {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 25000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .toast-popup-window {
+            background: var(--bg-white);
+            color: var(--text-dark);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            min-width: 320px;
+            max-width: 450px;
+            border-left: 5px solid var(--primary-navy);
+            transform: translateX(120%);
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-popup-window.toast-revealed {
+            transform: translateX(0);
+        }
+
+        .toast-popup-window.success-theme { border-left-color: var(--success); }
+        .toast-popup-window.success-theme i { color: var(--success); }
+        .toast-popup-window.error-theme { border-left-color: var(--error); }
+        .toast-popup-window.error-theme i { color: var(--error); }
+
+        .toast-meta-title { font-weight: 700; font-size: 0.9rem; }
+        .toast-meta-desc { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* Responsive Breakpoint Matrix Rules Configuration */
         @media (max-width: 1200px) {
-            .dashboard-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .search-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .analytics-matrix-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+            .filter-fields-row { grid-template-columns: repeat(3, 1fr); }
         }
 
         @media (max-width: 768px) {
-            body {
-                flex-direction: column;
+            .analytics-matrix-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .filter-fields-row { grid-template-columns: 1fr; }
+            .actions-toolbar-panel { flex-direction: column; align-items: stretch; }
+            .action-btn { width: 100%; }
+            .modal-control-footer { flex-direction: column-reverse; }
+            .modal-interactive-btn { width: 100%; }
+        }
+
+        /* Printable Layout Style Core System Override configurations matching A4 paper sizes */
+        @media print {
+            body { background: #FFF !important; color: #000 !important; }
+            header, .actions-toolbar-panel, .filter-panel-card, .row-action-links-box, th:first-child, td:first-child, th:last-child, td:last-child {
+                display: none !important;
             }
-            .sidebar {
-                width: 100%;
-                padding: 15px;
-            }
-            .brand {
-                margin-bottom: 15px;
-            }
-            .main-content {
-                padding: 15px;
-            }
-            .search-grid {
-                grid-template-columns: 1fr;
-            }
-            .dashboard-cards {
-                grid-template-columns: 1fr;
-            }
+            main { margin: 0 !important; padding: 0 !important; max-width: 100% !important; }
+            .analytics-matrix-grid { grid-template-columns: repeat(4, 1fr) !important; gap: 10px !important; }
+            .stat-glass-card { border: 1px solid #000 !important; background: transparent !important; box-shadow: none !important; padding: 10px !important; }
+            .registry-table-card { border: 1px solid #000 !important; background: transparent !important; box-shadow: none !important; border-radius: 0 !important; }
+            .registry-data-table th { border-bottom: 2px solid #000 !important; color: #000 !important; padding: 8px !important; }
+            .registry-data-table td { border-bottom: 1px solid #000 !important; padding: 8px !important; }
+            .teacher-avatar, .teacher-avatar-default { width: 40px !important; height: 40px !important; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="brand">
-            <i class="fa-solid fa-school"></i> R.S. Public School
+    <header>
+        <div class="header-wrapper">
+            <div class="brand">
+                <div class="brand-logo"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="brand-text">
+                    <h1>R.S. Public School</h1>
+                    <p>Enterprise Resource Planning Gateway</p>
+                </div>
+            </div>
         </div>
-        <a href="#" class="menu-item"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
-        <a href="teachers.html" class="menu-item active"><i class="fa-solid fa-chalkboard-teacher"></i> Teachers</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-graduation-cap"></i> Students</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-book"></i> Subjects</a>
-        <a href="#" class="menu-item"><i class="fa-solid fa-money-check-dollar"></i> Finance ERP</a>
-    </div>
+    </header>
 
-    <div class="main-content" id="teacherList">
+    <main>
         
-        <div class="header-actions">
-            <div class="page-title">
-                <h1>Teacher Management</h1>
-                <p>Monitor, configure, and allocate institute faculty operational metrics.</p>
+        <div class="page-headline-block">
+            <h2>Teacher Management</h2>
+            <p>Manage, monitor, allocate and maintain school faculty records.</p>
+        </div>
+
+        <div class="actions-toolbar-panel">
+            <a href="teacher-add.html" class="action-btn action-btn-gold">
+                <i class="fa-solid fa-plus"></i> Add Teacher
+            </a>
+            <button type="button" id="toolbarBtnEdit" class="action-btn action-btn-navy" disabled>
+                <i class="fa-solid fa-pencil"></i> Edit Teacher
+            </button>
+            <a href="teacher-allocation.html" class="action-btn action-btn-outline">
+                <i class="fa-solid fa-sitemap"></i> Assign Classes & Subjects
+            </a>
+            <button type="button" id="toolbarBtnIdCard" class="action-btn action-btn-outline" onclick="executeBatchIdCardGeneration()">
+                <i class="fa-solid fa-id-card"></i> Generate Teacher ID Card
+            </button>
+        </div>
+
+        <div class="analytics-matrix-grid">
+            <div class="stat-glass-card">
+                <div class="stat-meta-data">
+                    <h4>Total Teachers</h4>
+                    <div class="stat-counter" id="statTotal">--</div>
+                </div>
+                <div class="stat-icon-wrapper"><i class="fa-solid fa-users"></i></div>
             </div>
-            <div class="action-btns">
-                <button type="button" class="btn btn-secondary" id="btnPrint"><i class="fa-solid fa-print"></i> Print List</button>
-                <button type="button" class="btn btn-secondary" id="btnExport"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
-                <a href="teacher-add.html" class="btn btn-primary" id="btnAddTeacher"><i class="fa-solid fa-user-plus"></i> Add Teacher</a>
-                <a href="teacher-assignment.html" class="btn btn-primary">
-                <i class="fas fa-tasks"></i>
-                Assign Classes & Subjects
-                </a>
+            <div class="stat-glass-card stat-success">
+                <div class="stat-meta-data">
+                    <h4>Active Teachers</h4>
+                    <div class="stat-counter" id="statActive">--</div>
+                </div>
+                <div class="stat-icon-wrapper"><i class="fa-solid fa-user-check"></i></div>
+            </div>
+            <div class="stat-glass-card stat-gold">
+                <div class="stat-meta-data">
+                    <h4>Inactive Teachers</h4>
+                    <div class="stat-counter" id="statInactive">--</div>
+                </div>
+                <div class="stat-icon-wrapper"><i class="fa-solid fa-user-minus"></i></div>
+            </div>
+            <div class="stat-glass-card stat-info">
+                <div class="stat-meta-data">
+                    <h4>Departments Count</h4>
+                    <div class="stat-counter" id="statDepartments">--</div>
+                </div>
+                <div class="stat-icon-wrapper"><i class="fa-solid fa-building-user"></i></div>
+            </div>
+        </div>
+
+        <div class="filter-panel-card">
+            <div class="filter-fields-row">
+                <div class="filter-input-wrapper">
+                    <i class="fa-solid fa-fingerprint"></i>
+                    <input type="text" id="filterId" class="filter-control-element" placeholder="Search Teacher ID...">
+                </div>
+                <div class="filter-input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="filterName" class="filter-control-element" placeholder="Search Name...">
+                </div>
+                <div class="filter-input-wrapper">
+                    <i class="fa-solid fa-sitemap"></i>
+                    <select id="filterDepartment" class="filter-control-element">
+                        <option value="">All Departments</option>
+                    </select>
+                </div>
+                <div class="filter-input-wrapper">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="text" id="filterMobile" class="filter-control-element" placeholder="Search Mobile...">
+                </div>
+                <div class="filter-input-wrapper">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <select id="filterStatus" class="filter-control-element">
+                        <option value="">All Statuses</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="registry-table-card">
             
+            <div id="loading-state">
+                <div class="spinner-core"></div>
+                <p style="color: var(--primary-navy); font-weight: 600;">Synchronizing Master ERP Records Layer...</p>
             </div>
-        </div>
 
-        <div class="dashboard-cards">
-            <div class="card">
-                <div class="card-details">
-                    <h3>Total Teachers</h3>
-                    <div class="count" id="lblTotal">0</div>
-                </div>
-                <div class="card-icon"><i class="fa-solid fa-users"></i></div>
+            <div id="error-state" style="display: none;">
+                <div class="state-illustration-icon" style="color: var(--error);"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                <div class="state-headline">Infrastructure handshaking failure</div>
+                <div class="state-description">Failed to query microservice cluster nodes. Verify network gateway link controls data lines configuration properties paths.</div>
             </div>
-            <div class="card">
-                <div class="card-details">
-                    <h3>Active Teachers</h3>
-                    <div class="count" id="lblActive">0</div>
-                </div>
-                <div class="card-icon" style="color: var(--success);"><i class="fa-solid fa-user-check"></i></div>
-            </div>
-            <div class="card">
-                <div class="card-details">
-                    <h3>Class Teachers</h3>
-                    <div class="count" id="lblClassTeachers">0</div>
-                </div>
-                <div class="card-icon" style="color: var(--secondary-color);"><i class="fa-solid fa-user-tie"></i></div>
-            </div>
-            <div class="card">
-                <div class="card-details">
-                    <h3>Subject Teachers</h3>
-                    <div class="count" id="lblSubjectTeachers">0</div>
-                </div>
-                <div class="card-icon" style="color: #3b82f6;"><i class="fa-solid fa-book-reader"></i></div>
-            </div>
-        </div>
 
-        <div class="search-section" id="teacherSearch">
-            <div class="search-grid">
-                <div class="form-group">
-                    <label for="searchId">Teacher ID</label>
-                    <input type="text" id="searchId" class="form-control" placeholder="e.g. T001">
-                </div>
-                <div class="form-group">
-                    <label for="searchName">Teacher Name</label>
-                    <input type="text" id="searchName" class="form-control" placeholder="Search by name...">
-                </div>
-                <div class="form-group">
-                    <label for="searchMobile">Mobile Number</label>
-                    <input type="text" id="searchMobile" class="form-control" placeholder="Search by mobile...">
-                </div>
-                <div class="form-group">
-                    <label for="searchSubject">Subject</label>
-                    <input type="text" id="searchSubject" class="form-control" placeholder="e.g. Mathematics">
-                </div>
+            <div id="empty-state" style="display: none;">
+                <div class="state-illustration-icon" style="color: var(--primary-gold);"><i class="fa-solid fa-folder-open"></i></div>
+                <div class="state-headline">No matching registry records discovered</div>
+                <div class="state-description">The requested query parameter coordinates map returned an empty dataset pool array structure inside the cluster layer.</div>
             </div>
-        </div>
 
-        <div class="table-container">
-            <div class="table-responsive">
-                <table id="teacherTable">
+            <div class="table-scroll-container" id="tableContentArea" style="display: none;">
+                <table class="registry-data-table" id="masterRecordsDataTable">
                     <thead>
                         <tr>
+                            <th style="width: 40px; text-align: center;">
+                                <label class="checkbox-cell-wrapper">
+                                    <input type="checkbox" id="selectAllHeaderCheckbox">
+                                </label>
+                            </th>
                             <th>Photo</th>
-                            <th>Teacher ID</th>
-                            <th>Teacher Name</th>
-                            <th>Department</th>
-                            <th>Subject</th>
+                            <th class="sortable-header" onclick="executeColumnSort('teacher_code')">Teacher ID <i class="fa-solid fa-sort"></i></th>
+                            <th class="sortable-header" onclick="executeColumnSort('teacher_name')">Teacher Name <i class="fa-solid fa-sort"></i></th>
+                            <th class="sortable-header" onclick="executeColumnSort('department')">Department <i class="fa-solid fa-sort"></i></th>
+                            <th>Designation</th>
                             <th>Mobile</th>
-                            <th>Status</th>
-                            <th style="min-width: 180px;">Actions</th>
+                            <th>Email</th>
+                            <th class="sortable-header" onclick="executeColumnSort('status')">Status <i class="fa-solid fa-sort"></i></th>
+                            <th style="text-align: center; width: 130px;">Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="teacherTableBody">
+                    <tbody id="teachersRegistryTableBody">
                         </tbody>
                 </table>
             </div>
+
         </div>
 
+    </main>
+
+    <div id="deleteConfirmationModal" class="modal-container-mask" role="dialog" aria-modal="true">
+        <div class="modal-frame-box">
+            <div class="modal-top-headline-area">
+                <div class="modal-danger-badge-icon"><i class="fa-solid fa-trash-can"></i></div>
+                <h3>Delete Teacher</h3>
+            </div>
+            <div class="modal-text-content-body">
+                <p>Are you sure you want to permanently delete this teacher record?</p>
+                <p style="margin-top: 0.5rem; font-size: 0.85rem; color: var(--text-muted); background: #FFF5F5; padding: 0.5rem 0.75rem; border-left: 3px solid var(--error); border-radius: 4px;">
+                    <strong>Notice:</strong> This operational process drops relational table parameters inside the core storage structures immediately.
+                </p>
+            </div>
+            <div class="modal-control-footer">
+                <button type="button" id="modalBtnCancel" class="modal-interactive-btn modal-btn-cancel">Cancel</button>
+                <button type="button" id="modalBtnConfirm" class="modal-interactive-btn modal-btn-confirm-delete">
+                    <span id="modalBtnText">Delete</span>
+                    <span id="modalBtnInlineLoader" class="btn-inline-loader hidden"></span>
+                </button>
+            </div>
+        </div>
     </div>
 
+    <div id="toastSystemStackHolder" class="system-toast-stack"></div>
+
     <script>
-        /**
-         * INITIAL COMMERCIAL DEMO SAMPLE DATA MATRIX
-         * Match Object Model constraints intended for operational relational structures
-         */
-        let teachersData = [
-            { id: "T001", name: "Dr. Alok Ranjan", department: "Science", subject: "Physics", mobile: "9876543210", status: "Active", isClassTeacher: true, photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" },
-            { id: "T002", name: "Meenakshi Sharma", department: "Mathematics", subject: "Calculus", mobile: "8765432109", status: "Active", isClassTeacher: true, photo: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100" },
-            { id: "T003", name: "Rajesh Verma", department: "Languages", subject: "English Literature", mobile: "7654321098", status: "Inactive", isClassTeacher: false, photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100" },
-            { id: "T004", name: "Ananya Deshmukh", department: "Humanities", subject: "History", mobile: "6543210987", status: "Active", isClassTeacher: false, photo: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" }
-        ];
-
-        // Ensure state bindings apply smoothly after DOM is fully available
         document.addEventListener("DOMContentLoaded", () => {
-            initializeApplication();
-        });
+            
+            // Backend Target Microservice Rest Endpoints Routing Coordinates maps requirements
+            const API_GET_RESOURCE = "http://localhost:5000/api/teachers";
+            const API_DELETE_ROUTE = "http://localhost:5000/api/teachers";
+            const REDIRECT_EDIT_URI = "teacher-edit.html";
 
-        function initializeApplication() {
-            renderTeacherTable(teachersData);
-            calculateDashboardMetrics(teachersData);
-            setupEventBindings();
-        }
+            // Local System Master Runtime Memory Caches
+            let masterFacultyRegistryArray = [];
+            let currentlyFilteredDataset = [];
+            let trackedCheckboxSelectionMap = new Set();
+            let contextDeletionRecordId = null;
+            let activeSortingColumnKey = "";
+            let isSortingDirectionAscending = true;
 
-        /**
-         * GRAPHICAL INTERFACE DATA INTERPRETATION AND METRICS AGGREGATION LAYER
-         * Future Integration:
-         * Complete execution values should be mapped directly to aggregate counts from database payloads
-         * e.g., SELECT COUNT(*) FROM teachers...
-         */
-        function calculateDashboardMetrics(data) {
-            const total = data.length;
-            const active = data.filter(t => t.status === "Active").length;
-            const classTeachers = data.filter(t => t.isClassTeacher).length;
-            const subjectTeachers = total - classTeachers;
+            // DOM UI Handles Container References
+            const viewStateLoading = document.getElementById("loading-state");
+            const viewStateError = document.getElementById("error-state");
+            const viewStateEmpty = document.getElementById("empty-state");
+            const dataTableContainer = document.getElementById("tableContentArea");
+            const tableBodyDOMNode = document.getElementById("teachersRegistryTableBody");
+            const selectAllCheckbox = document.getElementById("selectAllHeaderCheckbox");
+            
+            // Global Interactive Control elements
+            const toolbarBtnEdit = document.getElementById("toolbarBtnEdit");
+            const dropdownFilterDepartment = document.getElementById("filterDepartment");
 
-            document.getElementById("lblTotal").textContent = total;
-            document.getElementById("lblActive").textContent = active;
-            document.getElementById("lblClassTeachers").textContent = classTeachers;
-            document.getElementById("lblSubjectTeachers").textContent = subjectTeachers;
-        }
+            // Modal Target handles
+            const deleteModalOverlay = document.getElementById("deleteConfirmationModal");
+            const modalBtnCancel = document.getElementById("modalBtnCancel");
+            const modalBtnConfirm = document.getElementById("modalBtnConfirm");
+            const modalBtnText = document.getElementById("modalBtnText");
+            const modalBtnInlineLoader = document.getElementById("modalBtnInlineLoader");
 
-        /**
-         * CORE DYNAMIC CONTENT ELEMENT INJECTION LAYER
-         * Maps backend design specifications into secure, standard DOM objects
-         */
-        function renderTeacherTable(data) {
-            const tbody = document.getElementById("teacherTableBody");
-            tbody.innerHTML = ""; // Clear existing render tree context
+            // Register Input Change Interceptors listeners
+            const filtersInputNodes = [
+                document.getElementById("filterId"),
+                document.getElementById("filterName"),
+                dropdownFilterDepartment,
+                document.getElementById("filterMobile"),
+                document.getElementById("filterStatus")
+            ];
 
-            if (data.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="no-records">No teacher matching your filter matrix criteria found.</td></tr>`;
-                return;
-            }
+            filtersInputNodes.forEach(node => {
+                node.addEventListener("input", searchTeachers);
+            });
 
-            /* HTTP REST API ENDPOINT TARGET REPLICATION BRIDGE NOTE:
-             * Data parsed below loops down elements mapped natively from the array objects.
-             * BACKEND ROUTE REFERENCE CONNECTION: GET /api/teachers
+            // Init Startup Boot Pipeline execution pass
+            loadTeachers();
+
+            /**
+             * Rest Layer Read Interface Pipeline Core Engine
              */
-            data.forEach(teacher => {
-                const tr = document.createElement("tr");
+            async function loadTeachers() {
+                try {
+                    routeDisplayStateContainer("LOADING");
+                    trackedCheckboxSelectionMap.clear();
+                    toggleEditButton();
+                    selectAllCheckbox.checked = false;
 
-                // Avatar Fallback Handler Implementation Matrix
-                const userPhoto = teacher.photo ? teacher.photo : "https://via.placeholder.com/100";
-                const badgeClass = teacher.status === "Active" ? "badge-active" : "badge-inactive";
+                    const apiNetworkResponse = await fetch(API_GET_RESOURCE);
+                    if (!apiNetworkResponse.ok) throw new Error("Rest interface rejected connectivity sequence pipeline parameters.");
+                    
+                    const responseJsonPayload = await apiNetworkResponse.ok ? await apiNetworkResponse.json() : [];
+                    
+                    // Route multi-tier data payload envelope specifications matching variants schemas structures
+                    let normalizedDataRecords = Array.isArray(responseJsonPayload) ? responseJsonPayload : responseJsonPayload.data;
+                    if (!normalizedDataRecords && responseJsonPayload.result) normalizedDataRecords = responseJsonPayload.result;
 
-                tr.innerHTML = `
-                    <td><img src="${userPhoto}" class="teacher-avatar" alt="${teacher.name}"></td>
-                    <td><strong>${teacher.id}</strong></td>
-                    <td>${teacher.name}</td>
-                    <td>${teacher.department}</td>
-                    <td>${teacher.subject}</td>
-                    <td>${teacher.mobile}</td>
-                    <td><span class="badge ${badgeClass}">${teacher.status}</span></td>
-                    <td>
-                        <div class="actions-cell">
-                            <a href="teacher-profile.html?id=${teacher.id}" class="btn-action btn-view" title="View Profile"><i class="fa-solid fa-eye"></i></a>
-                            <a href="teacher-edit.html?id=${teacher.id}" class="btn-action btn-edit" title="Edit Teacher"><i class="fa-solid fa-pen"></i></a>
-                            <a href="teacher-allocation.html?id=${teacher.id}" class="btn-action btn-alloc" title="Allocation Management"><i class="fa-solid fa-network-wired"></i></a>
-                            <button type="button" class="btn-action btn-delete" data-id="${teacher.id}" title="Delete Record"><i class="fa-solid fa-trash-can"></i></button>
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
+                    masterFacultyRegistryArray = Array.isArray(normalizedDataRecords) ? normalizedDataRecords : [];
+                    currentlyFilteredDataset = [...masterFacultyRegistryArray];
 
-            // Bind individual dynamic row elements to the operational context
-            bindDynamicTableActions();
-        }
+                    populateDepartmentFilterOptions(masterFacultyRegistryArray);
+                    updateDashboardStats(masterFacultyRegistryArray);
+                    renderTeachers(currentlyFilteredDataset);
 
-        /**
-         * EVENT ROUTING MANAGEMENT COMPONENT LAYER
-         * Configures search matrix inputs, functional data exports, and tracking
-         */
-        function setupEventBindings() {
-            // Search Input Event Query Bindings
-            document.getElementById("searchId").addEventListener("input", executesFilteringPipeline);
-            document.getElementById("searchName").addEventListener("input", executesFilteringPipeline);
-            document.getElementById("searchMobile").addEventListener("input", executesFilteringPipeline);
-            document.getElementById("searchSubject").addEventListener("input", executesFilteringPipeline);
-
-            // Global System Print Operational Handling
-            document.getElementById("btnPrint").addEventListener("click", () => {
-                window.print();
-            });
-
-            // CSV/Excel Simulated Data Export Interface Pipeline
-            document.getElementById("btnExport").addEventListener("click", () => {
-                exportTeacherMatrixCSV();
-            });
-        }
-
-        /**
-         * ACTION TERMINATION ROW BINDINGS
-         * Attach structural event loops back onto dynamic elements securely
-         */
-        function bindDynamicTableActions() {
-            const deleteButtons = document.querySelectorAll(".btn-delete");
-            deleteButtons.forEach(button => {
-                button.addEventListener("click", (e) => {
-                    const teacherId = e.currentTarget.getAttribute("data-id");
-                    processRecordDeletionRequest(teacherId);
-                });
-            });
-        }
-
-        /**
-         * CLIENT FILTER PIPELINE PROCESSING ALGORIHM
-         * Filters the standard data matrix against runtime application inputs
-         */
-        function executesFilteringPipeline() {
-            const fId = document.getElementById("searchId").value.toLowerCase().trim();
-            const fName = document.getElementById("searchName").value.toLowerCase().trim();
-            const fMobile = document.getElementById("searchMobile").value.toLowerCase().trim();
-            const fSubject = document.getElementById("searchSubject").value.toLowerCase().trim();
-
-            const subset = teachersData.filter(teacher => {
-                const matchId = teacher.id.toLowerCase().includes(fId);
-                const matchName = teacher.name.toLowerCase().includes(fName);
-                const matchMobile = teacher.mobile.toLowerCase().includes(fMobile);
-                const matchSubject = teacher.subject.toLowerCase().includes(fSubject);
-
-                return matchId && matchName && matchMobile && matchSubject;
-            });
-
-            renderTeacherTable(subset);
-        }
-
-        /**
-         * DELETION OPERATIONS MANAGER
-         * Performs security confirmation validation steps prior to altering records matrix
-         */
-        function processRecordDeletionRequest(id) {
-            if (confirm(`CRITICAL SECURITY WARNING: Are you certain you want to permanently delete Teacher Profile Record [ID: ${id}] from the ERP systems schema? This action is irreversible.`)) {
-                
-                /* BACKEND TARGET STORAGE CONNECTIVE FRAMEWORK ROUTE REFERENCE BRIDGE:
-                 * Target Route Node: DELETE /api/teachers/:id
-                 * * SQL Transaction Implementation Architecture Context:
-                 * connection.query('DELETE FROM teachers WHERE teacher_id = ?', [id], (err, result) => { ... });
-                 */
-                
-                // Client-side local persistence array mutation simulation logic
-                teachersData = teachersData.filter(t => t.id !== id);
-                
-                // Synchronize system application user interface views layout
-                executesFilteringPipeline();
-                calculateDashboardMetrics(teachersData);
-                
-                alert(`Data Integrity Sync Success: Teacher Record entry ${id} successfully scrubbed from persistent layout memory layer.`);
+                } catch (networkCallExceptionError) {
+                    console.error("Master Connectivity Handshake Exception Context:", networkCallExceptionError);
+                    routeDisplayStateContainer("ERROR");
+                    triggerSystemNotification("Link Disconnect Fault", "Failed link response connection sequences across ERP node arrays.", "error-theme");
+                }
             }
-        }
 
-        /**
-         * SPREADSHEET MATRIX TRANSLATION UTILITY FRAMEWORK (CSV FORMAT)
-         * Generates standardized content payloads safe for loading into spreadsheet editors
-         */
-        function exportTeacherMatrixCSV() {
-            let csv = "Teacher ID,Teacher Name,Department,Subject,Mobile,Status\n";
-            teachersData.forEach(t => {
-                csv += `"${t.id}","${t.name}","${t.department}","${t.subject}","${t.mobile}","${t.status}"\n`;
+            /**
+             * Data UI Representation Render Loop Builder Layer Engine
+             */
+            function renderTeachers(datasetPoolArray) {
+                tableBodyDOMNode.innerHTML = "";
+
+                if (!datasetPoolArray || datasetPoolArray.length === 0) {
+                    routeDisplayStateContainer("EMPTY");
+                    return;
+                }
+
+                routeDisplayStateContainer("WORKSPACE");
+
+                datasetPoolArray.forEach(teacherRecord => {
+                    const rowNodeWrapperElement = document.createElement("tr");
+                    const isRowCheckedInMapFlag = trackedCheckboxSelectionMap.has(Number(teacherRecord.id));
+                    
+                    if (isRowCheckedInMapFlag) {
+                        rowNodeWrapperElement.classList.add("row-selected");
+                    }
+
+                    // Evaluate structural identity status class bindings rules properties layouts
+                    const statusClassThemeStyle = String(teacherRecord.status).toLowerCase() === 'active' ? 'status-pill-active' : 'status-pill-inactive';
+
+                    // Evaluate image profile rendering paths layers maps variables layout rules
+                    const graphicAvatarMarkupHtml = teacherRecord.photo
+                        ? `<img src="http://localhost:5000${teacherRecord.photo}" class="teacher-avatar" alt="Faculty Display Frame" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                           <div class="teacher-avatar-default" style="display:none;"><i class="fa-solid fa-user-gear"></i></div>`
+                        : `<div class="teacher-avatar-default"><i class="fa-solid fa-user-gear"></i></div>`;
+
+                    rowNodeWrapperElement.innerHTML = `
+                        <td style="text-align: center;">
+                            <label class="checkbox-cell-wrapper">
+                                <input type="checkbox" class="row-selector-checkbox" data-record-id="${teacherRecord.id}" ${isRowCheckedInMapFlag ? 'checked' : ''}>
+                            </label>
+                        </td>
+                        <td>${graphicAvatarMarkupHtml}</td>
+                        <td style="font-weight: 700; color: var(--primary-navy);">${teacherRecord.teacher_code || `TR-${teacherRecord.id}`}</td>
+                        <td style="font-weight: 600;">${teacherRecord.teacher_name}</td>
+                        <td>${teacherRecord.department || '<span style="color:#94A3B8; font-style:italic;">Unassigned</span>'}</td>
+                        <td><span style="background:rgba(11,31,75,0.04); color:var(--primary-navy); padding:4px 8px; border-radius:4px; font-size:0.8rem; font-weight:600;">${teacherRecord.designation || 'Faculty'}</span></td>
+                        <td>${teacherRecord.mobile || '--'}</td>
+                        <td style="color: var(--text-muted); font-size: 0.85rem;">${teacherRecord.email || '--'}</td>
+                        <td><span class="status-pill ${statusClassThemeStyle}">${teacherRecord.status || 'Active'}</span></td>
+                        <td>
+                            <div class="row-action-links-box">
+                                <a href="teacher-profile.html?id=${teacherRecord.id}" class="row-action-link link-view" title="View Profile Matrix"><i class="fa-solid fa-eye"></i></a>
+                                <a href="${REDIRECT_EDIT_URI}?id=${teacherRecord.id}" class="row-action-link link-edit" title="Modify Record"><i class="fa-solid fa-pencil"></i></a>
+                                <button type="button" class="row-action-link link-delete" title="Purge Record" onclick="deleteTeacher(${teacherRecord.id})"><i class="fa-solid fa-trash-can"></i></button>
+                            </div>
+                        </td>
+                    `;
+
+                    // Register dynamically allocated events configurations passes
+                    const inputSelectionCheckbox = rowNodeWrapperElement.querySelector(".row-selector-checkbox");
+                    inputSelectionCheckbox.addEventListener("change", (eventInstance) => {
+                        executeIndividualCheckboxSelectionToggle(eventInstance, rowNodeWrapperElement);
+                    });
+
+                    tableBodyDOMNode.appendChild(rowNodeWrapperElement);
+                });
+
+                updateHeaderSelectAllCheckboxStatusTrackerState();
+            }
+
+            /**
+             * Advanced Filter Search Engine Implementation Rules Logic
+             */
+            function searchTeachers() {
+                const searchIdVal = document.getElementById("filterId").value.toLowerCase().trim();
+                const searchNameVal = document.getElementById("filterName").value.toLowerCase().trim();
+                const searchDeptVal = dropdownFilterDepartment.value.toLowerCase().trim();
+                const searchMobileVal = document.getElementById("filterMobile").value.trim();
+                const searchStatusVal = document.getElementById("filterStatus").value.toLowerCase().trim();
+
+                currentlyFilteredDataset = masterFacultyRegistryArray.filter(item => {
+                    const matchesId = !searchIdVal || String(item.teacher_code || `TR-${item.id}`).toLowerCase().includes(searchIdVal);
+                    const matchesName = !searchNameVal || String(item.teacher_name).toLowerCase().includes(searchNameVal);
+                    const matchesDept = !searchDeptVal || String(item.department).toLowerCase() === searchDeptVal;
+                    const matchesMobile = !searchMobileVal || String(item.mobile).includes(searchMobileVal);
+                    const matchesStatus = !searchStatusVal || String(item.status).toLowerCase() === searchStatusVal;
+
+                    return matchesId && matchesName && matchesDept && matchesMobile && matchesStatus;
+                });
+
+                renderTeachers(currentlyFilteredDataset);
+            }
+
+            /**
+             * Checkbox Core Matrix Interceptor Operations Handler Functions Layers
+             */
+            function executeIndividualCheckboxSelectionToggle(eventObj, parentRowDomNode) {
+                const checkElement = eventObj.target;
+                const extractionTargetId = Number(checkElement.getAttribute("data-record-id"));
+
+                if (checkElement.checked) {
+                    trackedCheckboxSelectionMap.add(extractionTargetId);
+                    parentRowDomNode.classList.add("row-selected");
+                } else {
+                    trackedCheckboxSelectionMap.delete(extractionTargetId);
+                    parentRowDomNode.classList.remove("row-selected");
+                }
+
+                toggleEditButton();
+                updateHeaderSelectAllCheckboxStatusTrackerState();
+            }
+
+            // Global Select/Deselect Header checkbox mechanism
+            selectAllCheckbox.addEventListener("change", (e) => {
+                const targetHeaderStateIsChecked = e.target.checked;
+                const trackingRowsInputCheckboxes = tableBodyDOMNode.querySelectorAll(".row-selector-checkbox");
+
+                trackingRowsInputCheckboxes.forEach(cb => {
+                    const rowIdReferenceKey = Number(cb.getAttribute("data-record-id"));
+                    cb.checked = targetHeaderStateIsChecked;
+                    
+                    const targetedRowMarkupNode = cb.closest("tr");
+                    if (targetHeaderStateIsChecked) {
+                        trackedCheckboxSelectionMap.add(rowIdReferenceKey);
+                        if (targetedRowMarkupNode) targetedRowMarkupNode.classList.add("row-selected");
+                    } else {
+                        trackedCheckboxSelectionMap.delete(rowIdReferenceKey);
+                        if (targetedRowMarkupNode) targetedRowMarkupNode.classList.remove("row-selected");
+                    }
+                });
+
+                toggleEditButton();
             });
 
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", `RSPS_Teacher_Export_${new Date().toISOString().slice(0,10)}.csv`);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+            function updateHeaderSelectAllCheckboxStatusTrackerState() {
+                const trackingRowsInputCheckboxes = tableBodyDOMNode.querySelectorAll(".row-selector-checkbox");
+                if (trackingRowsInputCheckboxes.length === 0) {
+                    selectAllCheckbox.checked = false;
+                    return;
+                }
+                
+                const checkedCounterMatchesLoopSize = Array.from(trackingRowsInputCheckboxes).every(input => input.checked);
+                selectAllCheckbox.checked = checkedCounterMatchesLoopSize;
+            }
 
-        /**
-         * FUTURE EXPRESS + MYSQL BACKEND INTEGRATION MATRIX INTERFACE TEMPLATE
-         * * // Client side fetch boilerplate mapping architecture setup layout:
-         * * // 1. GET ALL TEACHERS (READ)
-         * async function fetchAllTeachersFromDb() {
-         * try {
-         * const response = await fetch('/api/teachers');
-         * teachersData = await response.json();
-         * renderTeacherTable(teachersData);
-         * calculateDashboardMetrics(teachersData);
-         * } catch (err) {
-         * console.error("Critical Data Synchronization Handshake Error: ", err);
-         * }
-         * }
-         * * // 2. POST NEW TEACHER ENTRY (CREATE)
-         * // Target Route: POST /api/teachers
-         * // Payload Structure JSON: { id, name, department, subject, mobile, status, isClassTeacher }
-         * * // 3. PUT MODIFY UPDATE DATA ROW (UPDATE)
-         * // Target Route: PUT /api/teachers/:id
-         * * // 4. DELETE SYSTEM TARGET ID ENTRY (DELETE)
-         * // Target Route: DELETE /api/teachers/:id
-         */
+            /**
+             * Component Toolbar Action Toggle Evaluation Logic Engine Controls passes
+             */
+            function toggleEditButton() {
+                if (trackedCheckboxSelectionMap.size === 1) {
+                    toolbarBtnEdit.disabled = false;
+                    // Bind explicit trigger path targeting the specific isolated key array
+                    const activeSingleSelectedKey = Array.from(trackedCheckboxSelectionMap)[0];
+                    toolbarBtnEdit.onclick = () => {
+                        window.location.href = `${REDIRECT_EDIT_URI}?id=${activeSingleSelectedKey}`;
+                    };
+                } else {
+                    toolbarBtnEdit.disabled = true;
+                    toolbarBtnEdit.onclick = null;
+                }
+            }
+
+            /**
+             * Dynamic Analytics Stats Factory Engine Calculations Component mapping metrics
+             */
+            function updateDashboardStats(dataPoolSourceList) {
+                const totalLengthValue = dataPoolSourceList.length;
+                
+                const activeFiltersCounterList = dataPoolSourceList.filter(i => String(i.status).toLowerCase() === 'active').length;
+                const inactiveFiltersCounterList = dataPoolSourceList.filter(i => String(i.status).toLowerCase() === 'inactive').length;
+                
+                // Track Unique allocations elements pools arrays counters variables maps rules keys
+                const trackingDepartmentUniqueValuesSet = new Set();
+                dataPoolSourceList.forEach(item => {
+                    if (item.department && item.department.trim() !== "") {
+                        trackingDepartmentUniqueValuesSet.add(item.department.trim());
+                    }
+                });
+
+                document.getElementById("statTotal").textContent = totalLengthValue;
+                document.getElementById("statActive").textContent = activeFiltersCounterList;
+                document.getElementById("statInactive").textContent = inactiveFiltersCounterList;
+                document.getElementById("statDepartments").textContent = trackingDepartmentUniqueValuesSet.size;
+            }
+
+            function populateDepartmentFilterOptions(dataPoolSourceList) {
+                // Preserving structural setup fallback settings baseline parameters configurations elements
+                dropdownFilterDepartment.innerHTML = '<option value="">All Departments</option>';
+                const departmentsSet = new Set();
+                
+                dataPoolSourceList.forEach(item => {
+                    if (item.department && item.department.trim() !== "") {
+                        departmentsSet.add(item.department.trim());
+                    }
+                });
+
+                Array.from(departmentsSet).sort().forEach(deptName => {
+                    const alternativeOptionElementNode = document.createElement("option");
+                    alternativeOptionElementNode.value = deptName.toLowerCase();
+                    alternativeOptionElementNode.textContent = deptName;
+                    dropdownFilterDepartment.appendChild(alternativeOptionElementNode);
+                });
+            }
+
+            /**
+             * Advanced Front-End Client Column Sorting Engine Factory Implementation
+             */
+            window.executeColumnSort = function(sortingFieldColumnKeyName) {
+                if (activeSortingColumnKey === sortingFieldColumnKeyName) {
+                    isSortingDirectionAscending = !isSortingDirectionAscending;
+                } else {
+                    activeSortingColumnKey = sortingFieldColumnKeyName;
+                    isSortingDirectionAscending = true;
+                }
+
+                currentlyFilteredDataset.sort((recordObjA, recordObjB) => {
+                    let extractFieldValA = recordObjA[sortingFieldColumnKeyName] ? String(recordObjA[sortingFieldColumnKeyName]).toLowerCase() : "";
+                    let extractFieldValB = recordObjB[sortingFieldColumnKeyName] ? String(recordObjB[sortingFieldColumnKeyName]).toLowerCase() : "";
+
+                    if (extractFieldValA < extractFieldValB) return isSortingDirectionAscending ? -1 : 1;
+                    if (extractFieldValA > extractFieldValB) return isSortingDirectionAscending ? 1 : -1;
+                    return 0;
+                });
+
+                renderTeachers(currentlyFilteredDataset);
+            };
+
+            /**
+             * Stage 1: Deletion Control Panel Trigger Router Interceptor 
+             */
+            window.deleteTeacher = function(targetEntityDatabaseId) {
+                contextDeletionRecordId = targetEntityDatabaseId;
+                deleteModalOverlay.classList.add("modal-visible");
+                
+                modalBtnConfirm.disabled = false;
+                modalBtnCancel.disabled = false;
+                modalBtnConfirm.focus();
+            };
+
+            function dismissModalWindowOverlayElements() {
+                deleteModalOverlay.classList.remove("modal-visible");
+                contextDeletionRecordId = null;
+            }
+
+            modalBtnCancel.addEventListener("click", dismissModalWindowOverlayElements);
+            deleteModalOverlay.addEventListener("click", (e) => {
+                if (e.target === deleteModalOverlay) dismissModalWindowOverlayElements();
+            });
+
+            /**
+             * Stage 2: REST Interface Execute Mutation DELETE Fetch Operation Core Implementation
+             */
+            modalBtnConfirm.addEventListener("click", async () => {
+                if (!contextDeletionRecordId) return;
+
+                const structuralMutationDeleteTargetUrl = `${API_DELETE_ROUTE}/${contextDeletionRecordId}`;
+                
+                try {
+                    modalBtnConfirm.disabled = true;
+                    modalBtnCancel.disabled = true;
+                    modalBtnText.textContent = "Purging...";
+                    modalBtnInlineLoader.classList.remove("hidden");
+
+                    const networkMutationDeleteTransactionResult = await fetch(structuralMutationDeleteTargetUrl, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" }
+                    });
+
+                    if (!networkMutationDeleteTransactionResult.ok) throw new Error("Database cluster endpoint rejected structural delete commands pipeline requests.");
+                    
+                    const serverResultJsonPayload = await networkMutationDeleteTransactionResult.json();
+
+                    if (serverResultJsonPayload.success === true || serverResultJsonPayload.status === true) {
+                        triggerSystemNotification("Teacher Deleted Successfully", "ERP master database configuration nodes successfully mutationized.", "success-theme");
+                        dismissDeleteModalAndRefresh();
+                    } else {
+                        throw new Error(serverResultJsonPayload.message || "Relational database schema parameters violation constraints encountered.");
+                    }
+
+                } catch (mutationProcessingPipelineFaultException) {
+                    console.error("Mutation Execution Error Interception context Stack:", mutationProcessingPipelineFaultException);
+                    triggerSystemNotification("Unable To Delete Teacher", "Target row resource locked or access controls authorization criteria failed rules.", "error-theme");
+                    
+                    // Recover interactive states configurations inputs buttons loops contexts elements flags
+                    modalBtnText.textContent = "Delete";
+                    modalBtnInlineLoader.classList.add("hidden");
+                    modalBtnConfirm.disabled = false;
+                    modalBtnCancel.disabled = false;
+                }
+            });
+
+            function dismissDeleteModalAndRefresh() {
+                modalBtnText.textContent = "Delete";
+                modalBtnInlineLoader.classList.add("hidden");
+                deleteModalOverlay.classList.remove("modal-visible");
+                contextDeletionRecordId = null;
+                
+                // Hot reload master directory database index without physical window reload pass sequences triggers
+                loadTeachers();
+            }
+
+            /**
+             * Custom Integrated Identity Cards Batch / Single Processing Router Engine
+             */
+            window.executeBatchIdCardGeneration = function() {
+                const targetArraySelectionKeys = Array.from(trackedCheckboxSelectionMap);
+                
+                if (targetArraySelectionKeys.length === 0) {
+                    // Open module dashboard view space mode if loops are tracking null arrays variables maps
+                    window.location.href = "teacher-id-card.html";
+                } else if (targetArraySelectionKeys.length === 1) {
+                    window.location.href = `teacher-id-card.html?id=${targetArraySelectionKeys[0]}`;
+                } else {
+                    const compilationQueryStringSequenceParams = targetArraySelectionKeys.join(",");
+                    window.location.href = `teacher-id-card.html?ids=${compilationQueryStringSequenceParams}`;
+                }
+            };
+
+            /**
+             * Display Structural State Visibility Switch Controller Router Interface Matrix
+             */
+            function routeDisplayStateContainer(activeTargetViewStateDesignatorName) {
+                viewStateLoading.style.display = "none";
+                viewStateError.style.display = "none";
+                viewStateEmpty.style.display = "none";
+                dataTableContainer.style.display = "none";
+
+                if (activeTargetViewStateDesignatorName === "LOADING") {
+                    viewStateLoading.style.display = "flex";
+                } else if (activeTargetViewStateDesignatorName === "ERROR") {
+                    viewStateError.style.display = "flex";
+                } else if (activeTargetViewStateDesignatorName === "EMPTY") {
+                    viewStateEmpty.style.display = "flex";
+                } else if (activeTargetViewStateDesignatorName === "WORKSPACE") {
+                    dataTableContainer.style.display = "block";
+                }
+            }
+
+            /**
+             * Global Dynamic Non-blocking Overlay Toast Notification Stack Factory System Layout
+             */
+            function triggerSystemNotification(titleTextMsg, bodyTextMsg, themeClassConfigStyle = "success-theme") {
+                const toastStackHolderDOMWrapperNode = document.getElementById("toastSystemStackHolder");
+                const toastWindowContainerNode = document.createElement("div");
+                toastWindowContainerNode.className = `toast-popup-window ${themeClassConfigStyle}`;
+
+                const configurationIconGraphicElementMarkup = themeClassConfigStyle === "success-theme"
+                    ? '<i class="fa-solid fa-square-check" style="font-size: 1.25rem;"></i>'
+                    : '<i class="fa-solid fa-triangle-exclamation" style="font-size: 1.25rem;"></i>';
+
+                toastWindowContainerNode.innerHTML = `
+                    ${configurationIconGraphicElementMarkup}
+                    <div class="toast-body-wrapper-block">
+                        <div class="toast-meta-title">${titleTextMsg}</div>
+                        <div class="toast-meta-desc">${bodyTextMsg}</div>
+                    </div>
+                `;
+
+                toastStackHolderDOMWrapperNode.appendChild(toastWindowContainerNode);
+
+                // Safe recursive frame layout engine processing execution
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        toastWindowContainerNode.classList.add("toast-revealed");
+                    });
+                });
+
+                // Automated execution sequence clearing out instance stack allocations layers hooks
+                setTimeout(() => {
+                    toastWindowContainerNode.classList.remove("toast-revealed");
+                    toastWindowContainerNode.addEventListener("transitionend", () => {
+                        toastWindowContainerNode.remove();
+                    });
+                }, 4000);
+            }
+        });
     </script>
 </body>
 </html>

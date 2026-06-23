@@ -7,7 +7,8 @@ const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
+const teacherAllocationRoutes =
+require('./routes/teacherAllocationRoutes');
 dotenv.config();
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(
 app.use('/api', authRoutes);
 app.use('/api', studentRoutes);
 app.use('/api', teacherRoutes);
+app.use('/api', teacherAllocationRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

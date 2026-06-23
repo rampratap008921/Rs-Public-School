@@ -1,6 +1,8 @@
 const path = require('path');
 const studentRoutes = require('./routes/studentRoutes');
+const teacherRoutes = require('./routes/teacherRoutes');
 console.log(studentRoutes);
+console.log("Teacher =", teacherRoutes);
 const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
@@ -19,6 +21,7 @@ app.use(
 );
 app.use('/api', authRoutes);
 app.use('/api', studentRoutes);
+app.use('/api', teacherRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

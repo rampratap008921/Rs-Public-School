@@ -442,59 +442,17 @@
                 <div class="panel-heading">
                     <i class="fa-solid fa-bolt"></i> Faculty Academic Quick Actions
                 </div>
-                <div class="action-grid">
-
-                    <a href="teacher-classes.html" class="action-tile">
-                        <i class="fas fa-chalkboard"></i>
-                        <span>My Classes</span>
-                    </a>
-
-                    <a href="teacher-subjects.html" class="action-tile">
-                        <i class="fas fa-book-open"></i>
-                        <span>My Subjects</span>
-                    </a>
-
-                    <a href="attendance-management.html" class="action-tile">
-                        <i class="fas fa-user-check"></i>
-                        <span>Attendance Entry</span>
-                    </a>
-
-                    <a href="attendance-history.html" class="action-tile">
-                        <i class="fas fa-history"></i>
-                        <span>Attendance History</span>
-                    </a>
-
-                    <a href="attendance-report.html" class="action-tile">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Attendance Report</span>
-                    </a>
-
-                    <a href="marks-entry.html" class="action-tile">
-                        <i class="fas fa-pen-square"></i>
-                        <span>Marks Entry</span>
-                    </a>
-
-                    <a href="marks-history.html" class="action-tile">
-                        <i class="fas fa-clock-rotate-left"></i>
-                        <span>Marks History</span>
-                    </a>
-
-                    <a href="result-view.html" class="action-tile">
-                        <i class="fas fa-chart-line"></i>
-                        <span>Result View</span>
-                    </a>
-
-                    <a href="teacher-profile.html" class="action-tile">
-                        <i class="fas fa-user-cog"></i>
-                        <span>My Profile</span>
-                    </a>
-
-                    <div class="action-tile logout-tile"
-                        onclick="executeLogout()">
-                        <i class="fas fa-power-off"></i>
-                        <span>Logout</span>
-                    </div>
-
+                <div class="actions-matrix">
+                    <a href="#" class="action-tile"><i class="fa-solid fa-chalkboard"></i> My Classes</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-book-open"></i> My Subjects</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-user-check"></i> Attendance Entry</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-clock-rotate-left"></i> Attendance History</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-file-invoice"></i> Attendance Report</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-pen-to-square"></i> Marks Entry</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-history"></i> Marks History</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-chart-line"></i> Result View</a>
+                    <a href="#" class="action-tile"><i class="fa-solid fa-user-gear"></i> My Profile</a>
+                    <div class="action-tile" onclick="executeLogout()" style="background: #FFF1F2; color: var(--danger); border-color:#FFE4E6;"><i class="fa-solid fa-power-off" style="color:var(--danger)"></i> Logout</div>
                 </div>
             </section>
 
@@ -604,19 +562,13 @@
             const tbody = document.getElementById('allocationsTableBody');
 
             try {
-                const teacher =
-                    JSON.parse(localStorage.getItem("teacher"));
-                    const response = await fetch(
-                    `http://localhost:5000/api/teacher-allocation/allocations/teacher/${teacher.id}`
-                    );
+                const response = await fetch(`${API_BASE}/allocations/teacher/${teacherId}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Data pipeline breakdown response status: ${response.status}`);
+                }
 
-                    if (!response.ok) {
-                        throw new Error(`Data pipeline breakdown response status: ${response.status}`);
-                    }
-
-                    const result = await response.json();
-
-                    const allocations = result.data || [];
+                const allocations = await response.json();
                 
                 // Shutdown functional loading animation view elements immediately
                 loader.style.display = 'none';

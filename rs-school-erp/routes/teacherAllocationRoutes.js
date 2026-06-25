@@ -171,5 +171,38 @@ router.post('/allocations', (req, res) => {
     );
 
 });
+router.get(
+'/allocations/teacher/:teacherId',
+(req,res)=>{
 
+    const { teacherId } = req.params;
+
+    const sql = `
+    SELECT *
+    FROM teacher_allocations
+    WHERE teacher_id = ?
+    AND status = 'Active'
+    `;
+
+    db.query(
+        sql,
+        [teacherId],
+        (err,result)=>{
+
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    error:err
+                });
+            }
+
+            res.json({
+                success:true,
+                data:result
+            });
+
+        }
+    );
+
+});
 module.exports = router;

@@ -1,12 +1,14 @@
+console.log("SERVER FILE LOADED");
+
+const attendanceRoutes = require('./routes/attendanceRoutes');
 const path = require('path');
 const studentRoutes = require('./routes/studentRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-console.log(studentRoutes);
-console.log("Teacher =", teacherRoutes);
 const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+
 const teacherAllocationRoutes =
 require('./routes/teacherAllocationRoutes');
 dotenv.config();
@@ -21,9 +23,10 @@ app.use(
   )
 );
 app.use('/api', authRoutes);
-app.use('/api', studentRoutes);
-app.use('/api', teacherRoutes);
-app.use('/api', teacherAllocationRoutes);
+app.use('/api/students', studentRoutes);
+app.use('/api/teachers', teacherRoutes);
+app.use('/api/teacher-allocation', teacherAllocationRoutes);
+app.use('/api/attendance',attendanceRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

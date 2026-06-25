@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 const upload = require('../config/multerConfig');
-router.post('/students', (req, res) => {
+router.post('/', (req, res) => {
 
     console.log("POST Student Data:", req.body);
 
@@ -71,7 +71,7 @@ router.post('/students', (req, res) => {
     );
 
 });
-router.get('/students', (req, res) => {
+router.get('/', (req, res) => {
 
     db.query(
         "SELECT * FROM students",
@@ -93,7 +93,7 @@ router.get('/students', (req, res) => {
     );
 
 });
-router.get('/students/:id', (req, res) => {
+router.get('/:id', (req, res) => {
 
     const id = req.params.id;
 
@@ -157,7 +157,7 @@ router.get('/student/admission/:admission_no', (req, res) => {
     );
 
 });
-router.put('/students/:id', (req, res) => {
+router.put('/:id', (req, res) => {
 
     const id = req.params.id;
 
@@ -224,7 +224,7 @@ router.put('/students/:id', (req, res) => {
     );
 
 });
-router.delete('/students/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 
     const id = req.params.id;
 
@@ -249,7 +249,49 @@ router.delete('/students/:id', (req, res) => {
     );
 
 });
+router.get(
+'/class/:className/:section',
+(req,res)=>{
 
+    const {
+        className,
+        section
+    } = req.params;
+
+    const sql = `
+    SELECT
+    id,
+    admission_no,
+    student_name,
+    father_name,
+    photo
+    FROM students
+    WHERE class_name = ?
+    AND section = ?
+    ORDER BY student_name
+    `;
+
+    db.query(
+        sql,
+        [className,section],
+        (err,result)=>{
+
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    error:err
+                });
+            }
+
+            res.json({
+                success:true,
+                data:result
+            });
+
+        }
+    );
+
+});
 router.post('/upload-photo',upload.single('photo'),(req, res) => {
         console.log("Student Data Received:", req.body);
         if (!req.file) {

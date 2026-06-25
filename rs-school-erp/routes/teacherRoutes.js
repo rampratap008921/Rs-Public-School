@@ -1,11 +1,12 @@
 const upload = require('../config/multerConfig');
+console.log("TEACHER ROUTES LOADED");
 const express = require('express');
 const router = express.Router();
 const db = require('../config/db');
 router.get('/teacher-test', (req, res) => {
     res.send('Teacher Route Working');
 });
-router.post('/teachers', (req, res) => {
+router.post('/', (req, res) => {
 
     console.log("Teacher Data =", req.body);
 
@@ -85,7 +86,7 @@ router.post('/teachers', (req, res) => {
     );
 
 });
-router.get('/teachers', (req, res) => {
+router.get('/', (req, res) => {
 
     db.query(
         "SELECT * FROM teachers",
@@ -107,7 +108,7 @@ router.get('/teachers', (req, res) => {
     );
 
 });
-    router.put('/teachers/:id', (req, res) => {
+    router.put('/:id', (req, res) => {
 
     const teacherId = req.params.id;
 
@@ -187,7 +188,7 @@ router.get('/teachers', (req, res) => {
     );
 
 });
-router.delete('/teachers/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
 
     const teacherId = req.params.id;
 
@@ -213,7 +214,7 @@ router.delete('/teachers/:id', (req, res) => {
 
 });
 router.post(
-    '/teachers/upload',
+    '/upload',
     upload.single('photo'),
     (req, res) => {
 
@@ -231,4 +232,72 @@ router.post(
 
     }
 );
+router.post('/login', (req, res) => {
+
+    const { teacher_code } = req.body;
+
+    const sql = `
+    SELECT *
+    FROM teachers
+    WHERE teacher_code = ?
+    `;
+
+    db.query(sql, [teacher_code], (err, result) => {
+
+        if(err){
+            return res.status(500).json({
+                success:false
+            });
+        }
+
+        if(result.length === 0){
+            return res.json({
+                success:false,
+                message:'Teacher Not Found'
+            });
+        }
+
+        res.json({
+            success:true,
+            teacher:result[0]
+        });
+
+    });
+
+});
+router.get('/code/:teacherCode', (req, res) => {
+
+    const { teacherCode } = req.params;
+
+    const sql = `
+    SELECT *
+    FROM teachers
+    WHERE teacher_code = ?
+    LIMIT 1
+    `;
+
+    db.query(sql, [teacherCode], (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                error: err
+            });
+        }
+
+        if (result.length === 0) {
+            return res.json({
+                success: false,
+                message: "Teacher Not Found"
+            });
+        }
+
+        res.json({
+            success: true,
+            teacher: result[0]
+        });
+
+    });
+
+});
 module.exports = router;

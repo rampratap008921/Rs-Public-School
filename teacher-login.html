@@ -104,7 +104,10 @@ R.S. Public School ERP
 
 <div class="input-group">
 <label>Teacher ID</label>
-<input type="text" placeholder="Enter Teacher ID">
+<input
+id="teacherId"
+type="text"
+placeholder="Enter Teacher ID">
 </div>
 
 <div class="input-group">
@@ -113,9 +116,10 @@ R.S. Public School ERP
 </div>
 
 <button class="login-btn"
-onclick="window.location.href='teacher-dashboard.html'">
+onclick="teacherLogin()">
 Login
 </button>
+
 
 <div class="links">
 <a href="#">Forgot Password?</a>
@@ -123,6 +127,61 @@ Login
 </div>
 
 </div>
+<script>
 
+async function teacherLogin(){
+
+    const teacher_code =
+    document.getElementById("teacherId").value.trim();
+
+    if(!teacher_code){
+
+        alert("Enter Teacher ID");
+        return;
+
+    }
+
+    try{
+
+        const response = await fetch("http://localhost:5000/api/teachers/login",
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    teacher_code
+                })
+            }
+        );
+
+        const result = await response.json();
+
+        if(result.success){
+
+            localStorage.setItem(
+                "teacher",
+                JSON.stringify(result.teacher)
+            );
+
+            window.location.href =
+            "teacher-dashboard.html";
+
+        }else{
+
+            alert("Teacher ID Not Found");
+
+        }
+
+    }catch(error){
+
+        console.error(error);
+        alert("Server Connection Error");
+
+    }
+
+}
+
+</script>
 </body>
 </html>

@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Report Module - R.S. Public School ERP</title>
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Embedded CSS (attendance.css) -->
+    <style>
+        /* ERP Design Tokens (Navy Blue, Gold & Pure White) */
+        :root {
+            --primary-navy: #0B2545;
+            --secondary-navy: #134074;
+            --accent-gold: #EEB902;
+            --dark-gold: #C59B00;
+            --pure-white: #FFFFFF;
+            --bg-light: #EEF4F8;
+            --text-main: #1D2A44;
+            --text-muted: #64748B;
+            --border-color: #CBD5E1;
+            --card-radius: 12px;
+            --element-radius: 6px;
+            --shadow-sm: 0 2px 4px rgba(11, 37, 69, 0.05);
+            --shadow-md: 0 4px 12px rgba(11, 37, 69, 0.08);
+            
+            /* Strict Status Mappings */
+            --status-present: #10B981;
+            --status-present-bg: #E6F4EA;
+            --status-absent: #EF4444;
+            --status-absent-bg: #FCE8E6;
+            --status-late: #F59E0B;
+            --status-late-bg: #FEF3C7;
+            --status-leave: #3B82F6;
+            --status-leave-bg: #EBF5FF;
+        }
+
+        /* Base Form Resets */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-main);
+            line-height: 1.5;
+            padding: 24px;
+        }
+
+        .erp-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Professional Header Panel */
+        .erp-header {
+            background: linear-gradient(135deg, var(--primary-navy), var(--secondary-navy));
+            color: var(--pure-white);
+            padding: 24px 32px;
+            border-radius: var(--card-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            border-bottom: 4px solid var(--accent-gold);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .school-logo {
+            font-size: 2.5rem;
+            color: var(--accent-gold);
+        }
+
+        .logo-area h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-area p {
+            font-size: 0.9rem;
+            color: #94A3B8;
+        }
+
+        .action-utils {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Button & Utilities Setup */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: var(--element-radius);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-gold);
+            color: var(--primary-navy);
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--dark-gold);
+        }
+
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--pure-white);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-light);
+        }
+
+        /* Action Dropdown Elements */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: var(--pure-white);
+            min-width: 220px;
+            box-shadow: var(--shadow-md);
+            border-radius: var(--element-radius);
+            z-index: 100;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .dropdown-content a {
+            color: var(--text-main);
+            padding: 12px 166px;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--bg-light);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        /* Cards Wrapper Architecture */
+        .card {
+            background-color: var(--pure-white);
+            border-radius: var(--card-radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #F8FAFC;
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--primary-navy);
+        }
+
+        .card-header h2, .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Filtering Layout Engine */
+        .filter-grid {
+            padding: 24px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 10px 12px;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--element-radius);
+            color: var(--text-main);
+            background-color: var(--pure-white);
+            outline: none;
+            transition: border-color 0.15s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--secondary-navy);
+            box-shadow: 0 0 0 3px rgba(19, 64, 116, 0.15);
+        }
+
+        .span-all { grid-column: 1 / -1; }
+
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 8px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 16px;
+        }
+
+        /* Metrics KPI Grids */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .summary-card {
+            background-color: var(--pure-white);
+            border-radius: var(--card-radius);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--text-muted);
+        }
+
+        .summary-icon {
+            font-size: 2rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .summary-data h3 { font-size: 1.5rem; font-weight: 700; }
+        .summary-data p {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* KPI Card Context Variants */
+        .summary-card.total { border-left-color: var(--primary-navy); }
+        .summary-card.total .summary-icon { background: #E0E7FF; color: var(--primary-navy); }
+
+        .summary-card.present { border-left-color: var(--status-present); }
+        .summary-card.present .summary-icon { background: var(--status-present-bg); color: var(--status-present); }
+
+        .summary-card.absent { border-left-color: var(--status-absent); }
+        .summary-card.absent .summary-icon { background: var(--status-absent-bg); color: var(--status-absent); }
+
+        .summary-card.late { border-left-color: var(--status-late); }
+        .summary-card.late .summary-icon { background: var(--status-late-bg); color: var(--status-late); }
+
+        .summary-card.leave { border-left-color: var(--status-leave); }
+        .summary-card.leave .summary-icon { background: var(--status-leave-bg); color: var(--status-leave); }
+
+        .summary-card.performance { border-left-color: var(--accent-gold); }
+        .summary-card.performance .summary-icon { background: #FEF3C7; color: var(--dark-gold); }
+
+        /* Charts Layout Panels */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .chart-card .chart-container {
+            padding: 16px;
+            position: relative;
+            height: 280px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Master Data Ledger Table Layout */
+        .table-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-meta { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+        .table-responsive { width: 100%; overflow-x: auto; position: relative; min-height: 250px; }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+
+        th {
+            background-color: #F8FAFC;
+            color: var(--primary-navy);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--border-color);
+            white-space: nowrap;
+        }
+
+        th.sortable { cursor: pointer; user-select: none; }
+        th.sortable:hover { background-color: #E2E8F0; }
+
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); vertical-align: middle; color: #334155; }
+        tr:hover td { background-color: #F1F5F9; }
+
+        /* In-Row Component Badges */
+        .student-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid var(--border-color);
+            background-color: #E2E8F0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 50px;
+        }
+
+        .status-badge.present { background-color: var(--status-present-bg); color: var(--status-present); }
+        .status-badge.absent { background-color: var(--status-absent-bg); color: var(--status-absent); }
+        .status-badge.late { background-color: var(--status-late-bg); color: var(--status-late); }
+        .status-badge.leave { background-color: var(--status-leave-bg); color: var(--status-leave); }
+
+        .table-actions { display: flex; gap: 8px; justify-content: center; }
+
+        .action-icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.1s ease;
+        }
+
+        .action-icon-btn.edit { color: var(--secondary-navy); }
+        .action-icon-btn.delete { color: var(--status-absent); }
+        .action-icon-btn:hover { background-color: #E2E8F0; }
+
+        /* System Status Feedback Viewports */
+        .state-layer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px;
+            text-align: center;
+            color: var(--text-muted);
+            width: 100%;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Loading Animation Keyframes */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-navy);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-icon, .error-icon { font-size: 2.5rem; margin-bottom: 12px; }
+        .error-icon { color: var(--status-absent); }
+
+        /* Ledger Table Footer Controls */
+        .table-footer {
+            padding: 16px 24px;
+            background-color: #F8FAFC;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .per-page-selector select { padding: 6px 10px; border-radius: var(--element-radius); border: 1px solid var(--border-color); }
+        .pagination-nav { display: flex; align-items: center; gap: 8px; }
+        .pagination-btn { padding: 6px 12px; border: 1px solid var(--border-color); background-color: var(--pure-white); border-radius: var(--element-radius); cursor: pointer; font-size: 0.85rem; }
+        .pagination-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .pagination-pages-list { display: flex; gap: 4px; }
+
+        .page-num {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--element-radius);
+            border: 1px solid var(--border-color);
+            background-color: var(--pure-white);
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .page-num.active { background-color: var(--primary-navy); color: var(--pure-white); border-color: var(--primary-navy); }
+
+        /* Modal Interface Elements */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(11, 37, 69, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .modal.open { opacity: 1; pointer-events: auto; }
+        .modal-content { background-color: var(--pure-white); border-radius: var(--card-radius); width: 100%; max-width: 500px; box-shadow: var(--shadow-md); overflow: hidden; transform: translateY(-20px); transition: transform 0.2s ease; }
+        .modal.open .modal-content { transform: translateY(0); }
+        .modal-header { background-color: var(--primary-navy); color: var(--pure-white); padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .close-modal { font-size: 1.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.7); }
+        .close-modal:hover { color: var(--pure-white); }
+
+        #edit-form { padding: 24px; display: flex; flex-direction: column; gap: 16px; }
+        .readonly-input { background-color: var(--bg-light) !important; color: var(--text-muted); cursor: not-allowed; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+
+        /* Typography Helper Classes */
+        .text-center { text-align: center; }
+        .text-danger { color: var(--status-absent); }
+        .text-success { color: var(--status-present); }
+        .text-info { color: var(--status-leave); }
+
+        /* Responsive Grid Engine Layout Adapters */
+        @media (max-width: 1024px) {
+            .charts-grid { grid-template-columns: 1fr 1fr; }
+            .span-2-md { grid-column: span 2; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .erp-header { flex-direction: column; gap: 16px; text-align: center; }
+            .logo-area { flex-direction: column; gap: 8px; }
+            .filter-grid { grid-template-columns: 1fr 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+            .span-2-md { grid-column: unset; }
+            .table-footer { flex-direction: column; align-items: stretch; text-align: center; }
+            .pagination-nav { justify-content: center; }
+        }
+
+        @media (max-width: 480px) {
+            .filter-grid { grid-template-columns: 1fr; }
+            .action-utils { width: 100%; flex-direction: column; }
+            .btn, .dropdown { width: 100%; }
+            .dropdown-content { width: 100%; position: static; }
+        }
+
+        /* Institutional Clean Print Engine Layout Styles */
+        @media print {
+            body { background: white; color: black; padding: 0; }
+            .erp-header, .filter-card, .table-footer, .table-actions, .action-utils, th:last-child, td:last-child { display: none !important; }
+            .card { border: none; box-shadow: none; }
+            table { border: 1px solid black; }
+            th, td { padding: 8px; border-bottom: 1px solid black; }
+        }
+    </style>
+</head>
+<body>
+    <div class="erp-container">
+        <!-- Header Banner -->
+        <header class="erp-header">
+            <div class="logo-area">
+                <i class="fas fa-school school-logo"></i>
+                <div>
+                    <h1>R.S. Public School ERP</h1>
+                    <p>Attendance Report & Analytics Engine</p>
+                </div>
+            </div>
+            <div class="action-utils">
+                <button id="btn-refresh" class="btn btn-secondary"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button"><i class="fas fa-download"></i> Export Data</button>
+                    <div class="dropdown-content">
+                        <a href="#" id="export-pdf"><i class="far fa-file-pdf text-danger"></i> Export as PDF / Print</a>
+                        <a href="#" id="export-excel"><i class="far fa-file-excel text-success"></i> Export as Excel</a>
+                        <a href="#" id="export-csv"><i class="far fa-file-alt text-info"></i> Export as CSV</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Filters Section -->
+        <section class="card filter-card">
+            <div class="card-header">
+                <h2><i class="fas fa-sliders-h"></i> Advanced Analytics Filter Panel</h2>
+            </div>
+            <form id="filter-form" class="filter-grid">
+                <div class="form-group">
+                    <label for="filter-report-type">Report Scope</label>
+                    <select id="filter-report-type" name="reportType">
+                        <option value="daily">Daily Report</option>
+                        <option value="weekly">Weekly Report</option>
+                        <option value="monthly" selected>Monthly Report</option>
+                        <option value="yearly">Yearly Report</option>
+                        <option value="class">Class Wise Report</option>
+                        <option value="section">Section Wise Report</option>
+                        <option value="subject">Subject Wise Report</option>
+                        <option value="student">Student Wise Report</option>
+                        <option value="teacher">Teacher Wise Report</option>
+                        <option value="overall">Overall Attendance Report</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-date">Attendance Date</label>
+                    <input type="date" id="filter-date" name="date">
+                </div>
+                <div class="form-group">
+                    <label for="filter-from-date">From Date</label>
+                    <input type="date" id="filter-from-date" name="from_date">
+                </div>
+                <div class="form-group">
+                    <label for="filter-to-date">To Date</label>
+                    <input type="date" id="filter-to-date" name="to_date">
+                </div>
+                <div class="form-group">
+                    <label for="filter-class">Class</label>
+                    <input type="text" id="filter-class" name="class_name" placeholder="e.g., 10, 12">
+                </div>
+                <div class="form-group">
+                    <label for="filter-section">Section</label>
+                    <input type="text" id="filter-section" name="section_name" placeholder="e.g., A, B">
+                </div>
+                <div class="form-group">
+                    <label for="filter-subject">Subject</label>
+                    <input type="text" id="filter-subject" name="subject_name" placeholder="e.g., Mathematics">
+                </div>
+                <div class="form-group">
+                    <label for="filter-status">Attendance Status</label>
+                    <select id="filter-status" name="status">
+                        <option value="">All Statuses</option>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Late">Late</option>
+                        <option value="Leave">Leave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="filter-adm-no">Admission Number</label>
+                    <input type="text" id="filter-adm-no" name="admission_no" placeholder="e.g., ADM-2026-001">
+                </div>
+                <div class="form-group">
+                    <label for="filter-student-name">Student Name</label>
+                    <input type="text" id="filter-student-name" name="student_name" placeholder="Search name...">
+                </div>
+                <div class="filter-actions span-all">
+                    <button type="button" id="btn-reset" class="btn btn-outline"><i class="fas fa-undo"></i> Reset Filters</button>
+                    <button type="submit" id="btn-search" class="btn btn-primary"><i class="fas fa-search"></i> Generate Analysis</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- KPI Summary Cards -->
+        <section class="summary-grid">
+            <div class="summary-card total">
+                <div class="summary-icon"><i class="fas fa-users"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-total">0</h3>
+                    <p>Total Records</p>
+                </div>
+            </div>
+            <div class="summary-card present">
+                <div class="summary-icon"><i class="fas fa-user-check"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-present">0</h3>
+                    <p>Present</p>
+                </div>
+            </div>
+            <div class="summary-card absent">
+                <div class="summary-icon"><i class="fas fa-user-times"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-absent">0</h3>
+                    <p>Absent</p>
+                </div>
+            </div>
+            <div class="summary-card late">
+                <div class="summary-icon"><i class="fas fa-clock"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-late">0</h3>
+                    <p>Late</p>
+                </div>
+            </div>
+            <div class="summary-card leave">
+                <div class="summary-icon"><i class="fas fa-plane-departure"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-leave">0</h3>
+                    <p>Leave</p>
+                </div>
+            </div>
+            <div class="summary-card performance">
+                <div class="summary-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="summary-data">
+                    <h3 id="kpi-percentage">0%</h3>
+                    <p>Attendance %</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Visual Charts Grid -->
+        <section class="charts-grid">
+            <div class="card chart-card">
+                <div class="card-header"><h3><i class="fas fa-chart-pie"></i> Distribution Breakdown</h3></div>
+                <div class="chart-container"><canvas id="pieChart"></canvas></div>
+            </div>
+            <div class="card chart-card">
+                <div class="card-header"><h3><i class="fas fa-chart-bar"></i> Class-wise Performance Matrix</h3></div>
+                <div class="chart-container"><canvas id="barChart"></canvas></div>
+            </div>
+            <div class="card chart-card span-2-md">
+                <div class="card-header"><h3><i class="fas fa-chart-area"></i> Chronological Monthly Trend</h3></div>
+                <div class="chart-container"><canvas id="lineChart"></canvas></div>
+            </div>
+        </section>
+
+        <!-- Data Grid Table Section -->
+        <section class="card table-card">
+            <div class="card-header table-header-flex">
+                <h2><i class="fas fa-list-alt"></i> Detailed Attendance Registry Ledger</h2>
+                <div class="table-meta">
+                    <span id="showing-records-count">Showing 0 records</span>
+                </div>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="attendance-table">
+                    <thead>
+                        <tr>
+                            <th>Photo</th>
+                            <th class="sortable" data-sort="admission_no">Admission No <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="student_name">Student Name <i class="fas fa-sort"></i></th>
+                            <th class="sortable" data-sort="class">Class <i class="fas fa-sort"></i></th>
+                            <th>Section</th>
+                            <th>Subject</th>
+                            <th>Teacher</th>
+                            <th class="sortable" data-sort="attendance_date">Attendance Date <i class="fas fa-sort"></i></th>
+                            <th>Status</th>
+                            <th>Remarks</th>
+                            <th>Updated At</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Code injected dynamically via JavaScript Engine -->
+                    </tbody>
+                </table>
+
+                <!-- Async Feedback Elements -->
+                <div id="table-loading" class="state-layer hidden">
+                    <div class="spinner"></div>
+                    <p>Fetching institutional matrices from secure ERP layers...</p>
+                </div>
+                <div id="table-empty" class="state-layer hidden">
+                    <i class="fas fa-folder-open empty-icon"></i>
+                    <p>No relational records discovered matching selected parameters.</p>
+                </div>
+                <div id="table-error" class="state-layer hidden">
+                    <i class="fas fa-exclamation-triangle error-icon"></i>
+                    <p id="error-message">A critical API framework execution runtime error occurred.</p>
+                </div>
+            </div>
+
+            <!-- Pagination Table Control Footing -->
+            <div class="table-footer">
+                <div class="per-page-selector">
+                    <label for="per-page">Rows per page:</label>
+                    <select id="per-page">
+                        <option value="10">10</option>
+                        <option value="25" selected>25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <nav class="pagination-nav">
+                    <button id="btn-prev" class="pagination-btn" type="button" disabled><i class="fas fa-chevron-left"></i> Prev</button>
+                    <div id="pagination-pages" class="pagination-pages-list"></div>
+                    <button id="btn-next" class="pagination-btn" type="button" disabled>Next <i class="fas fa-chevron-right"></i></button>
+                </nav>
+            </div>
+        </section>
+    </div>
+
+    <!-- Edit Record Modal Layer -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Modify Record Entry</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <form id="edit-form">
+                <input type="hidden" id="edit-record-id">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" id="edit-student-name" readonly class="readonly-input">
+                </div>
+                <div class="form-group">
+                    <label for="edit-status">Status Matrix</label>
+                    <select id="edit-status" required>
+                        <option value="Present">Present</option>
+                        <option value="Absent">Absent</option>
+                        <option value="Late">Late</option>
+                        <option value="Leave">Leave</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="edit-remarks">Justification Remarks</label>
+                    <textarea id="edit-remarks" rows="3" placeholder="Enter formal update justification log..."></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-outline close-modal-btn">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Modifications</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Embedded Embedded JavaScript (attendance-report.js) -->
+    <script>
+        /**
+         * R.S. Public School ERP - Attendance Report Module Script Engine
+         * Native Vanilla ES6 implementation interfacing with Node.js + Express backend.
+         */
+
+        document.addEventListener('DOMContentLoaded', () => {
+            AttendanceReportModule.init();
+        });
+
+        const AttendanceReportModule = (() => {
+            // Structural Functional Application State
+            let state = {
+                records: [],
+                summary: { total: 0, present: 0, absent: 0, late: 0, leave: 0, percentage: 0 },
+                chartsData: { classWise: {}, monthlyTrend: {} },
+                pagination: { page: 1, limit: 25, totalPages: 1 },
+                sorting: { column: 'attendance_date', direction: 'DESC' }
+            };
+
+            // Active ChartJS Instance Storage Object
+            let instances = { pie: null, bar: null, line: null };
+
+            // Primary DOM Element Lookups Map
+            const dom = {
+                filterForm: document.getElementById('filter-form'),
+                tableBody: document.getElementById('table-body'),
+                loadingState: document.getElementById('table-loading'),
+                emptyState: document.getElementById('table-empty'),
+                errorState: document.getElementById('table-error'),
+                errorMessage: document.getElementById('error-message'),
+                recordsCount: document.getElementById('showing-records-count'),
+                perPage: document.getElementById('per-page'),
+                btnPrev: document.getElementById('btn-prev'),
+                btnNext: document.getElementById('btn-next'),
+                pagesList: document.getElementById('pagination-pages'),
+                btnReset: document.getElementById('btn-reset'),
+                btnRefresh: document.getElementById('btn-refresh'),
+                editModal: document.getElementById('edit-modal'),
+                editForm: document.getElementById('edit-form')
+            };
+
+            /** Initial Execution Trigger Module Configuration */
+            const init = () => {
+                setupEventBindings();
+                setDefaultDateBounds();
+                fetchAnalyticsEngineData();
+            };
+
+            /** Sets logical default date filters matching active session timelines */
+            const setDefaultDateBounds = () => {
+                const today = new Date();
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                
+                document.getElementById('filter-to-date').value = today.toISOString().split('T')[0];
+                document.getElementById('filter-from-date').value = firstDay.toISOString().split('T')[0];
+            };
+
+            /** Maps events cleanly without jQuery reliance */
+            const setupEventBindings = () => {
+                dom.filterForm.addEventListener('submit', (e) => { e.preventDefault(); state.pagination.page = 1; fetchAnalyticsEngineData(); });
+                dom.btnReset.addEventListener('click', () => { dom.filterForm.reset(); setDefaultDateBounds(); state.pagination.page = 1; fetchAnalyticsEngineData(); });
+                dom.btnRefresh.addEventListener('click', () => fetchAnalyticsEngineData());
+                dom.perPage.addEventListener('change', (e) => { state.pagination.limit = parseInt(e.target.value); state.pagination.page = 1; renderTableLedger(); });
+                dom.btnPrev.addEventListener('click', () => { if (state.pagination.page > 1) { state.pagination.page--; renderTableLedger(); } });
+                dom.btnNext.addEventListener('click', () => { if (state.pagination.page < state.pagination.totalPages) { state.pagination.page++; renderTableLedger(); } });
+
+                // Table Sort Header Listeners
+                document.querySelectorAll('th.sortable').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const column = th.dataset.sort;
+                        state.sorting.direction = (state.sorting.column === column && state.sorting.direction === 'ASC') ? 'DESC' : 'ASC';
+                        state.sorting.column = column;
+                        sortRecordsArray();
+                        renderTableLedger();
+                    });
+                });
+
+                // Layer Window Closure Element Mapping
+                document.querySelectorAll('.close-modal, .close-modal-btn').forEach(el => {
+                    el.addEventListener('click', () => dom.editModal.classList.remove('open'));
+                });
+                dom.editForm.addEventListener('submit', handleUpdateRecordEntry);
+
+                // Export Utilities Triggers
+                document.getElementById('export-pdf').addEventListener('click', (e) => { e.preventDefault(); window.print(); });
+                document.getElementById('export-csv').addEventListener('click', (e) => { e.preventDefault(); triggerDataStreamExport('csv'); });
+                document.getElementById('export-excel').addEventListener('click', (e) => { e.preventDefault(); triggerDataStreamExport('excel'); });
+            };
+
+            /** Converts active filter selections to URL parameters */
+            const serializeFilterParameters = () => {
+                const formData = new FormData(dom.filterForm);
+                const params = new URLSearchParams();
+                for (const [key, value] of formData.entries()) {
+                    if (value) params.append(key, value);
+                }
+                return params.toString();
+            };
+
+            /** Primary Fetch Engine pipeline requesting `/api/attendance/report` */
+            const fetchAnalyticsEngineData = async () => {
+                setUXState('loading');
+                const queryParams = serializeFilterParameters();
+                
+                try {
+                    const response = await fetch(`http://localhost:5000/api/attendance/report?${queryParams}`, {
+                        method: 'GET',
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    });
+
+                    if (!response.ok) throw new Error(`HTTP Error Code Exception: ${response.status}`);
+                    
+                    const payload = await response.json();
+                    
+                    // Safely fall back into common API response patterns
+                   if (payload.summary) {
+
+                        state.summary = {
+                            total: payload.summary.total_students,
+                            present: payload.summary.present_count,
+                            absent: payload.summary.absent_count,
+                            late: payload.summary.late_count,
+                            leave: payload.summary.leave_count,
+                            percentage: payload.summary.attendance_percentage
+                        };
+
+                        state.records = payload.records || [];
+
+                    } else {
+
+                        state.records = payload.data || [];
+                    }
+                    if (!Array.isArray(state.records)) state.records = [];
+                    
+                    processDataMetrics(state.records);
+                    sortRecordsArray();
+                    renderKPICards();
+                    renderDataVisualizations();
+                    renderTableLedger();
+                    
+                } catch (error) {
+                    console.error('ERP Report Engine Error:', error);
+                    dom.errorMessage.textContent = `API Transmission Fault: ${error.message}`;
+                    setUXState('error');
+                }
+            };
+
+            /** Aggregates backend data arrays into chart coordinates and metric KPIs */
+            const processDataMetrics = (recordsArray) => {
+                let total = recordsArray.length;
+                let present = 0, absent = 0, late = 0, leave = 0;
+                let classMap = {}, monthlyMap = {};
+
+                recordsArray.forEach(rec => {
+                    const status = rec.status ? rec.status.trim() : 'Absent';
+                    if (status === 'Present') present++;
+                    else if (status === 'Absent') absent++;
+                    else if (status === 'Late') late++;
+                    else if (status === 'Leave') leave++;
+
+                    // Class metrics assignment mapping
+                    const className = rec.class_name || 'N/A';
+                    if (!classMap[className]) classMap[className] = { total: 0, present: 0 };
+                    classMap[className].total++;
+                    if (status === 'Present' || status === 'Late') classMap[className].present++;
+
+                    // Timeline sorting calculation logic
+                    if (rec.attendance_date) {
+                        const dateObj = new Date(rec.attendance_date);
+                        const monthToken = dateObj.toLocaleString('default', { month: 'short', year: '2-digit' });
+                        if (!monthlyMap[monthToken]) monthlyMap[monthToken] = { total: 0, present: 0 };
+                        monthlyMap[monthToken].total++;
+                        if (status === 'Present' || status === 'Late') monthlyMap[monthToken].present++;
+                    }
+                });
+
+                state.summary = {
+                    total, present, absent, late, leave,
+                    percentage: total > 0 ? Math.round(((present + late) / total) * 100) : 0
+                };
+                state.chartsData.classWise = classMap;
+                state.chartsData.monthlyTrend = monthlyMap;
+            };
+
+            /** Sorting machine for records collections array */
+            const sortRecordsArray = () => {
+                const col = state.sorting.column;
+                const dir = state.sorting.direction === 'ASC' ? 1 : -1;
+
+                state.records.sort((a, b) => {
+                    let valA = a[col] !== undefined && a[col] !== null ? a[col].toString().toLowerCase() : '';
+                    let valB = b[col] !== undefined && b[col] !== null ? b[col].toString().toLowerCase() : '';
+                    return valA.localeCompare(valB, undefined, { numeric: true, sensitivity: 'base' }) * dir;
+                });
+            };
+
+            /** Writes aggregated summary counts directly to UI cards */
+            const renderKPICards = () => {
+                document.getElementById('kpi-total').textContent = state.summary.total;
+                document.getElementById('kpi-present').textContent = state.summary.present;
+                document.getElementById('kpi-absent').textContent = state.summary.absent;
+                document.getElementById('kpi-late').textContent = state.summary.late;
+                document.getElementById('kpi-leave').textContent = state.summary.leave;
+                document.getElementById('kpi-percentage').textContent = `${state.summary.percentage}%`;
+            };
+
+            /** Generates table grid elements matching state slices dynamically */
+            const renderTableLedger = () => {
+                const totalRecords = state.records.length;
+                if (totalRecords === 0) {
+                    setUXState('empty');
+                    return;
+                }
+
+                setUXState('ready');
+                
+                state.pagination.totalPages = Math.ceil(totalRecords / state.pagination.limit) || 1;
+                if (state.pagination.page > state.pagination.totalPages) state.pagination.page = state.pagination.totalPages;
+                
+                const startIdx = (state.pagination.page - 1) * state.pagination.limit;
+                const endIdx = Math.min(startIdx + state.pagination.limit, totalRecords);
+                const activePageSlice = state.records.slice(startIdx, endIdx);
+
+                dom.recordsCount.textContent = `Showing ${startIdx + 1} to ${endIdx} of ${totalRecords} Records`;
+                dom.tableBody.innerHTML = '';
+
+                activePageSlice.forEach(row => {
+                    const tr = document.createElement('tr');
+                    
+                    const dateStr = row.attendance_date ? new Date(row.attendance_date).toLocaleDateString('en-GB') : 'N/A';
+                    const updatedStr = row.updated_at ? new Date(row.updated_at).toLocaleTimeString('en-GB', {hour: '2-digit', minute:'2-digit'}) : 'N/A';
+                    const avatarSrc = row.photo
+                    ? `http://localhost:5000${row.photo}`
+                    : 'images/default-avatar.png';
+
+                    tr.innerHTML = `
+                        <td><img src="${avatarSrc}" class="student-avatar" alt="Student"></td>
+                        <td><strong>${row.admission_no || row.id || 'N/A'}</strong></td>
+                        <td>${row.student_name || 'N/A'}</td>
+                        <td>Class ${row.class_name || 'N/A'}</td>
+                        <td>${row.section || 'N/A'}</td>
+                        <td>${row.subject_name || 'General Core'}</td>
+                        <td>${row.teacher_name || 'N/A'}</td>
+                        <td>${dateStr}</td>
+                        <td><span class="status-badge ${row.status ? row.status.toLowerCase() : 'absent'}">${row.status || 'Absent'}</span></td>
+                        <td><small>${row.remarks || ''}</small></td>
+                        <td><small>${updatedStr}</small></td>
+                        <td class="text-center">
+                            <div class="table-actions">
+                                <button class="action-icon-btn edit" data-id="${row.id}" title="Modify Entry"><i class="fas fa-edit"></i></button>
+                                <button class="action-icon-btn delete" data-id="${row.id}" title="Purge Entry"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    dom.tableBody.appendChild(tr);
+                });
+
+                renderPaginationControls();
+                attachTableActionListeners();
+            };
+
+            /** Numeric Pagination Element Builder Engine */
+            const renderPaginationControls = () => {
+                dom.btnPrev.disabled = state.pagination.page === 1;
+                dom.btnNext.disabled = state.pagination.page === state.pagination.totalPages;
+                dom.pagesList.innerHTML = '';
+
+                let maxVisible = 5;
+                let startPage = Math.max(1, state.pagination.page - Math.floor(maxVisible / 2));
+                let endPage = Math.min(state.pagination.totalPages, startPage + maxVisible - 1);
+
+                if (endPage - startPage + 1 < maxVisible) {
+                    startPage = Math.max(1, endPage - maxVisible + 1);
+                }
+
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageBtn = document.createElement('button');
+                    pageBtn.className = `page-num ${i === state.pagination.page ? 'active' : ''}`;
+                    pageBtn.textContent = i;
+                    pageBtn.type = "button";
+                    pageBtn.addEventListener('click', () => {
+                        state.pagination.page = i;
+                        renderTableLedger();
+                    });
+                    dom.pagesList.appendChild(pageBtn);
+                }
+            };
+
+            /** Context actions handler routing instructions to edit or delete row entries */
+            const attachTableActionListeners = () => {
+                dom.tableBody.querySelectorAll('.action-icon-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const targetRecord = state.records.find(r => r.id == btn.dataset.id);
+                        if (targetRecord) invokeModalTransactionEditor(targetRecord);
+                    });
+                });
+
+                dom.tableBody.querySelectorAll('.action-icon-btn.delete').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        handleDeleteConfirmation(btn.dataset.id);
+                    });
+                });
+            };
+
+            /** Populates modal form elements to update individual items */
+            const invokeModalTransactionEditor = (record) => {
+                document.getElementById('edit-record-id').value = record.id;
+                document.getElementById('edit-student-name').value = record.student_name || 'N/A';
+                document.getElementById('edit-status').value = record.status || 'Present';
+                document.getElementById('edit-remarks').value = record.remarks || '';
+                dom.editModal.classList.add('open');
+            };
+
+            /** Resolves data changes via `PUT /api/attendance/:id` */
+            async function handleUpdateRecordEntry(e) {
+                e.preventDefault();
+                const recordId = document.getElementById('edit-record-id').value;
+                const bodyPayload = {
+                    status: document.getElementById('edit-status').value,
+                    remarks: document.getElementById('edit-remarks').value
+                };
+
+                try {
+                    const res = await fetch(`/api/attendance/${recordId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(bodyPayload)
+                    });
+
+                    if (!res.ok) throw new Error('ERP endpoint declined status update execution payload synchronization.');
+                    
+                    dom.editModal.classList.remove('open');
+                    fetchAnalyticsEngineData();
+                    
+                } catch (err) {
+                    alert(`ERP Update Transaction Failure: ${err.message}`);
+                }
+            }
+
+            /** Triggers direct row data purges via `DELETE /api/attendance/:id` */
+            async function handleDeleteConfirmation(recordId) {
+                if (!confirm('Are you absolutely certain you want to purge this row entry from the institutional ledger? This cannot be undone.')) return;
+                
+                try {
+                    const res = await fetch(`/api/attendance/${recordId}`, { method: 'DELETE' });
+                    if (!res.ok) throw new Error('Backend refused transaction data clearance instruction.');
+                    fetchAnalyticsEngineData();
+                } catch (err) {
+                    alert(`ERP Purge Execution Failure: ${err.message}`);
+                }
+            }
+
+            /** Component state visibility manager switcher */
+            const setUXState = (viewstate) => {
+                dom.loadingState.classList.add('hidden');
+                dom.emptyState.classList.add('hidden');
+                dom.errorState.classList.add('hidden');
+                
+                if (viewstate === 'loading') dom.loadingState.classList.remove('hidden');
+                else if (viewstate === 'empty') dom.emptyState.classList.remove('hidden');
+                else if (viewstate === 'error') dom.errorState.classList.remove('hidden');
+            };
+
+            /** Canvas ChartJS Visual Dashboard Generator */
+            const renderDataVisualizations = () => {
+                // Safe context clearing handling memory release parameters
+                if (instances.pie) instances.pie.destroy();
+                if (instances.bar) instances.bar.destroy();
+                if (instances.line) instances.line.destroy();
+
+                // 1. Pie Chart Configuration
+                const ctxPie = document.getElementById('pieChart').getContext('2d');
+                instances.pie = new Chart(ctxPie, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Present', 'Absent', 'Late', 'Leave'],
+                        datasets: [{
+                            data: [state.summary.present, state.summary.absent, state.summary.late, state.summary.leave],
+                            backgroundColor: ['#10B981', '#EF4444', '#F59E0B', '#3B82F6']
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+                });
+
+                // 2. Bar Chart Configuration
+                const classes = Object.keys(state.chartsData.classWise);
+                const classRates = classes.map(c => {
+                    const item = state.chartsData.classWise[c];
+                    return item.total > 0 ? Math.round((item.present / item.total) * 100) : 0;
+                });
+
+                const ctxBar = document.getElementById('barChart').getContext('2d');
+                instances.bar = new Chart(ctxBar, {
+                    type: 'bar',
+                    data: {
+                        labels: classes.map(c => `Class ${c}`),
+                        datasets: [{
+                            label: 'Attendance Metrics (%)',
+                            data: classRates,
+                            backgroundColor: '#134074',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { min: 0, max: 100, ticks: { callback: value => value + '%' } } }
+                    }
+                });
+
+                // 3. Line Chart Configuration
+                const months = Object.keys(state.chartsData.monthlyTrend);
+                const monthRates = months.map(m => {
+                    const item = state.chartsData.monthlyTrend[m];
+                    return item.total > 0 ? Math.round((item.present / item.total) * 100) : 0;
+                });
+
+                const ctxLine = document.getElementById('lineChart').getContext('2d');
+                instances.line = new Chart(ctxLine, {
+                    type: 'line',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Compliance Factor (%)',
+                            data: monthRates,
+                            borderColor: '#EEB902',
+                            backgroundColor: 'rgba(238, 185, 2, 0.1)',
+                            fill: true,
+                            tension: 0.3,
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        scales: { y: { min: 0, max: 100, ticks: { callback: value => value + '%' } } }
+                    }
+                });
+            };
+
+            /** Serializes operational local matrix records array straight into data stream downloads */
+            const triggerDataStreamExport = (format) => {
+                if (!state.records.length) return alert('No active datasets loaded to initialize text document streams.');
+                
+                let fileContent = '';
+                let typeStr = 'text/csv';
+                const docTitle = `RSPS_Report_Export_${new Date().toISOString().split('T')[0]}`;
+                const headers = ['Admission No', 'Student Name', 'Class', 'Section', 'Subject', 'Teacher', 'Date', 'Status', 'Remarks'];
+                
+                fileContent += headers.join(',') + '\n';
+                state.records.forEach(r => {
+                    const stringifiedRow = [
+                        `"${r.admission_no || ''}"`,
+                        `"${r.student_name || ''}"`,
+                        `"${r.class_name || ''}"`,
+                        `"${r.section_name || ''}"`,
+                        `"${r.subject_name || 'Core Core'}"`,
+                        `"${r.teacher_name || ''}"`,
+                        `"${r.attendance_date ? r.attendance_date.split('T')[0] : ''}"`,
+                        `"${r.status || ''}"`,
+                        `"${r.remarks || ''}"`
+                    ];
+                    fileContent += stringifiedRow.join(',') + '\n';
+                });
+                
+                typeStr = format === 'excel' ? 'application/vnd.ms-excel' : 'text/csv';
+
+                const dataBlob = new Blob([fileContent], { type: `${typeStr};charset=utf-8;` });
+                const downstreamLink = document.createElement('a');
+                downstreamLink.href = URL.createObjectURL(dataBlob);
+                downstreamLink.setAttribute('download', `${docTitle}.${format === 'excel' ? 'xls' : 'csv'}`);
+                document.body.appendChild(downstreamLink);
+                downstreamLink.click();
+                document.body.removeChild(downstreamLink);
+            };
+
+            return { init };
+        })();
+    </script>
+</body>
+</html>

@@ -452,41 +452,49 @@
                 <input type="text" id="moduleSearch" class="search-bar" placeholder="Search operational features...">
             </div>
         </div>
+<section class="stats-grid">
 
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-info">
-                    <p>Total Students</p>
-                    <div class="stat-counter" data-target="1245">0</div>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-graduation-cap"></i></div>
-            </div>
-            
-            <div class="stat-card">
-                <div class="stat-info">
-                    <p>Boys</p>
-                    <div class="stat-counter" data-target="680">0</div>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-user-graduate"></i></div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-info">
+            <p>Total Students</p>
+            <div id="total-students" class="stat-counter">0</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-info">
-                    <p>Girls</p>
-                    <div class="stat-counter" data-target="565">0</div>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-user-graduate-female" class="fa-solid fa-children"></i><i class="fa-solid fa-child-dress"></i></div>
-            </div>
+    <div class="stat-card">
+        <div class="stat-info">
+            <p>Boys</p>
+            <div id="boys-count" class="stat-counter">0</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fa-solid fa-user-graduate"></i>
+        </div>
+    </div>
 
-            <div class="stat-card">
-                <div class="stat-info">
-                    <p>New Admissions</p>
-                    <div class="stat-counter" data-target="112">0</div>
-                </div>
-                <div class="stat-icon"><i class="fa-solid fa-sparkles"><i class="fa-solid fa-user-plus"></i></i></div>
-            </div>
-        </section>
+    <div class="stat-card">
+        <div class="stat-info">
+            <p>Girls</p>
+            <div id="girls-count" class="stat-counter">0</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fa-solid fa-child-dress"></i>
+        </div>
+    </div>
 
+    <div class="stat-card">
+        <div class="stat-info">
+            <p>New Admissions</p>
+            <div id="new-admissions" class="stat-counter">0</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fa-solid fa-user-plus"></i>
+        </div>
+    </div>
+
+</section>
         <div class="section-title-bar">
             <h2>Students Management Workspace</h2>
         </div>
@@ -613,8 +621,7 @@
                 };
                 updateCounter();
             });
-
-            // --- 2. LIVE INTERACTIVE FEATURE ENGINE SEARCH ---
+                            // --- 2. LIVE INTERACTIVE FEATURE ENGINE SEARCH ---
             const searchField = document.getElementById('moduleSearch');
             const actionCards = document.querySelectorAll('.action-card');
             const zeroStateMsg = document.getElementById('noResultsBlock');
@@ -654,6 +661,37 @@
                 });
             });
         });
+        async function loadDashboardCards() {
+
+    try {
+
+        const res = await fetch("http://localhost:5000/api/students/dashboard");
+        const result = await res.json();
+
+        if (!result.success) return;
+
+        document.getElementById("total-students").textContent =
+            result.data.total_students;
+
+        document.getElementById("boys-count").textContent =
+            result.data.boys;
+
+        document.getElementById("girls-count").textContent =
+            result.data.girls;
+
+        document.getElementById("new-admissions").textContent =
+            result.data.new_admissions;
+
+    } catch (err) {
+
+        console.log(err);
+
+    }
+
+}
+
+document.addEventListener("DOMContentLoaded", loadDashboardCards);
+
     </script>
 </body>
 </html>

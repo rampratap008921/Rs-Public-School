@@ -71,6 +71,7 @@ router.post('/', (req, res) => {
     );
 
 });
+
 router.get('/', (req, res) => {
 
     db.query(
@@ -91,6 +92,46 @@ router.get('/', (req, res) => {
 
         }
     );
+
+});
+router.get('/dashboard', (req, res) => {
+
+    const sql = `
+        SELECT
+            COUNT(*) AS total_students,
+
+            SUM(CASE WHEN gender='Male' THEN 1 ELSE 0 END) AS boys,
+
+            SUM(CASE WHEN gender='Female' THEN 1 ELSE 0 END) AS girls,
+
+            SUM(
+                CASE
+                    WHEN MONTH(admission_date)=MONTH(CURDATE())
+                    AND YEAR(admission_date)=YEAR(CURDATE())
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS new_admissions
+
+        FROM students
+    `;
+
+    db.query(sql, (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Dashboard data fetch failed",
+                error: err
+            });
+        }
+
+        res.json({
+            success: true,
+            data: result[0]
+        });
+
+    });
 
 });
 router.get('/:id', (req, res) => {
@@ -224,6 +265,7 @@ router.put('/:id', (req, res) => {
     );
 
 });
+
 router.delete('/:id', (req, res) => {
 
     const id = req.params.id;

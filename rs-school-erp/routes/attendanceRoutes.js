@@ -201,55 +201,153 @@ router.get('/history', (req, res) => {
  * @access  Private (Management Dashboard / Report Engine UI Context)
  */
 router.get('/report', (req, res) => {
-    const { teacher_id, class_name, section, subject_name, from_date, to_date } = req.query;
 
-    let sql = `
-        SELECT 
-            COUNT(id) AS total_students,
-            SUM(CASE WHEN status = 'Present' THEN 1 ELSE 0 END) AS present_count,
-            SUM(CASE WHEN status = 'Absent' THEN 1 ELSE 0 END) AS absent_count,
-            SUM(CASE WHEN status = 'Late' THEN 1 ELSE 0 END) AS late_count,
-            SUM(CASE WHEN status = 'Leave' THEN 1 ELSE 0 END) AS leave_count
-        FROM attendance 
-        WHERE 1=1
+    const {
+        teacher_id,
+        class_name,
+        section,
+        subject_name,
+        from_date,
+        to_date,
+        status,
+        admission_no,
+        student_name
+    } = req.query;
+
+    let where = " WHERE 1=1 ";
+    let params = [];
+
+    if (teacher_id) {
+        where += " AND a.teacher_id = ?";
+        params.push(teacher_id);
+    }
+
+    if (class_name) {
+        where += " AND a.class_name = ?";
+        params.push(class_name);
+    }
+
+    if (section) {
+        where += " AND a.section = ?";
+        params.push(section);
+    }
+
+    if (subject_name) {
+        where += " AND a.subject_name = ?";
+        params.push(subject_name);
+    }
+
+    if (status) {
+        where += " AND a.status = ?";
+        params.push(status);
+    }
+
+    if (admission_no) {
+        where += " AND s.admission_no = ?";
+        params.push(admission_no);
+    }
+
+    if (student_name) {
+        where += " AND s.student_name LIKE ?";
+        params.push(`%${student_name}%`);
+    }
+
+    if (from_date) {
+        where += " AND a.attendance_date >= ?";
+        params.push(from_date);
+    }
+
+    if (to_date) {
+        where += " AND a.attendance_date <= ?";
+        params.push(to_date);
+    }
+
+    const summarySql = `
+        SELECT
+            COUNT(a.id) total_records,
+            SUM(CASE WHEN a.status='Present' THEN 1 ELSE 0 END) present_count,
+            SUM(CASE WHEN a.status='Absent' THEN 1 ELSE 0 END) absent_count,
+            SUM(CASE WHEN a.status='Late' THEN 1 ELSE 0 END) late_count,
+            SUM(CASE WHEN a.status='Leave' THEN 1 ELSE 0 END) leave_count
+        FROM attendance a
+        JOIN students s ON a.student_id=s.id
+        ${where}
     `;
-    const queryParams = [];
 
-    if (teacher_id) { sql += ` AND teacher_id = ?`; queryParams.push(teacher_id); }
-    if (class_name) { sql += ` AND class_name = ?`; queryParams.push(class_name); }
-    if (section) { sql += ` AND section = ?`; queryParams.push(section); }
-    if (subject_name) { sql += ` AND subject_name = ?`; queryParams.push(subject_name); }
-    if (from_date) { sql += ` AND attendance_date >= ?`; queryParams.push(from_date); }
-    if (to_date) { sql += ` AND attendance_date <= ?`; queryParams.push(to_date); }
+    const recordsSql = `
+        SELECT
+            a.id,
+            s.photo,
+            s.admission_no,
+            s.student_name,
+            a.class_name,
+            a.section,
+            a.subject_name,
+            t.teacher_name,
+            a.attendance_date,
+            a.status,
+            a.remarks,
+            a.updated_at
+        FROM attendance a
+        JOIN students s
+            ON a.student_id=s.id
+        LEFT JOIN teachers t
+            ON a.teacher_id=t.id
+        ${where}
+        ORDER BY a.attendance_date DESC,a.id DESC
+    `;
 
-    db.query(sql, queryParams, (err, result) => {
+    db.query(summarySql, params, (err, summary) => {
+
         if (err) {
             return res.status(500).json({
-                success: false,
-                message: "Failed to generate attendance report.",
-                error: err
+                success:false,
+                error:err
             });
         }
 
-        const metrics = result[0];
-        const total = parseInt(metrics.total_students) || 0;
-        const presents = parseInt(metrics.present_count) || 0;
-        
-        // Prevent Divide-By-Zero Error Conditionals
-        const attendancePercentage = total > 0 ? parseFloat(((presents / total) * 100).toFixed(2)) : 0.00;
+        db.query(recordsSql, params, (err2, records) => {
 
-        res.json({
-            success: true,
-            data: {
-                total_students: total,
-                present_count: presents,
-                absent_count: parseInt(metrics.absent_count) || 0,
-                late_count: parseInt(metrics.late_count) || 0,
-                leave_count: parseInt(metrics.leave_count) || 0,
-                attendance_percentage: attendancePercentage
+            if (err2) {
+                return res.status(500).json({
+                    success:false,
+                    error:err2
+                });
             }
+
+            const s = summary[0];
+
+            const total = Number(s.total_records || 0);
+            const present = Number(s.present_count || 0);
+            const absent = Number(s.absent_count || 0);
+            const late = Number(s.late_count || 0);
+            const leave = Number(s.leave_count || 0);
+
+            const percentage = total
+                ? (((present + late) / total) * 100).toFixed(2)
+                : 0;
+
+            res.json({
+
+                success:true,
+
+                summary:{
+                    total_students:total,
+                    present_count:present,
+                    absent_count:absent,
+                    late_count:late,
+                    leave_count:leave,
+                    attendance_percentage:percentage
+                },
+
+                records:records
+
+            });
+
         });
+
     });
+
 });
 
 /**

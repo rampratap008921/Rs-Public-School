@@ -671,6 +671,10 @@
         let currentlySelectedRow = null;
 
         document.addEventListener("DOMContentLoaded", () => {
+            const params = new URLSearchParams(window.location.search);
+            const examId = params.get("exam");
+
+            console.log("Exam ID =", examId);
             // Deploy initial empty allocation line arrays matrix configuration element to grid framework workspace
             addAllocationRow();
         });
@@ -912,35 +916,44 @@
         function packageStructuralPayload() {
             const rows = document.querySelectorAll("#allocationRowsContainer tr");
             const relationalMatrixMap = Array.from(rows).map(row => ({
-                subjectName: row.querySelector(".cell-sub-name").value.trim(),
-                subjectCode: row.querySelector(".cell-sub-code").value.trim().toUpperCase(),
-                maxMarks: Number(row.querySelector(".cell-max-marks").value),
-                minMarks: Number(row.querySelector(".cell-min-marks").value),
-                examType: row.querySelector(".cell-exam-type").value,
-                isPractical: row.querySelector(".cell-is-practical").checked,
-                isTheory: row.querySelector(".cell-is-theory").checked,
-                subjectStatus: row.querySelector(".cell-status").value,
-                detailedBreakdown: {
-                    theoryWeightage: Number(row.dataset.theoryMarks) || null,
-                    practicalWeightage: Number(row.dataset.practicalMarks) || null,
-                    internalWeightage: Number(row.dataset.internalMarks) || null,
-                    remarksText: row.dataset.subjectRemarks || ""
-                }
+
+                subject_name: row.querySelector(".cell-sub-name").value.trim(),
+
+                subject_code: row.querySelector(".cell-sub-code").value.trim(),
+
+                maximum_marks: Number(row.querySelector(".cell-max-marks").value),
+
+                passing_marks: Number(row.querySelector(".cell-min-marks").value),
+
+                exam_type: row.querySelector(".cell-exam-type").value,
+
+                is_practical: row.querySelector(".cell-is-practical").checked ? 1 : 0,
+
+                is_theory: row.querySelector(".cell-is-theory").checked ? 1 : 0,
+
+                status: row.querySelector(".cell-status").value,
+
+                theory_marks: Number(row.dataset.theoryMarks || 0),
+
+                practical_marks: Number(row.dataset.practicalMarks || 0),
+
+                internal_marks: Number(row.dataset.internalMarks || 0),
+
+                remarks: row.dataset.subjectRemarks || ""
+
             }));
 
+            const params = new URLSearchParams(window.location.search);
+
             return {
-                examId: document.getElementById("examId").value,
-                academicSession: document.getElementById("academicSession").value,
-                className: document.getElementById("className").value,
-                sectionName: document.getElementById("sectionName").value,
-                patternSettings: {
-                    theoryEnabled: document.getElementById("patternTheory").checked,
-                    practicalEnabled: document.getElementById("patternPractical").checked,
-                    oralEnabled: document.getElementById("patternOral").checked,
-                    projectEnabled: document.getElementById("patternProject").checked,
-                    internalEnabled: document.getElementById("patternInternal").checked,
-                    skillEnabled: document.getElementById("patternSkill").checked
-                },
+                exam_id: Number(params.get("exam")),
+
+                class_name: document.getElementById("className").value,
+
+                section: document.getElementById("sectionName").value,
+
+                academic_session: document.getElementById("academicSession").value,
+
                 allocationMatrix: relationalMatrixMap
             };
         }
@@ -952,20 +965,41 @@
             if(!validateAllocationWorkspaceForm()) return;
 
             const finalTargetPayload = packageStructuralPayload();
-            console.log("Structured Object Schema Model compiled for Node.js REST routing framework channels transport:", finalTargetPayload);
+            fetch("http://localhost:5000/api/exam-subjects",{
 
-            /* API FETCH SUBMISSION EXECUTABLE PATTERN:
-               fetch('/api/v1/subject-allocation/save', {
-                   method: 'POST',
-                   headers: { 'Content-Type': 'application/json' },
-                   body: JSON.stringify(finalTargetPayload)
-               })
-               .then(res => res.json())
-               .then(json => { alert("Allocation configuration deployed."); })
-               .catch(err => console.error(err));
-            */
+                method:"POST",
 
-            alert(`Success! Subject Evaluation Map metrics parameters structured safely for class allocation profile [${finalTargetPayload.className} - Section ${finalTargetPayload.sectionName}]. Record pipeline maps logged in control panel workspace dashboard.`);
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify(finalTargetPayload)
+
+            })
+
+            .then(res=>res.json())
+
+            .then(data=>{
+
+                console.log(data);
+
+                if(data.success){
+
+                    alert("Subject Allocation Saved Successfully");
+
+                }else{
+
+                    alert(data.message);
+
+                }
+
+            })
+
+            .catch(err=>{
+
+                console.error(err);
+
+            });
         }
 
         function resetAllocationWorkspace() {

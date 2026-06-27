@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Examination - R.S. Public School ERP</title>
+    <title>Create Exam Master - R.S. Public School ERP</title>
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -85,7 +87,7 @@
             color: rgba(255, 255, 255, 0.7);
         }
 
-        /* Main Grid Wrapper */
+        /* Workspace Layout */
         .workspace-container {
             max-width: 1440px;
             width: 100%;
@@ -134,10 +136,35 @@
             margin-top: 4px;
         }
 
+        /* Status Alerts */
+        .alert-box {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .alert-success {
+            background-color: #E6F4EA;
+            color: var(--success-color);
+            border: 1px solid #B7E1CD;
+        }
+
+        .alert-error {
+            background-color: #FCE8E6;
+            color: var(--error-color);
+            border: 1px solid #F9CB9C;
+        }
+
         /* Split Screen Configuration Layout */
         .split-layout {
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1.6fr 1.1fr;
             gap: 30px;
             align-items: start;
         }
@@ -161,6 +188,7 @@
             padding: 25px;
             box-shadow: var(--shadow);
             border: 1px solid #E2E8F0;
+            transition: var(--transition);
         }
 
         .config-card-title {
@@ -186,14 +214,8 @@
             gap: 20px;
         }
 
-        .form-grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
         @media (max-width: 640px) {
-            .form-grid-2, .form-grid-3 {
+            .form-grid-2 {
                 grid-template-columns: 1fr;
             }
         }
@@ -221,7 +243,6 @@
 
         input[type="text"],
         input[type="date"],
-        input[type="number"],
         select,
         textarea {
             width: 100%;
@@ -255,156 +276,7 @@
             display: none;
         }
 
-        /* Custom Modern Multi-Select Lists */
-        .pill-select-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: #FAFAFA;
-            max-height: 180px;
-            overflow-y: auto;
-        }
-
-        .pill-checkbox {
-            display: none;
-        }
-
-        .pill-label {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            background: #FFF;
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            user-select: none;
-            transition: var(--transition);
-        }
-
-        .pill-checkbox:checked + .pill-label {
-            background-color: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* Summary Context Box */
-        .summary-accent-box {
-            background-color: #F8FAFC;
-            border-left: 4px solid var(--accent-color);
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .summary-accent-box span {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-muted);
-        }
-
-        .summary-accent-box strong {
-            font-size: 1.3rem;
-            color: var(--primary-color);
-        }
-
-        /* Table Architecture */
-        .table-responsive {
-            overflow-x: auto;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            background: white;
-        }
-
-        .enterprise-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            font-size: 0.9rem;
-        }
-
-        .enterprise-table th {
-            background-color: #F1F5F9;
-            color: var(--primary-color);
-            font-weight: 600;
-            padding: 12px 16px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .enterprise-table td {
-            padding: 10px 16px;
-            border-bottom: 1px solid #E2E8F0;
-            vertical-align: middle;
-        }
-
-        .btn-add-row {
-            background: #FFF;
-            border: 1px dashed var(--primary-color);
-            color: var(--primary-color);
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            margin-top: 12px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: var(--transition);
-        }
-
-        .btn-add-row:hover {
-            background: rgba(11, 31, 91, 0.05);
-        }
-
-        .btn-delete-row {
-            background: transparent;
-            border: none;
-            color: var(--error-color);
-            cursor: pointer;
-            font-size: 1.1rem;
-            padding: 4px;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-
-        .btn-delete-row:hover {
-            background: #FEE2E2;
-        }
-
-        /* Grid Configuration Rules Checkboxes */
-        .checkbox-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 14px;
-        }
-
-        @media(max-width: 480px){
-            .checkbox-grid { grid-template-columns: 1fr; }
-        }
-
-        .custom-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            user-select: none;
-        }
-
-        .custom-checkbox input {
-            accent-color: var(--primary-color);
-            width: 16px;
-            height: 16px;
-        }
-
-        /* Live Right Panel Preview sticky mechanism */
+        /* Sticky Side Panel */
         .sticky-side-panel {
             position: sticky;
             top: 95px;
@@ -413,6 +285,7 @@
             gap: 20px;
         }
 
+        /* Right Side Live Preview Card */
         .preview-card {
             background: linear-gradient(135deg, #0B1F5B 0%, #1E3A8A 100%);
             color: white;
@@ -420,6 +293,7 @@
             padding: 25px;
             box-shadow: var(--shadow);
             border-top: 4px solid var(--accent-color);
+            animation: fadeIn 0.4s ease;
         }
 
         .preview-card h3 {
@@ -468,15 +342,21 @@
             font-weight: 600;
             text-transform: uppercase;
             background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Form Execution Buttons block */
+        .preview-status.active {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: var(--success-color);
+            color: #A7F3D0;
+        }
+
+        /* Action Buttons */
         .action-button-group {
             display: flex;
             justify-content: flex-end;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 10px;
         }
 
         .btn-erp {
@@ -487,6 +367,7 @@
             cursor: pointer;
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
             transition: var(--transition);
             border: 1px solid transparent;
@@ -497,7 +378,7 @@
             color: white;
         }
 
-        .btn-erp-primary:hover {
+        .btn-erp-primary:hover:not(:disabled) {
             background-color: #1E3A8A;
         }
 
@@ -506,7 +387,7 @@
             color: var(--primary-color);
         }
 
-        .btn-erp-accent:hover {
+        .btn-erp-accent:hover:not(:disabled) {
             background-color: var(--accent-hover);
             color: white;
         }
@@ -516,19 +397,33 @@
             color: var(--text-main);
         }
 
-        .btn-erp-secondary:hover {
+        .btn-erp-secondary:hover:not(:disabled) {
             background-color: #CBD5E1;
         }
 
-        .btn-erp-danger {
-            background-color: transparent;
-            border-color: var(--error-color);
-            color: var(--error-color);
+        .btn-erp:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
-        .btn-erp-danger:hover {
-            background-color: var(--error-color);
-            color: white;
+        /* Loading Spinner */
+        .spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         footer {
@@ -548,8 +443,8 @@
         <div class="school-branding">
             <div class="school-logo">RS</div>
             <div class="school-info">
-                <h1>R.S. PUBLIC SCHOOL</h1>
-                <p><i class="fa-solid fa-location-dot"></i> Khutaha Bazar, Maharajganj</p>
+                <h1>R.S. PUBLIC SCHOOL ERP</h1>
+                <p><i class="fa-solid fa-layer-group"></i> Professional Dashboard Panel</p>
             </div>
         </div>
     </header>
@@ -557,25 +452,36 @@
     <main class="workspace-container">
         
         <nav class="breadcrumb">
-            <a href="exam-dashboard.html">Dashboard</a>
+            <a href="#">Dashboard</a>
             <i class="fa-solid fa-chevron-right"></i>
-            <a href="#">Examination Management</a>
+            <a href="#">Examinations</a>
             <i class="fa-solid fa-chevron-right"></i>
             <span>Create Examination</span>
         </nav>
         
         <header class="page-header">
             <h2>Create Examination</h2>
-            <p>Configure and manage examination sessions for the academic year.</p>
+            <p>Create a new examination for the academic session..</p>
         </header>
 
-        <form id="examCreationForm" onsubmit="handleFormSubmission(event)" novalidate>
+        <!-- Dynamic Success/Error Notifications Box -->
+        <div id="alertSuccess" class="alert-box alert-success">
+            <i class="fa-solid fa-circle-check"></i> <span id="successText">Exam Master initialized and configured successfully. Redirecting...</span>
+        </div>
+        <div id="alertError" class="alert-box alert-error">
+            <i class="fa-solid fa-circle-exclamation"></i> <span id="errorText">An error has occurred inside the validation layer module parameters pipeline.</span>
+        </div>
+
+        <form id="examCreationForm" novalidate>
             <div class="split-layout">
                 
+                <!-- Main Configuration Panel Left -->
                 <div class="form-sections-wrapper">
                     
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-circle-info"></i> Section 1: Exam Basic Information</legend>
+                    <div class="config-card">
+                        <div class="config-card-title">
+                            <i class="fa-solid fa-circle-info"></i> Basic Exam Profile
+                        </div>
                         <div class="form-grid-2">
                             <div class="form-group">
                                 <label for="examName">Exam Name <span>*</span></label>
@@ -584,487 +490,464 @@
                             </div>
                             <div class="form-group">
                                 <label for="examCode">Exam Code <span>*</span></label>
-                                <input type="text" id="examCode" placeholder="e.g., HY-2026" required>
-                                <div class="error-message" id="err-examCode">Unique Exam Code is required.</div>
+                                <input type="text" id="examCode" placeholder="e.g., EXAM-HY-2026" required>
+                                <div class="error-message" id="err-examCode">Unique alphanumeric code is required (e.g. EXAM-XXX).</div>
                             </div>
                             <div class="form-group">
                                 <label for="academicSession">Academic Session <span>*</span></label>
                                 <select id="academicSession" required>
-                                    <option value="" disabled selected>Select Session</option>
+                                    <option value="" disabled selected>Select Academic Session</option>
                                     <option value="2025-2026">2025-2026</option>
                                     <option value="2026-2027">2026-2027</option>
+                                    <option value="2027-2028">2027-2028</option>
                                 </select>
-                                <div class="error-message" id="err-academicSession">Please select an academic session.</div>
+                                <div class="error-message" id="err-academicSession">Academic Session is required.</div>
                             </div>
                             <div class="form-group">
                                 <label for="examType">Exam Type <span>*</span></label>
                                 <select id="examType" required>
-                                    <option value="" disabled selected>Select Type</option>
+                                    <option value="" disabled selected>Select Exam Type</option>
                                     <option value="Unit Test">Unit Test</option>
                                     <option value="Monthly Test">Monthly Test</option>
-                                    <option value="Quarterly Examination">Quarterly Examination</option>
-                                    <option value="Half Yearly Examination">Half Yearly Examination</option>
-                                    <option value="Annual Examination">Annual Examination</option>
-                                    <option value="Pre Board Examination">Pre Board Examination</option>
-                                    <option value="Board Pattern Test">Board Pattern Test</option>
-                                    <option value="Custom Examination">Custom Examination</option>
+                                    <option value="Term Examination">Term Examination</option>
+                                    <option value="Half Yearly">Half Yearly</option>
+                                    <option value="Annual">Annual</option>
+                                    <option value="Pre-Board">Pre-Board</option>
                                 </select>
-                                <div class="error-message" id="err-examType">Please choose an exam context type.</div>
+                                <div class="error-message" id="err-examType">Exam Type is required.</div>
                             </div>
                             <div class="form-group full-width">
                                 <label for="examStatus">Status <span>*</span></label>
                                 <select id="examStatus" required>
-                                    <option value="Draft" selected>Draft</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Completed">Completed</option>
-                                    <option value="Archived">Archived</option>
+                                    <option value="Active" selected>Active</option>
+                                    <option value="Inactive">Inactive</option>
                                 </select>
+                                <div class="error-message" id="err-examStatus">Status validation parameter required.</div>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
 
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-sliders"></i> Section 2: Exam Scope Configuration</legend>
+                    <div class="config-card">
+                        <div class="config-card-title">
+                            <i class="fa-solid fa-calendar-days"></i> Timeline Windows Matrix
+                        </div>
                         <div class="form-grid-2">
                             <div class="form-group">
-                                <label>Applicable Classes <span>*</span> (Select Multiple)</label>
-                                <div class="pill-select-container" id="classSelectionContainer">
-                                    <input type="checkbox" name="classSelection" value="Playway" id="cls-pw" class="pill-checkbox"><label for="cls-pw" class="pill-label">Playway</label>
-                                    <input type="checkbox" name="classSelection" value="LKG" id="cls-lkg" class="pill-checkbox"><label for="cls-lkg" class="pill-label">LKG</label>
-                                    <input type="checkbox" name="classSelection" value="UKG" id="cls-ukg" class="pill-checkbox"><label for="cls-ukg" class="pill-label">UKG</label>
-                                    <input type="checkbox" name="classSelection" value="Class 1" id="cls-1" class="pill-checkbox"><label for="cls-1" class="pill-label">Class 1</label>
-                                    <input type="checkbox" name="classSelection" value="Class 2" id="cls-2" class="pill-checkbox"><label for="cls-2" class="pill-label">Class 2</label>
-                                    <input type="checkbox" name="classSelection" value="Class 3" id="cls-3" class="pill-checkbox"><label for="cls-3" class="pill-label">Class 3</label>
-                                    <input type="checkbox" name="classSelection" value="Class 4" id="cls-4" class="pill-checkbox"><label for="cls-4" class="pill-label">Class 4</label>
-                                    <input type="checkbox" name="classSelection" value="Class 5" id="cls-5" class="pill-checkbox"><label for="cls-5" class="pill-label">Class 5</label>
-                                    <input type="checkbox" name="classSelection" value="Class 6" id="cls-6" class="pill-checkbox"><label for="cls-6" class="pill-label">Class 6</label>
-                                    <input type="checkbox" name="classSelection" value="Class 7" id="cls-7" class="pill-checkbox"><label for="cls-7" class="pill-label">Class 7</label>
-                                    <input type="checkbox" name="classSelection" value="Class 8" id="cls-8" class="pill-checkbox"><label for="cls-8" class="pill-label">Class 8</label>
-                                    <input type="checkbox" name="classSelection" value="Class 9" id="cls-9" class="pill-checkbox"><label for="cls-9" class="pill-label">Class 9</label>
-                                    <input type="checkbox" name="classSelection" value="Class 10" id="cls-10" class="pill-checkbox"><label for="cls-10" class="pill-label">Class 10</label>
-                                </div>
-                                <div class="error-message" id="err-classSelection">Select at least one class framework.</div>
+                                <label for="startDate">Start Date <span>*</span></label>
+                                <input type="date" id="startDate" required>
+                                <div class="error-message" id="err-startDate">Start Date timeline value missing.</div>
                             </div>
                             <div class="form-group">
-                                <label>Applicable Sections <span>*</span> (Select Multiple)</label>
-                                <div class="pill-select-container" id="sectionSelectionContainer">
-                                    <input type="checkbox" name="sectionSelection" value="A" id="sec-a" class="pill-checkbox"><label for="sec-a" class="pill-label">A</label>
-                                    <input type="checkbox" name="sectionSelection" value="B" id="sec-b" class="pill-checkbox"><label for="sec-b" class="pill-label">B</label>
-                                    <input type="checkbox" name="sectionSelection" value="C" id="sec-c" class="pill-checkbox"><label for="sec-c" class="pill-label">C</label>
-                                    <input type="checkbox" name="sectionSelection" value="D" id="sec-d" class="pill-checkbox"><label for="sec-d" class="pill-label">D</label>
-                                </div>
-                                <div class="error-message" id="err-sectionSelection">Select at least one operational section.</div>
+                                <label for="endDate">End Date <span>*</span></label>
+                                <input type="date" id="endDate" required>
+                                <div class="error-message" id="err-endDate">End Date terminal boundary missing.</div>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
 
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-clock"></i> Section 3: Exam Duration Settings</legend>
+                    <div class="config-card">
+                        <div class="config-card-title">
+                            <i class="fa-solid fa-file-lines"></i> Guidelines, Institutional Specifications & Notes
+                        </div>
                         <div class="form-grid-2">
-                            <div class="form-group">
-                                <label for="examStartDate">Exam Start Date <span>*</span></label>
-                                <input type="date" id="examStartDate" required>
-                                <div class="error-message" id="err-examStartDate">Valid start date required.</div>
+                            <div class="form-group full-width">
+                                <label for="instructions">Exam Instructions</label>
+                                <textarea id="instructions" rows="3" placeholder="General structural directions given for formatting rules over the exam..."></textarea>
                             </div>
-                            <div class="form-group">
-                                <label for="examEndDate">Exam End Date <span>*</span></label>
-                                <input type="date" id="examEndDate" required>
-                                <div class="error-message" id="err-examEndDate">End date must fall on or after start date.</div>
+                            <div class="form-group full-width">
+                                <label for="studentGuidelines">Student Guidelines</label>
+                                <textarea id="studentGuidelines" rows="3" placeholder="Mandatory instructions for student compliance..."></textarea>
                             </div>
-                            <div class="form-group full-width" style="margin-top: 5px;">
-                                <div class="summary-accent-box">
-                                    <span>Calculated Operational Workspace Window:</span>
-                                    <div><strong id="totalExamDaysDisplay">0</strong> <span>Days</span></div>
-                                </div>
+                            <div class="form-group full-width">
+                                <label for="invigilatorNotes">Invigilator Notes</label>
+                                <textarea id="invigilatorNotes" rows="3" placeholder="Confidential workspace logs and administrative notes..."></textarea>
                             </div>
                         </div>
-                    </fieldset>
+                    </div>
 
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-book"></i> Section 4: Subject Configuration</legend>
-                        <div class="table-responsive">
-                            <table class="enterprise-table" id="subjectTable">
-                                <thead>
-                                    <tr>
-                                        <th>Subject Name <span>*</span></th>
-                                        <th>Subject Code <span>*</span></th>
-                                        <th>Maximum Marks <span>*</span></th>
-                                        <th>Passing Marks <span>*</span></th>
-                                        <th style="width: 50px; text-align: center;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="subjectTableBody">
-                                    </tbody>
-                            </table>
-                        </div>
-                        <button type="button" class="btn-add-row" onclick="addSubjectRow()"><i class="fa-solid fa-plus"></i> Add Subject</button>
-                        <div class="error-message" id="err-subjectTable" style="margin-top: 10px;">Ensure all subjects are correctly configured without duplicate codes.</div>
-                    </fieldset>
-
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-shield-halved"></i> Section 5: Examination Automation Rules</legend>
-                        <div class="checkbox-grid">
-                            <label class="custom-checkbox"><input type="checkbox" id="ruleAdmitCard" checked> Enable Admit Card Generation</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="ruleDeskSlip" checked> Enable Desk Slip Generation</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="ruleSeating"> Enable Seating Arrangement</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="rulePublish"> Enable Timetable Publication</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="ruleSMS"> Enable SMS Notification</label>
-                            <label class="custom-checkbox"><input type="checkbox" id="ruleParent"> Enable Parent Notification</label>
-                        </div>
-                    </fieldset>
-
-                    <fieldset class="config-card">
-                        <legend class="config-card-title"><i class="fa-solid fa-file-pen"></i> Section 6: Exam Textual Specifications</legend>
-                        <div class="form-group" style="margin-bottom: 15px;">
-                            <label for="examInstructions">Exam Instructions</label>
-                            <textarea id="examInstructions" rows="3" placeholder="General rules governing administration of the whole examination..."></textarea>
-                        </div>
-                        <div class="form-group" style="margin-bottom: 15px;">
-                            <label for="studentGuidelines">Student Guidelines</label>
-                            <textarea id="studentGuidelines" rows="3" placeholder="Mandatory requirements for students (e.g., Reporting times, uniform)..."></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label for="invigilatorNotes">Invigilator Notes</label>
-                            <textarea id="invigilatorNotes" rows="3" placeholder="Confidential protocols or distribution guidance for room control supervisors..."></textarea>
-                        </div>
-                    </fieldset>
                 </div>
 
+                <!-- Live Preview Panel & Quick Actions Right -->
                 <div class="sticky-side-panel">
                     
                     <div class="preview-card">
-                        <h3><i class="fa-solid fa-eye"></i> Live Summary Preview</h3>
+                        <h3><i class="fa-solid fa-eye"></i> Real-time Live Preview</h3>
                         <div class="preview-data-list">
                             <div class="preview-item">
-                                <label>Exam Scope Name</label>
-                                <span id="prevName">—</span>
+                                <label>Exam Name</label>
+                                <span id="previewExamName">—</span>
                             </div>
                             <div class="preview-item">
-                                <label>Configuration Profile</label>
-                                <span id="prevType">—</span>
+                                <label>Exam Code</label>
+                                <span id="previewExamCode">—</span>
                             </div>
                             <div class="preview-item">
-                                <label>Target Scope Classes</label>
-                                <span id="prevClasses">—</span>
+                                <label>Type / Session</label>
+                                <span id="previewTypeSession">—</span>
                             </div>
                             <div class="preview-item">
-                                <label>Subjects Monitored</label>
-                                <span id="prevSubjectsCount">0 Subjects</span>
+                                <label>Chronological Window</label>
+                                <span id="previewChronology">—</span>
                             </div>
                             <div class="preview-item">
-                                <label>Chronological Framework</label>
-                                <span id="prevDates">—</span>
+                                <label>Total Duration Metrics</label>
+                                <span id="previewDuration">0 Days</span>
                             </div>
-                            <div class="preview-item" style="margin-top: 5px;">
-                                <label>Status</label>
-                                <span class="preview-status" id="prevStatus">Draft</span>
+                            <div class="preview-item">
+                                <label>Operational Status</label>
+                                <div id="previewStatus" class="preview-status">Active</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="config-card">
                         <div class="action-button-group">
-                            <button type="button" class="btn-erp btn-erp-danger" onclick="window.location.href='exam-dashboard.html'" style="flex: 1; justify-content: center;">Cancel</button>
-                            <button type="button" class="btn-erp btn-erp-secondary" onclick="resetWorkspaceForm()" style="flex: 1; justify-content: center;">Reset</button>
-                            <button type="button" class="btn-erp btn-erp-accent" onclick="saveFormStateAsDraft()" style="width: 100%; justify-content: center;"><i class="fa-solid fa-floppy-disk"></i> Save As Draft</button>
-                            <button type="submit" class="btn-erp btn-erp-primary" style="width: 100%; justify-content: center;"><i class="fa-solid fa-circle-check"></i> Save & Deploy Exam</button>
+                            <button type="button" id="btnCancel" class="btn-erp btn-erp-secondary" style="flex: 1;">Cancel</button>
+                            <button type="button" id="btnReset" class="btn-erp btn-erp-secondary" style="flex: 1;">Reset</button>
+                            <button type="submit" id="btnSave" class="btn-erp btn-erp-primary" style="width: 100%; margin-top: 10px;">
+                                <div class="spinner" id="saveSpinner"></div>
+                                <i class="fa-solid fa-floppy-disk" id="saveIcon"></i> 
+                                <span id="saveBtnText">Save Exam</span>
+                            </button>
                         </div>
                     </div>
 
                 </div>
+
             </div>
         </form>
     </main>
 
     <footer>
-        &copy; 2026 R.S. Public School, Khutaha Bazar, Maharajganj. Powered by Enterprise Academic ERP Systems.
+        &copy; 2026 R.S. Public School ERP Engine Systems. All Rights Reserved.
     </footer>
 
     <script>
-        // DOM Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            // Instantiate initial standard subject row
-            addSubjectRow();
-            setupRealtimePreviewHooks();
-        });
-
-        // Dynamic Subjects Configuration Logic Block
-        function addSubjectRow() {
-            const tbody = document.getElementById('subjectTableBody');
-            const rowCount = tbody.rows.length;
-            const tr = document.createElement('tr');
+            // DOM Selection Strategy
+            const examForm = document.getElementById('examCreationForm');
             
-            tr.innerHTML = `
-                <td>
-                    <input type="text" class="sub-name" placeholder="e.g., Mathematics" oninput="updateLivePreview()" required>
-                </td>
-                <td>
-                    <input type="text" class="sub-code" placeholder="e.g., MATH101" oninput="updateLivePreview()" required>
-                </td>
-                <td>
-                    <input type="number" class="sub-max-marks" placeholder="100" min="1" oninput="updateLivePreview()" required>
-                </td>
-                <td>
-                    <input type="number" class="sub-min-marks" placeholder="33" min="0" oninput="updateLivePreview()" required>
-                </td>
-                <td style="text-align: center;">
-                    <button type="button" class="btn-delete-row" onclick="removeSubjectRow(this)" title="Remove Subject Row">
-                        <i class="fa-solid fa-trash-can"></i>
-                    </button>
-                </td>
-            `;
-            tbody.appendChild(tr);
-            updateLivePreview();
-        }
-
-        function removeSubjectRow(button) {
-            const tbody = document.getElementById('subjectTableBody');
-            if (tbody.rows.length > 1) {
-                button.closest('tr').remove();
-                updateLivePreview();
-            } else {
-                alert("An operational examination configuration requires at least one evaluated syllabus subject profile.");
-            }
-        }
-
-        // Live Preview Hooks Registration
-        function setupRealtimePreviewHooks() {
-            const fields = ['examName', 'examType', 'examStartDate', 'examEndDate', 'examStatus'];
-            fields.forEach(id => {
-                document.getElementById(id).addEventListener('input', updateLivePreview);
-            });
-
-            // Set multi-select listeners
-            document.querySelectorAll('input[name="classSelection"]').forEach(el => {
-                el.addEventListener('change', updateLivePreview);
-            });
-        }
-
-        // Realtime Preview and Timeline Metrics Computations
-        function updateLivePreview() {
-            // Strings
-            document.getElementById('prevName').innerText = document.getElementById('examName').value || '—';
-            document.getElementById('prevType').innerText = document.getElementById('examType').value || '—';
-            document.getElementById('prevStatus').innerText = document.getElementById('examStatus').value;
-
-            // Date & Day Calculation Logic
-            const startVal = document.getElementById('examStartDate').value;
-            const endVal = document.getElementById('examEndDate').value;
-            const totalDaysDisplay = document.getElementById('totalExamDaysDisplay');
+            // Required Form Inputs
+            const examName = document.getElementById('examName');
+            const examCode = document.getElementById('examCode');
+            const academicSession = document.getElementById('academicSession');
+            const examType = document.getElementById('examType');
+            const examStatus = document.getElementById('examStatus');
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
             
-            if (startVal && endVal) {
-                const start = new Date(startVal);
-                const end = new Date(endVal);
-                const diffTime = end - start;
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            // Optional Input Parameters
+            const instructions = document.getElementById('instructions');
+            const studentGuidelines = document.getElementById('studentGuidelines');
+            const invigilatorNotes = document.getElementById('invigilatorNotes');
 
-                if (diffDays >= 1) {
-                    totalDaysDisplay.innerText = diffDays;
-                    document.getElementById('prevDates').innerText = `${startVal} to ${endVal} (${diffDays} Days)`;
+            // Action Buttons
+            const btnCancel = document.getElementById('btnCancel');
+            const btnReset = document.getElementById('btnReset');
+            const btnSave = document.getElementById('btnSave');
+            const saveSpinner = document.getElementById('saveSpinner');
+            const saveIcon = document.getElementById('saveIcon');
+            const saveBtnText = document.getElementById('saveBtnText');
+
+            // Feedback Alert Elements
+            const alertSuccess = document.getElementById('alertSuccess');
+            const alertError = document.getElementById('alertError');
+            const successText = document.getElementById('successText');
+            const errorText = document.getElementById('errorText');
+
+            // Live Preview Dashboard Mapping Elements
+            const previewExamName = document.getElementById('previewExamName');
+            const previewExamCode = document.getElementById('previewExamCode');
+            const previewTypeSession = document.getElementById('previewTypeSession');
+            const previewChronology = document.getElementById('previewChronology');
+            const previewDuration = document.getElementById('previewDuration');
+            const previewStatus = document.getElementById('previewStatus');
+
+            // Structural Regex Unique Format Engine Rules validation validation
+            const EXAM_CODE_REGEX = /^[A-Z0-9_\-\/]{3,20}$/i;
+
+            // Live Preview Synchronization Function
+            function performLivePreviewSync() {
+                if (previewExamName) previewExamName.innerText = (examName && examName.value.trim()) ? examName.value.trim() : '—';
+                if (previewExamCode) previewExamCode.innerText = (examCode && examCode.value.trim()) ? examCode.value.trim().toUpperCase() : '—';
+                
+                const chosenType = (examType && examType.value) ? examType.value : '—';
+                const chosenSession = (academicSession && academicSession.value) ? academicSession.value : '—';
+                if (previewTypeSession) previewTypeSession.innerText = `${chosenType} (${chosenSession})`;
+                
+                const startVal = (startDate && startDate.value) ? startDate.value : null;
+                const endVal = (endDate && endDate.value) ? endDate.value : null;
+                
+                if (startVal && endVal) {
+                    if (previewChronology) previewChronology.innerText = `${startVal} to ${endVal}`;
+                    
+                    const startD = new Date(startVal);
+                    const endD = new Date(endVal);
+                    const diffTime = endD - startD;
+                    const calculatedDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                    
+                    if (previewDuration) {
+                        if (calculatedDays > 0) {
+                            previewDuration.innerText = `${calculatedDays} Day(s)`;
+                        } else if (calculatedDays === 0) {
+                            previewDuration.innerText = `1 Day (Single Terminal Target)`;
+                        } else {
+                            previewDuration.innerText = `Invalid Range Error`;
+                        }
+                    }
+                } else if (startVal || endVal) {
+                    if (previewChronology) previewChronology.innerText = startVal ? `Starts: ${startVal}` : `Ends: ${endVal}`;
+                    if (previewDuration) previewDuration.innerText = '—';
                 } else {
-                    totalDaysDisplay.innerText = '0';
-                    document.getElementById('prevDates').innerText = 'Invalid range detected.';
-                }
-            } else {
-                totalDaysDisplay.innerText = '0';
-                document.getElementById('prevDates').innerText = '—';
-            }
-
-            // Target Class Arrays tracking
-            const selectedClasses = Array.from(document.querySelectorAll('input[name="classSelection"]:checked')).map(el => el.value);
-            document.getElementById('prevClasses').innerText = selectedClasses.length > 0 ? selectedClasses.join(', ') : '—';
-
-            // Dynamic Subject Rows tally
-            const rows = document.querySelectorAll('#subjectTableBody tr');
-            document.getElementById('prevSubjectsCount').innerText = `${rows.length} Subject(s) Listed`;
-        }
-
-        // Deep Validation Engine Pipeline 
-        function validateExamForm() {
-            let isValid = true;
-            
-            // Clean dynamic helper visibility states
-            document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
-            document.querySelectorAll('input, select, textarea').forEach(el => el.classList.remove('input-error'));
-
-            // 1. Text Fields Validation
-            const requiredTextFields = ['examName', 'examCode', 'academicSession', 'examType'];
-            requiredTextFields.forEach(id => {
-                const input = document.getElementById(id);
-                if (!input.value.trim()) {
-                    document.getElementById(`err-${id}`).style.display = 'block';
-                    input.classList.add('input-error');
-                    isValid = false;
-                }
-            });
-
-            // 2. Multi-Select Dynamic Checkbox Configurations Validations
-            const checkedClasses = document.querySelectorAll('input[name="classSelection"]:checked');
-            if (checkedClasses.length === 0) {
-                document.getElementById('err-classSelection').style.display = 'block';
-                isValid = false;
-            }
-
-            const checkedSections = document.querySelectorAll('input[name="sectionSelection"]:checked');
-            if (checkedSections.length === 0) {
-                document.getElementById('err-sectionSelection').style.display = 'block';
-                isValid = false;
-            }
-
-            // 3. Chronology Context Date Checks
-            const startDateInput = document.getElementById('examStartDate');
-            const endDateInput = document.getElementById('examEndDate');
-            
-            if (!startDateInput.value) {
-                document.getElementById('err-examStartDate').style.display = 'block';
-                startDateInput.classList.add('input-error');
-                isValid = false;
-            }
-            if (!endDateInput.value) {
-                document.getElementById('err-examEndDate').style.display = 'block';
-                endDateInput.classList.add('input-error');
-                isValid = false;
-            } else if (startDateInput.value && new Date(endDateInput.value) < new Date(startDateInput.value)) {
-                document.getElementById('err-examEndDate').innerText = "End execution timestamp cannot chronological precede starting date.";
-                document.getElementById('err-examEndDate').style.display = 'block';
-                endDateInput.classList.add('input-error');
-                isValid = false;
-            }
-
-            // 4. Dynamic Matrix Subject Grid Verification Loops
-            const rows = document.querySelectorAll('#subjectTableBody tr');
-            const trackedSubjectCodes = new Set();
-            let subjectGridValid = true;
-
-            if(rows.length === 0) {
-                subjectGridValid = false;
-            }
-
-            rows.forEach(row => {
-                const nameInp = row.querySelector('.sub-name');
-                const codeInp = row.querySelector('.sub-code');
-                const maxInp = row.querySelector('.sub-max-marks');
-                const minInp = row.querySelector('.sub-min-marks');
-
-                if(!nameInp.value.trim() || !codeInp.value.trim() || !maxInp.value || !minInp.value) {
-                    subjectGridValid = false;
-                    if(!nameInp.value.trim()) nameInp.classList.add('input-error');
-                    if(!codeInp.value.trim()) codeInp.classList.add('input-error');
-                    if(!maxInp.value) maxInp.classList.add('input-error');
-                    if(!minInp.value) minInp.classList.add('input-error');
+                    if (previewChronology) previewChronology.innerText = '—';
+                    if (previewDuration) previewDuration.innerText = '0 Days';
                 }
 
-                // Marks boundary constraints checks
-                if(Number(minInp.value) > Number(maxInp.value)) {
-                    subjectGridValid = false;
-                    minInp.classList.add('input-error');
-                }
-
-                // Code collision detection ruleset logic
-                const uniformCode = codeInp.value.trim().toUpperCase();
-                if(uniformCode) {
-                    if(trackedSubjectCodes.has(uniformCode)) {
-                        subjectGridValid = false;
-                        codeInp.classList.add('input-error');
+                if (previewStatus && examStatus) {
+                    previewStatus.innerText = examStatus.value;
+                    if (examStatus.value === 'Active') {
+                        previewStatus.className = 'preview-status active';
                     } else {
-                        trackedSubjectCodes.add(uniformCode);
+                        previewStatus.className = 'preview-status';
                     }
                 }
+            }
+
+            // Real-Time Event Target Hook Registers
+            const inputElementsArray = [examName, examCode, academicSession, examType, examStatus, startDate, endDate];
+            inputElementsArray.forEach(inputEl => {
+                if (inputEl) {
+                    inputEl.addEventListener('input', performLivePreviewSync);
+                    inputEl.addEventListener('change', performLivePreviewSync);
+                }
             });
 
-            if(!subjectGridValid) {
-                document.getElementById('err-subjectTable').style.display = 'block';
-                isValid = false;
-            }
+            // Deep Form Validation Strategy Pipeline Engine
+            function executeSystemValidationRules() {
+                let isPassed = true;
 
-            return isValid;
-        }
+                // Reset error message boundaries elements display structures
+                const errorElements = document.querySelectorAll('.error-message');
+                errorElements.forEach(msg => msg.style.display = 'none');
 
-        // Gather Payload Architecture mapping directly into RESTful Entity formats
-        function generateDataPayload() {
-            const subjectRows = document.querySelectorAll('#subjectTableBody tr');
-            const subjectsPayload = Array.from(subjectRows).map(row => ({
-                subjectName: row.querySelector('.sub-name').value.trim(),
-                subjectCode: row.querySelector('.sub-code').value.trim().toUpperCase(),
-                maximumMarks: Number(row.querySelector('.sub-max-marks').value),
-                minimumPassingMarks: Number(row.querySelector('.sub-min-marks').value)
-            }));
+                const activeInputStates = document.querySelectorAll('input, select, textarea');
+                activeInputStates.forEach(input => input.classList.remove('input-error'));
 
-            return {
-                examName: document.getElementById('examName').value.trim(),
-                examCode: document.getElementById('examCode').value.trim().toUpperCase(),
-                academicSession: document.getElementById('academicSession').value,
-                examType: document.getElementById('examType').value,
-                examStatus: document.getElementById('examStatus').value,
-                classSelection: Array.from(document.querySelectorAll('input[name="classSelection"]:checked')).map(el => el.value),
-                sectionSelection: Array.from(document.querySelectorAll('input[name="sectionSelection"]:checked')).map(el => el.value),
-                examStartDate: document.getElementById('examStartDate').value,
-                examEndDate: document.getElementById('examEndDate').value,
-                subjects: subjectsPayload,
-                automationRules: {
-                    enableAdmitCard: document.getElementById('ruleAdmitCard').checked,
-                    enableDeskSlip: document.getElementById('ruleDeskSlip').checked,
-                    enableSeatingArrangement: document.getElementById('ruleSeating').checked,
-                    enableTimetablePublication: document.getElementById('rulePublish').checked,
-                    enableSMSNotification: document.getElementById('ruleSMS').checked,
-                    enableParentNotification: document.getElementById('ruleParent').checked
-                },
-                textualSpecifications: {
-                    examInstructions: document.getElementById('examInstructions').value.trim(),
-                    studentGuidelines: document.getElementById('studentGuidelines').value.trim(),
-                    invigilatorNotes: document.getElementById('invigilatorNotes').value.trim()
+                if (alertError) alertError.style.display = 'none';
+                if (alertSuccess) alertSuccess.style.display = 'none';
+
+                // Exam Name Check
+                if (!examName || !examName.value.trim()) {
+                    const err = document.getElementById('err-examName');
+                    if (err) err.style.display = 'block';
+                    if (examName) examName.classList.add('input-error');
+                    isPassed = false;
                 }
-            };
-        }
 
-        // Active Submission Endpoint Strategy Pipeline handler
-        function handleFormSubmission(event) {
-            event.preventDefault();
-            
-            if(!validateExamForm()) {
-                // Focus context fallback logic pattern
-                const firstError = document.querySelector('.input-error');
-                if(firstError) firstError.focus();
-                return;
+                // Exam Code Check
+                if (!examCode || !examCode.value.trim()) {
+                    const err = document.getElementById('err-examCode');
+                    if (err) {
+                        err.innerText = "Exam Code parameter identifier is required.";
+                        err.style.display = 'block';
+                    }
+                    if (examCode) examCode.classList.add('input-error');
+                    isPassed = false;
+                } else if (!EXAM_CODE_REGEX.test(examCode.value.trim())) {
+                    const err = document.getElementById('err-examCode');
+                    if (err) {
+                        err.innerText = "Format violation. Alphanumeric, underscores, hyphens, and slashes only (3-20 chars).";
+                        err.style.display = 'block';
+                    }
+                    if (examCode) examCode.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // Academic Session Check
+                if (!academicSession || !academicSession.value) {
+                    const err = document.getElementById('err-academicSession');
+                    if (err) err.style.display = 'block';
+                    if (academicSession) academicSession.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // Exam Type Check
+                if (!examType || !examType.value) {
+                    const err = document.getElementById('err-examType');
+                    if (err) err.style.display = 'block';
+                    if (examType) examType.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // Status Parameter Target Check
+                if (!examStatus || !examStatus.value) {
+                    const err = document.getElementById('err-examStatus');
+                    if (err) err.style.display = 'block';
+                    if (examStatus) examStatus.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // Start Date Check
+                if (!startDate || !startDate.value) {
+                    const err = document.getElementById('err-startDate');
+                    if (err) err.style.display = 'block';
+                    if (startDate) startDate.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // End Date Check
+                if (!endDate || !endDate.value) {
+                    const err = document.getElementById('err-endDate');
+                    if (err) {
+                        err.innerText = "End Date terminal boundary missing.";
+                        err.style.display = 'block';
+                    }
+                    if (endDate) endDate.classList.add('input-error');
+                    isPassed = false;
+                }
+
+                // Chronology Structural Constraints Logic Check
+                if (startDate && startDate.value && endDate && endDate.value) {
+                    const sDate = new Date(startDate.value);
+                    const eDate = new Date(endDate.value);
+                    if (eDate < sDate) {
+                        const err = document.getElementById('err-endDate');
+                        if (err) {
+                            err.innerText = "Chronological Error: Terminal execution date cannot fall before starting path date.";
+                            err.style.display = 'block';
+                        }
+                        if (endDate) endDate.classList.add('input-error');
+                        isPassed = false;
+                    }
+                }
+
+                return isPassed;
             }
 
-            const apiPayload = generateDataPayload();
-            console.log("Ready Enterprise State JSON Payload Structure target for Node.js API pipeline mapping:", apiPayload);
-            
-            /* BACKEND CONNECTION SYNTAX EXAMPLE:
-               
-               fetch('/api/v1/examinations/create', {
-                   method: 'POST',
-                   headers: { 'Content-Type': 'application/json' },
-                   body: JSON.stringify(apiPayload)
-               })
-               .then(res => res.json())
-               .then(data => { window.location.href = 'exam-dashboard.html'; })
-               .catch(err => console.error(err));
-            */
-            
-            alert(`Success! Examination configuration profile [${apiPayload.examCode}] compilation completed. Structure logged to console workspace pipeline framework.`);
-        }
+            // Workspace Forms Reset Mechanics Interface Control
+            if (btnReset) {
+                btnReset.addEventListener('click', () => {
+                    if (examForm) {
+                        examForm.reset();
+                        performLivePreviewSync();
+                        
+                        const errorElements = document.querySelectorAll('.error-message');
+                        errorElements.forEach(msg => msg.style.display = 'none');
 
-        // Draft Operations Strategy Shortcut
-        function saveFormStateAsDraft() {
-            // Draft skips strict field enforcement validation structures
-            document.getElementById('examStatus').value = "Draft";
-            const currentPayload = generateDataPayload();
-            console.log("Saving entity state payload instance map into standard volatile LocalStorage database context:", currentPayload);
-            alert("Draft instance configurations saved in operational storage pipeline matrix state.");
-        }
+                        const activeInputStates = document.querySelectorAll('input, select, textarea');
+                        activeInputStates.forEach(input => input.classList.remove('input-error'));
 
-        // Reset workspace layout wrapper
-        function resetWorkspaceForm() {
-            if(confirm("Confirm action? This wipes all modifications in the current subject allocation tables and form structures.")) {
-                document.getElementById('examCreationForm').reset();
-                const tbody = document.getElementById('subjectTableBody');
-                tbody.innerHTML = '';
-                addSubjectRow();
-                updateLivePreview();
+                        if (alertError) alertError.style.display = 'none';
+                        if (alertSuccess) alertSuccess.style.display = 'none';
+                    }
+                });
             }
-        }
+
+            // Dashboard Cancellation Strategy Route Management Action Hook
+            if (btnCancel) {
+                btnCancel.addEventListener('click', () => {
+                    if (confirm("Are you sure you want to cancel? Any unsaved master initialization settings will be lost.")) {
+                        window.location.href="exam-management.html";
+                    }
+                });
+            }
+
+            // API Endpoint Server Target Post Form Submit Strategy
+            if (examForm) {
+                examForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+
+                    // Trigger Data Guard Pipeline Verification Controls Check
+                    if (!executeSystemValidationRules()) {
+                        if (alertError) {
+                            errorText.innerText = "Form validation failed. Please check the marked fields before saving.";
+                            alertError.style.with = "100%";
+                            alertError.style.display = "flex";
+                        }
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        return;
+                    }
+
+                    // Set UI Network Processing Pipeline Loading State
+                    if (btnSave) btnSave.disabled = true;
+                    if (saveSpinner) saveSpinner.style.display = "block";
+                    if (saveIcon) saveIcon.style.display = "none";
+                    if (saveBtnText) saveBtnText.innerText = "Processing Save Request...";
+
+                    // Generate Clean Strict Target Backend REST Payload Fields Strategy Context Only Map
+                    const payload = {
+                            examName: examName.value.trim(),
+                            examCode: examCode.value.trim(),
+                            academicSession: academicSession.value,
+                            examType: examType.value,
+                            examStatus: examStatus.value,
+                            examStartDate: startDate.value,
+                            examEndDate: endDate.value,
+
+                            instructions: instructions ? instructions.value.trim() : "",
+                            studentGuidelines: studentGuidelines ? studentGuidelines.value.trim() : "",
+                            invigilatorNotes: invigilatorNotes ? invigilatorNotes.value.trim() : ""
+                        };
+
+                        console.log("Payload =", payload);
+
+                    // Network Fetch Execution Gateway Block
+                    fetch("http://localhost:5000/api/exams", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(payload)
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP network endpoint structural failure code returned: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.success === true) {
+                            if (alertSuccess) {
+                                successText.innerText = data.message || "Exam Master Framework Initialization Completed Successfully!";
+                                alertSuccess.style.display = "flex";
+                            }
+                            if (alertError) alertError.style.display = "none";
+
+                            // Store primary key reference value context identifiers inside operational sandbox
+                            localStorage.setItem("currentExamId", data.exam_id);
+
+                            // Redirect to dedicated profile workflows allocation
+                            setTimeout(() => {
+                               window.location.href=`subject-allocation.html?exam=${data.exam_id}`;
+                            }, 1500);
+
+                        } else {
+                            // Handler for edge cases inside success blocks
+                            throw new Error(data.message || "Internal transaction script sequence abort error context.");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("ERP Core System API Failure Trace Log: ", err);
+                        if (alertError) {
+                            errorText.innerText = `Server Strategy Gateway Communication Aborted: ${err.message}`;
+                            alertError.style.display = "flex";
+                        }
+                        if (alertSuccess) alertSuccess.style.display = "none";
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    })
+                    .finally(() => {
+                        // Tear down loading state UI rules parameters variables maps
+                        if (btnSave) btnSave.disabled = false;
+                        if (saveSpinner) saveSpinner.style.display = "none";
+                        if (saveIcon) saveIcon.style.display = "inline-block";
+                        if (saveBtnText) saveBtnText.innerText = "Save Exam";
+                    });
+                });
+            }
+
+            // Initial Execution on Load Bootstrap State Trigger
+            performLivePreviewSync();
+        });
     </script>
 </body>
 </html>

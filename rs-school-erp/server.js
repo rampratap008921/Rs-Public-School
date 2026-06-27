@@ -1,3 +1,10 @@
+const examRoutes = require('./routes/exams');
+const examSubjectsRoutes = require('./routes/examSubjectsRoutes');
+const examTimetableRoutes = require('./routes/examTimetableRoutes.js');
+
+console.log("Exam Timetable Routes =", examTimetableRoutes);
+console.log("Exam Subjects Routes =", examSubjectsRoutes);
+console.log("Exam Routes =", examRoutes);
 console.log("SERVER FILE LOADED");
 
 const attendanceRoutes = require('./routes/attendanceRoutes');
@@ -27,6 +34,9 @@ app.use('/api/students', studentRoutes);
 app.use('/api/teachers', teacherRoutes);
 app.use('/api/teacher-allocation', teacherAllocationRoutes);
 app.use('/api/attendance',attendanceRoutes);
+app.use('/api/exams', examRoutes);
+app.use('/api/exam-subjects', examSubjectsRoutes);
+app.use('/api/exam-timetable', examTimetableRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

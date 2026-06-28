@@ -530,68 +530,85 @@
 
     <script>
         // High Performance Mock Data Layer matching student registries entity profiles arrays
-        const structuralMockDatabaseRosterMatrixMap = {
-            "Class 7-A": [
-                { studentId: "ST-701", admissionNo: "RS-2021-094", rollNo: "01", studentName: "Ram Pratap Prajapati", fatherName: "S. Prajapati" },
-                { studentId: "ST-702", admissionNo: "RS-2021-105", rollNo: "02", studentName: "Aditya Narayan Mani", fatherName: "K. Mani" },
-                { studentId: "ST-703", admissionNo: "RS-2022-412", studentName: "Ananya Mishra", fatherName: "V. Mishra" },
-                { studentId: "ST-704", admissionNo: "RS-2021-318", studentName: "Deepak Kumar Sahani", fatherName: "M. Sahani" },
-                { studentId: "ST-705", admissionNo: "RS-2023-019", studentName: "Divya Prakash Vishwakarma", fatherName: "B. Vishwakarma" }
-            ],
-            "Class 10-B": [
-                { studentId: "ST-101", admissionNo: "RS-2018-002", studentName: "Aman Kumar Gupta", fatherName: "J. Gupta" },
-                { studentId: "ST-102", admissionNo: "RS-2018-054", studentName: "Kriti Kumari Serwani", fatherName: "L. Serwani" }
-            ]
-        };
-
-        // Linked structural timetabled exam records matrices acting as core tracking profiles components
-        const localizedSharedMockTimetableScheduleMatrixMap = [
-            { subject: "Mathematics", code: "MATH-7", date: "2026-09-12", day: "Saturday", time: "09:00 AM - 12:00 PM" },
-            { subject: "English Language", code: "ENG-7", date: "2026-09-14", day: "Monday", time: "09:00 AM - 12:00 PM" },
-            { subject: "General Science", code: "SCI-7", date: "2026-09-16", day: "Wednesday", time: "09:00 AM - 12:00 PM" },
-            { subject: "Social Studies", code: "SST-7", date: "2026-09-18", day: "Friday", time: "09:00 AM - 12:00 PM" }
-        ];
+        
 
         let loadedRosterMemoryThreadBuffer = [];
+        let loadedTimetable = [];
+        let loadedExam = {};
 
         // Asynchronous structural database pipeline simulator hooks
         function executeAsynchronousRosterFetchQuery() {
-            const cls = document.getElementById("className").value;
-            const sec = document.getElementById("sectionName").value;
-            const tbody = document.getElementById("rosterTableContainerBodyNode");
 
-            if(!cls || !sec) {
-                return; // Gracefully halt execution routines pending complete scoping context definitions locks
+                const examId = new URLSearchParams(window.location.search).get("exam");
+
+                const className = document.getElementById("className").value.replace("Class ","");
+
+                const section = document.getElementById("sectionName").value;
+
+                const tbody = document.getElementById("rosterTableContainerBodyNode");
+
+                if(!examId || !className || !section){
+                    return;
+                }
+
+                fetch(`http://localhost:5000/api/admit-card?exam_id=${examId}&class_name=${className}&section=${section}`)
+
+                .then(res=>res.json())
+
+                .then(data=>{
+
+                    console.log(data);
+
+                    loadedExam = data.exam;
+
+                    loadedRosterMemoryThreadBuffer = data.students;
+
+                    loadedTimetable = data.timetable;
+
+                    tbody.innerHTML="";
+
+                    loadedRosterMemoryThreadBuffer.forEach((student,indexId)=>{
+
+                        tbody.innerHTML += `
+
+                        <tr>
+
+                            <td style="text-align:center">
+
+                                <input
+                                    type="checkbox"
+                                    class="row-checkbox"
+                                    data-index="${indexId}"
+                                    checked
+                                    onchange="evaluateMasterGridCheckboxStateCheck();synchronizeLandscapePrintLayoutEngine();">
+
+                            </td>
+
+                            <td>${student.admission_no}</td>
+
+                            <td>${indexId+1}</td>
+
+                            <td>${student.student_name}</td>
+
+                            <td>${student.father_name}</td>
+
+                        </tr>
+
+                        `;
+
+                    });
+
+                    synchronizeLandscapePrintLayoutEngine();
+
+                })
+
+                .catch(err=>{
+
+                    console.log(err);
+
+                });
+
             }
-
-            const searchLookupKey = `${cls}-${sec}`;
-            const queryResponseArray = structuralMockDatabaseRosterMatrixMap[searchLookupKey] || [];
-
-            // Execute deep copy duplication into active thread storage structures arrays matrices logs
-            loadedRosterMemoryThreadBuffer = JSON.parse(JSON.stringify(queryResponseArray));
-
-            if(loadedRosterMemoryThreadBuffer.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:15px;">No structural registries match chosen focus parameters inputs.</td></tr>`;
-                synchronizeLandscapePrintLayoutEngine();
-                return;
-            }
-
-            tbody.innerHTML = "";
-            loadedRosterMemoryThreadBuffer.forEach((student, indexId) => {
-                const tr = document.createElement("tr");
-                tr.innerHTML = `
-                    <td style="text-align:center;"><input type="checkbox" class="row-checkbox" value="${student.studentId}" data-index="${indexId}" checked onchange="evaluateMasterGridCheckboxStateCheck(); synchronizeLandscapePrintLayoutEngine();"></td>
-                    <td><strong>${student.admissionNo}</strong></td>
-                    <td>${student.rollNo || (indexId+1).toString().padStart(2, '0')}</td>
-                    <td style="font-weight:600; color:var(--primary-color);">${student.studentName}</td>
-                    <td>${student.fatherName}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            document.getElementById("masterGridCheckboxToggler").checked = true;
-            synchronizeLandscapePrintLayoutEngine();
-        }
 
         function executeBatchGenerationTriggerState(stateFlag) {
             const targetCheckboxes = document.querySelectorAll("#rosterTableContainerBodyNode .row-checkbox");
@@ -621,7 +638,34 @@
         // ========================================================
         // TWIN LANDSCAPE A4 PRINT ENGINE COMPILED CONFIGURATIONS
         // ========================================================
-        function synchronizeLandscapePrintLayoutEngine() {
+            function formatDate(date){
+
+                const d=new Date(date);
+
+                return d.toLocaleDateString("en-GB",{
+
+                    day:"2-digit",
+                    month:"short",
+                    year:"numeric"
+
+                });
+
+            }
+
+            function formatTime(time){
+
+                const d=new Date("1970-01-01T"+time);
+
+                return d.toLocaleTimeString("en-US",{
+
+                    hour:"2-digit",
+                    minute:"2-digit",
+                    hour12:true
+
+                });
+
+            }
+            function synchronizeLandscapePrintLayoutEngine() {
             const canvasScrollContainer = document.getElementById("virtualA4SheetsCanvasScrollContainer");
             canvasScrollContainer.innerHTML = ""; // Clear active rendering layers tracks nodes lines
 
@@ -659,7 +703,7 @@
             const showInst = document.getElementById("maskInstructions").checked;
             const showSign = document.getElementById("maskSignatures").checked;
 
-            const targetSelectedExamLabelText = document.getElementById("examId").value;
+            const targetSelectedExamLabelText = loadedExam.exam_name || "EXAMINATION";
             const chosenClassNameTextValue = document.getElementById("className").value || "—";
             const chosenSectionNameTextValue = document.getElementById("sectionName").value || "—";
 
@@ -691,14 +735,20 @@
                 let logoMarkMarkupStr = showLogo ? `<div class="header-crest-logo-box">RS</div>` : `<div style="width:42px;"></div>`;
                 let photoNodeMarkupStr = showPhoto ? `
                     <div class="student-photo-box-node">
-                        <img src="https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(student.studentName)}" alt="Candidate Photo">
+                       <img src="http://localhost:5000${student.photo}" alt="Candidate Photo">
                     </div>` : '';
 
                 // Timetable array rendering matrix loop codes block items
                 let timetableRowsMarkupStr = "";
                 if(showTable) {
-                    localizedSharedMockTimetableScheduleMatrixMap.forEach(item => {
-                        timetableRowsMarkupStr += `<tr><td><strong>${item.subject}</strong></td><td>${item.date}</td><td>${item.day}</td><td>${item.time}</td></tr>`;
+                    loadedTimetable.forEach(subject=>{
+                        timetableRowsMarkupStr += `
+                        <tr>
+                        <td><strong>${subject.subject_name}</strong></td>
+                        <td>${formatDate(subject.exam_date)}</td>
+                        <td>${subject.exam_day}</td>
+                        <td>${formatTime(subject.start_time)} - ${formatTime(subject.end_time)}</td>
+                        </tr>`;
                     });
                 }
 
@@ -743,14 +793,20 @@
                             </div>
                             <div style="width:42px;"></div>
                         </div>
-                        <div class="document-title-banner-tag">${targetSelectedExamLabelText || 'EXAMINATION ADMIT CARD'}</div>
+                        <div class="document-title-banner-tag">${targetSelectedExamLabelText.toUpperCase()}</div>
                         
                         <div class="profile-data-layout-columns">
                             <table class="profile-fields-data-table">
                                 <tbody>
-                                    <tr><td class="lbl">Admission No:</td><td><strong>${student.admissionNo}</strong></td><td class="lbl">Roll Number:</td><td><strong>${student.rollNo || (indexTrackLoopId+1).toString().padStart(2, '0')}</strong></td></tr>
-                                    <tr><td class="lbl">Student Name:</td><td style="font-weight:700; text-transform:uppercase;">${student.studentName}</td><td class="lbl">Grade Class:</td><td>${chosenClassNameTextValue} (${chosenSectionNameTextValue})</td></tr>
-                                    <tr><td class="lbl">Father Name:</td><td>${student.fatherName}</td><td class="lbl">Academic Session:</td><td>2026-2027</td></tr>
+                                    <tr><td class="lbl">Admission No:</td><td><strong>${student.admission_no}</strong></td><td class="lbl">Roll Number:</td><td><strong>${student.roll_no || (indexTrackLoopId+1).toString().padStart(2, '0')}</strong></td></tr>
+                                    <tr><td class="lbl">Student Name:</td><td style="font-weight:700; text-transform:uppercase;">${student.student_name}</td><td class="lbl">Grade Class:</td><td>${chosenClassNameTextValue} (${chosenSectionNameTextValue})</td></tr>
+                                    <tr>
+                                        <td class="lbl">Father Name:</td>
+                                        <td>${student.father_name}</td>
+                
+                                        <td class="lbl">Academic Session:</td>
+                                        <td>${loadedExam.academic_session}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                             ${photoNodeMarkupStr}
@@ -780,6 +836,7 @@
                 document.getElementById("masterGridCheckboxToggler").checked = false;
 
                 loadedRosterMemoryThreadBuffer = [];
+                
                 synchronizeLandscapePrintLayoutEngine();
             }
         }

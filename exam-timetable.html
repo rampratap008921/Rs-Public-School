@@ -960,6 +960,19 @@
 
     <!-- Complete Integrated Embedded JavaScript Application Logic Block Architecture -->
     <script>
+        function formatDate(dateString) {
+
+            if (!dateString) return "";
+
+            const date = new Date(dateString);
+
+            const day = String(date.getDate()).padStart(2, "0");
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = date.getFullYear();
+
+            return `${day}-${month}-${year}`;
+
+        }
         // Module Scope Globals Database & Architecture Logic Strategy Core
         const BACKEND_API_BASE_AXIS_ROUTE = "http://localhost:5000/api";
         const WEEK_DAY_NAMES_INDEX_MATRIX = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -1273,7 +1286,7 @@
                     <td><span style="font-weight: 500;">${subjectEntityRow.maximum_marks}</span></td>
                     <td><span style="color: var(--text-muted); font-weight: 500;">${subjectEntityRow.passing_marks}</span></td>
                     <td>
-                        <input type="date" id="${uniqueInputRowDOMIdPrefix}_date" class="grid-cell-input-date" data-index="${rowIndex}" value="${subjectEntityRow.exam_date || ''}">
+                        <input type="date" id="${uniqueInputRowDOMIdPrefix}_date" class="grid-cell-input-date" data-index="${rowIndex}" value="${subjectEntityRow.exam_date ? subjectEntityRow.exam_date.split('T')[0] : ''}">
                     </td>
                     <td>
                         <input type="text" id="${uniqueInputRowDOMIdPrefix}_day" class="grid-cell-input-day" placeholder="Auto Calculate" value="${subjectEntityRow.exam_day || ''}" readonly style="background-color: #F1F5F9; font-weight: 600; text-align: center; color: var(--primary-color);">
@@ -1587,6 +1600,9 @@
 
             // Evaluate state counters response statuses feedback messages profiles maps to present alerts
             if (successSavedRecordsCounter === totalRowsCount) {
+                currentEditingTargetRecordIdKey = null;
+
+                document.getElementById("btnSaveTimetableData").innerHTML ='<i class="fa-solid fa-floppy-disk"></i> Save Timetable';
                 createToastAlertNotification("success", "Database Transactions Complete: All examination timetable scheduling matrix entries records synchronized saved successfully.");
                 resetBuilderWorkspaceFormInterfaceContext();
                 await fetchAndRenderHistoricalTimetablesRegistry();
@@ -1667,10 +1683,29 @@
                     <td><span class="status-badge" style="background-color: #E0E7FF; color: #3730A3; border-radius: 4px; font-weight: 600;">${logRowEntity.class_name}</span></td>
                     <td><strong>${logRowEntity.section}</strong></td>
                     <td>${logRowEntity.subject_name} <br><small style="color: var(--text-muted); font-weight: 500;">(${logRowEntity.subject_code})</small></td>
-                    <td><span style="font-weight: 500;">${logRowEntity.exam_date}</span></td>
+                    <td>
+                        <span style="font-weight:500;">
+                            ${new Date(logRowEntity.exam_date).toLocaleDateString("en-GB")}
+                        </span>
+                    </td>
                     <td><small style="font-weight: 600; text-transform: uppercase;">${logRowEntity.exam_day}</small></td>
-                    <td>${logRowEntity.start_time}</td>
-                    <td>${logRowEntity.end_time}</td>
+                    <td>
+                        ${new Date(`1970-01-01T${logRowEntity.start_time}`)
+                            .toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true
+                            })}
+                    </td>
+
+                    <td>
+                        ${new Date(`1970-01-01T${logRowEntity.end_time}`)
+                            .toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true
+                            })}
+                    </td>
                     <td><span style="color: var(--secondary-color); font-weight: 600;">${logRowEntity.room_no}</span></td>
                     <td><i class="fa-solid fa-user-tie" style="font-size:0.75rem; opacity:0.5; margin-right:4px;"></i> <span style="font-size:0.85rem; font-weight:500;">${logRowEntity.invigilator}</span></td>
                     <td><span class="${customBadgeClassAttributeDefinition}">${logRowEntity.status}</span></td>
@@ -1702,7 +1737,13 @@
                 const response = await fetch(`${BACKEND_API_BASE_AXIS_ROUTE}/exam-timetable/${recordIdKey}`);
                 if (!response.ok) throw new Error(`Single record fetching api index channel returned status fault code: ${response.status}`);
 
-                const singleRecordPayloadData = await response.json();
+                const result = await response.json();
+
+                    if (!result.success) {
+                        throw new Error(result.message);
+                    }
+
+                    const singleRecordPayloadData = result.data;
                 
                 // Synchronize dropdown filter selectors fields positions indicators context to match data parameters origin
                 document.getElementById("ctxExamSelect").value = singleRecordPayloadData.exam_id;
@@ -1718,12 +1759,13 @@
                 ctxSectionSelect.disabled = false;
 
                 document.getElementById("btnGenerateGrid").disabled = false;
+                document.getElementById("btnGenerateGrid").disabled = true;
 
                 // Build workstation grid array utilizing identical row interface compiler structures parsing single item as wrapper array array element list
                 const singleTargetItemWrapperList = [singleRecordPayloadData];
                 constructInteractiveBuilderWorkstationRowsInterfaceGrid(singleTargetItemWrapperList, true);
-
-                createToastAlertNotification("warning", `Workspace configuration profile switched: Edit Mode operational locked onto unique registry index key tracking element record ID #${recordIdKey}.`);
+                document.getElementById("btnSaveTimetableData").innerHTML ='<i class="fa-solid fa-pen"></i> Update Timetable';
+                createToastAlertNotification("success","Timetable loaded for editing.");
                 document.getElementById("timetableBuilderSectionCard").scrollIntoView({ behavior: 'smooth', block: 'start' });
             } catch (editFetchError) {
                 console.error("Single Record Initialization Fetch Pipeline Exception Failure Stack Trace: ", editFetchError);
@@ -1805,9 +1847,27 @@
                 <tr>
                     <td><strong>${selectedRecordEntityObjectInstance.subject_name}</strong></td>
                     <td>${selectedRecordEntityObjectInstance.subject_code}</td>
-                    <td>${selectedRecordEntityObjectInstance.exam_date}</td>
+                    <td>
+                    ${new Date(selectedRecordEntityObjectInstance.exam_date)
+                        .toLocaleDateString("en-GB")
+                        .replace(/\//g,"-")}
+                    </td>
                     <td><small style="font-weight:700; text-transform:uppercase;">${selectedRecordEntityObjectInstance.exam_day}</small></td>
-                    <td>${selectedRecordEntityObjectInstance.start_time} - ${selectedRecordEntityObjectInstance.end_time}</td>
+                    <td>
+                        ${new Date(`1970-01-01T${selectedRecordEntityObjectInstance.start_time}`)
+                            .toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true
+                            })}
+                        -
+                        ${new Date(`1970-01-01T${selectedRecordEntityObjectInstance.end_time}`)
+                            .toLocaleTimeString("en-US", {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                                hour12: true
+                            })}
+                    </td>
                     <td><strong>${selectedRecordEntityObjectInstance.room_no}</strong></td>
                     <td>${selectedRecordEntityObjectInstance.invigilator}</td>
                 </tr>

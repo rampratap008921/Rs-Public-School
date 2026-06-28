@@ -1,7 +1,7 @@
 const examRoutes = require('./routes/exams');
 const examSubjectsRoutes = require('./routes/examSubjectsRoutes');
 const examTimetableRoutes = require('./routes/examTimetableRoutes.js');
-
+const admitCardRoutes = require("./routes/admitCardRoutes");
 console.log("Exam Timetable Routes =", examTimetableRoutes);
 console.log("Exam Subjects Routes =", examSubjectsRoutes);
 console.log("Exam Routes =", examRoutes);
@@ -37,6 +37,7 @@ app.use('/api/attendance',attendanceRoutes);
 app.use('/api/exams', examRoutes);
 app.use('/api/exam-subjects', examSubjectsRoutes);
 app.use('/api/exam-timetable', examTimetableRoutes);
+app.use("/api/admit-card", admitCardRoutes);
 require('./config/db');
 
 app.get('/', (req, res) => {

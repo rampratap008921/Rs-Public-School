@@ -15,7 +15,7 @@ const authRoutes = require('./routes/authRoutes');
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
+const marksEntryRoutes = require("./routes/marksEntryRoutes");
 const teacherAllocationRoutes =
 require('./routes/teacherAllocationRoutes');
 dotenv.config();
@@ -38,6 +38,7 @@ app.use('/api/exams', examRoutes);
 app.use('/api/exam-subjects', examSubjectsRoutes);
 app.use('/api/exam-timetable', examTimetableRoutes);
 app.use("/api/admit-card", admitCardRoutes);
+
 require('./config/db');
 
 app.get('/', (req, res) => {
@@ -45,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-
+app.use("/api/marks-entry", marksEntryRoutes);
 app.listen(PORT, () => {
   console.log(`Server Running On Port ${PORT}`);
 });

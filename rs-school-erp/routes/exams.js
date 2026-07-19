@@ -96,6 +96,186 @@ router.get('/all', (req, res) => {
     });
 
 });
+// Get Active Exams
+router.get('/list', (req, res) => {
+
+    const sql = `
+        SELECT
+            id,
+            exam_name,
+            academic_session
+        FROM exams
+        WHERE status='Active'
+        ORDER BY id DESC
+    `;
+
+    db.query(sql, (err, result) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Database Error",
+                error: err
+            });
+        }
+
+        res.json({
+            success: true,
+            data: result
+        });
+
+    });
+
+});
+// Get Classes By Exam
+router.get('/classes/:examId', (req, res) => {
+
+    const sql = `
+        SELECT DISTINCT
+            class_name
+        FROM exam_subjects
+        WHERE exam_id=?
+        ORDER BY class_name
+    `;
+
+    db.query(sql,[req.params.examId],(err,result)=>{
+
+        if(err){
+            return res.status(500).json({
+                success:false,
+                message:"Database Error",
+                error:err
+            });
+        }
+
+        res.json({
+            success:true,
+            data:result
+        });
+
+    });
+
+});
+// Get Sections
+router.get('/sections/:examId/:className', (req, res) => {
+
+    const sql = `
+        SELECT DISTINCT
+            section
+        FROM exam_subjects
+        WHERE
+            exam_id=?
+            AND class_name=?
+        ORDER BY section
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            req.params.examId,
+
+            req.params.className
+
+        ],
+
+        (err,result)=>{
+
+            if(err){
+                return res.status(500).json({
+                    success:false,
+                    message:"Database Error",
+                    error:err
+                });
+            }
+
+            res.json({
+
+                success:true,
+
+                data:result
+
+            });
+
+        }
+
+    );
+
+});
+// Get Subjects
+router.get('/subjects/:examId/:className/:section', (req,res)=>{
+
+    const sql=`
+
+        SELECT
+
+            id,
+
+            subject_name,
+
+            maximum_marks,
+
+            passing_marks
+
+        FROM exam_subjects
+
+        WHERE
+
+            exam_id=?
+
+            AND class_name=?
+
+            AND section=?
+
+        ORDER BY subject_name
+
+    `;
+
+    db.query(
+
+        sql,
+
+        [
+
+            req.params.examId,
+
+            req.params.className,
+
+            req.params.section
+
+        ],
+
+        (err,result)=>{
+
+            if(err){
+
+                return res.status(500).json({
+
+                    success:false,
+
+                    message:"Database Error",
+
+                    error:err
+
+                });
+
+            }
+
+            res.json({
+
+                success:true,
+
+                data:result
+
+            });
+
+        }
+
+    );
+
+});
 
 
 // Get Single Exam
